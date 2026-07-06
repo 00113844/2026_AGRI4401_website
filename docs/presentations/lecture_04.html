@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sensors in Precision Agriculture</title>
+  
+  <!-- RevealJS Core Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css" id="theme">
+
+  <!-- Compiled UWA Custom Theme SCSS Styles -->
+  <style>
+    /* ==================================================================
+       Universal UWA RevealJS Theme
+       Standard for all UWA academic units
+       ================================================================== */
+
+    /* ---------------------- CSS Variable Overrides (UWA Branding) -- */
+    :root {
+      --r-heading-color: #27348B;
+      --r-main-color: #333333;
+      --r-main-font: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      --r-heading-font: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      --r-background-color: #ffffff;
+    }
+
+    /* ---------------------- Section Dividers ----------------------- */
+    .reveal section[data-background-color="#002147"] h1,
+    .reveal section[data-background-color="#002147"] h2,
+    .reveal section[data-background-color="#002147"] h3,
+    .reveal section[data-background-color="#002147"] p {
+      color: white !important;
+    }
+
+    /* ---------------------- Title Slide & Section Break Slides ----- */
+    .reveal section[data-background-color="#27348B"] h1,
+    .reveal section[data-background-color="#27348B"] h2,
+    .reveal section[data-background-color="#27348B"] .title {
+      color: #E2B600 !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+    .reveal section[data-background-color="#27348B"] h3 {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+    .reveal section[data-background-color="#27348B"] p,
+    .reveal section[data-background-color="#27348B"] .subtitle,
+    .reveal section[data-background-color="#27348B"] li {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+    .reveal section[data-background-color="#27348B"] .author,
+    .reveal section[data-background-color="#27348B"] .date,
+    .reveal section[data-background-color="#27348B"] .institute,
+    .reveal section[data-background-color="#27348B"] .quarto-title-author-name,
+    .reveal section[data-background-color="#27348B"] .quarto-title-affiliation {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    /* ---------------------- Learning Objectives -------------------- */
+    .learning-objectives-slide .learning-objectives {
+      background: linear-gradient(135deg, #F5F5F5 0%, #ffffff 100%);
+      border-left: 5px solid #27348B;
+      padding: 1.5em;
+      margin: 1em 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .learning-objectives strong {
+      color: #27348B;
+      font-size: 1.1em;
+    }
+
+    /* ---------------------- Two-Column Layouts --------------------- */
+    .reveal .columns {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 1.4em;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .reveal .column {
+      flex: 1 1 0%;
+      min-width: 0;
+    }
+    .reveal .column ul,
+    .reveal .column ol {
+      margin: 0.2em 0 0.3em 1em;
+      padding: 0;
+    }
+    .reveal .column li {
+      margin-bottom: 0.25em;
+      line-height: 1.3;
+    }
+
+    /* ---------------------- Emphasis & Highlights ------------------ */
+    .emphasis {
+      color: #27348B;
+      font-weight: 600;
+    }
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(39, 52, 139, 0.08) 0%, rgba(85, 119, 187, 0.08) 100%);
+      border: 2px solid #5577BB;
+      padding: 1em 1.5em;
+      border-radius: 8px;
+      margin: 0.5em 0;
+    }
+
+    /* ---------------------- Tables --------------------------------- */
+    .reveal table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.5em 0 !important;
+      font-size: 0.8em !important;
+    }
+    .reveal table th {
+      background: #27348B;
+      color: white;
+      padding: 0.75em 1em;
+      text-align: left;
+      font-weight: 600;
+    }
+    .reveal table td {
+      padding: 0.75em 1em;
+      border-bottom: 1px solid #CCCCCC;
+    }
+    .reveal table tr:nth-child(even) {
+      background: #F5F5F5;
+    }
+
+    /* ---------------------- Mermaid Diagrams ----------------------- */
+    .reveal .mermaid {
+      background: transparent;
+      margin: 1em auto;
+      max-width: 92%;
+      max-height: 45vh !important;
+      overflow: auto;
+    }
+    .reveal pre.mermaid {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .reveal .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ---------------------- Slide Content Overflow Prevention ------ */
+    .reveal .slides section {
+      overflow: visible;
+      max-height: none;
+      padding-bottom: 0.5em;
+      font-size: 0.78em !important;
+    }
+    .reveal .slides section ul,
+    .reveal .slides section ol {
+      margin: 0.2em 0 0.4em 1.1em;
+      padding: 0;
+    }
+    .reveal .slides section ul {
+      list-style: disc outside;
+    }
+    .reveal .slides section ol {
+      list-style: decimal outside;
+    }
+    .reveal .slides section li {
+      margin-bottom: 0.2em !important;
+      font-size: 0.9em !important;
+      line-height: 1.3;
+      display: list-item !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+    }
+    .reveal .slides section li::marker {
+      color: #27348B;
+    }
+
+    /* ---------------------- Font Scalings -------------------------- */
+    .reveal h2 {
+      margin-top: 0.1em;
+      margin-bottom: 0.2em !important;
+      line-height: 1.15;
+      word-break: break-word;
+      hyphens: auto;
+      font-size: 1.6em !important;
+    }
+    .reveal h3 {
+      margin-top: 0.1em;
+      margin-bottom: 0.25em;
+      font-size: 1.3em !important;
+    }
+    .reveal h4 {
+      font-size: 1.0em !important;
+    }
+
+    /* Utility Classes */
+    .smaller { font-size: 0.85em; }
+    .compact { line-height: 1.4; }
+    .title-author { font-size: 0.85em; margin-top: 2em; }
+    .center-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .reveal h2 { font-size: 1.3em !important; }
+      .reveal .slides section li { font-size: 0.75em !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE SLIDE -->
+      <section data-background-color="#27348B" class="center-content">
+        <h1>Sensors in Precision Agriculture</h1>
+        <p>From Foundational Concepts to Synthesis</p>
+        <p class="title-author">AGRI4401: Precision Agriculture</p>
+        <p class="title-author">Author: Gustavo Alckmin</p>
+      </section>
+
+      <!-- PART 1 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 1: What Is a Sensor? Foundational Concepts</h2>
+        <p>The layer beneath every precision agriculture technology</p>
+      </section>
+
+      <section>
+        <h2>Why Sensors Are the Foundation of Precision Agriculture</h2>
+        <ul>
+          <li>Sensors tell you <strong>what is there</strong>; positioning tells you <strong>where</strong></li>
+          <li>A sensor converts physical or chemical properties into recordable signals</li>
+          <li>Without sensors, a GPS coordinate is just an empty point on a map</li>
+          <li>Structure: foundational concepts → sensing modalities → practical selection framework</li>
+        </ul>
+        <aside class="notes">
+          Open by establishing sensors as the layer beneath every other precision agriculture technology covered elsewhere in this unit. Define a sensor at its simplest as a device that converts a physical or chemical property of the environment into a signal that can be recorded, transmitted, and acted upon. Preview the structure of the lecture.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Sensing as Indirect Measurement</h2>
+        <ul>
+          <li>Almost no agricultural sensor measures what an agronomist actually cares about directly</li>
+          <li>A canopy reflectance sensor measures reflected light intensity, from which crop health is <strong>inferred</strong></li>
+          <li>A soil moisture probe infers moisture from a calibration relationship</li>
+          <li>Trade-off: direct measurement (accurate but slow and unscalable) vs. indirect sensing (fast and scalable but only as reliable as calibration)</li>
+          <li><strong>Key principle:</strong> Every sensor reading is an inference, not a fact</li>
+        </ul>
+        <aside class="notes">
+          Introduce the single most important conceptual habit for working with any sensor. Discuss the practical trade-offs between direct measurement and indirect sensing.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Spectral and Spatial Resolution</h2>
+        <ul>
+          <li><strong>Spectral resolution:</strong> Number and narrowness of wavelength bands a sensor distinguishes</li>
+          <li>Ranges from 3-band RGB to hundreds of hyperspectral bands</li>
+          <li><strong>Spatial resolution:</strong> Ground area represented by a single measurement or pixel</li>
+          <li>Fundamental trade-off: higher spectral resolution generally requires larger pixels (coarser spatial resolution)</li>
+          <li>A sensor rarely excels at both simultaneously</li>
+        </ul>
+        <aside class="notes">
+          Define spectral resolution and spatial resolution. Explain the fundamental trade-off that shapes every sensor selection decision.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Temporal Resolution: How Often Can a Sensor Look?</h2>
+        <ul>
+          <li><strong>Temporal resolution:</strong> How frequently a sensor revisits the same location</li>
+          <li>Ranges from continuous in-field sensors to satellite revisit cycles of several days</li>
+          <li>Crop stress events can develop and resolve within days</li>
+          <li>A sensing system that only revisits every two weeks may miss the actionable window</li>
+          <li>Spectral, spatial, and temporal resolution types interact and interact — you cannot maximize all three simultaneously</li>
+        </ul>
+        <aside class="notes">
+          Define temporal resolution and explain why it matters as much as spectral or spatial resolution. Introduce the general principle that these three resolution types interact.
+        </aside>
+      </section>
+
+      <section>
+        <h2>From Signal to Action: The Sensor Pipeline</h2>
+        <ul>
+          <li>Raw signal acquisition → calibration → conversion to meaningful units → contextualisation → actionable recommendation</li>
+          <li>Examples: fertiliser rate, irrigation trigger, targeted herbicide application</li>
+          <li>The value of a sensor is determined by how reliably this whole pipeline converts a signal into a correct decision</li>
+          <li>Not by its raw precision alone</li>
+        </ul>
+        <aside class="notes">
+          Walk through the generic pipeline that recurs across every sensor type. Emphasize that the value of a sensor is determined by the entire decision pipeline, not just raw precision.
+        </aside>
+      </section>
+
+      <!-- PART 2 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 2: Active vs Passive Sensing</h2>
+        <p>And the Platform Landscape</p>
+      </section>
+
+      <section>
+        <h2>Active vs Passive Sensing: The Core Distinction</h2>
+        <ul>
+          <li><strong>Passive sensors:</strong> Measure energy that already exists in the environment</li>
+          <li>Reflected sunlight, emitted thermal radiation, ambient sound</li>
+          <li><strong>Active sensors:</strong> Emit their own controlled signal and measure what returns</li>
+          <li>Laser pulses, radio/ultrasonic waves, artificial light flashes</li>
+          <li>This single distinction predicts much of a sensor's practical behaviour</li>
+        </ul>
+        <aside class="notes">
+          Define the distinction that organises almost every sensor discussed in this lecture. Explain how this predicts a sensor's practical behaviour.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Passive Sensing: Strengths and Constraints</h2>
+        <ul>
+          <li><strong>Strengths:</strong> Simpler optical design, lower power, can cover very large areas cheaply</li>
+          <li><strong>Constraints:</strong> Performance depends entirely on ambient illumination</li>
+          <li>Unusable at night, degraded under cloud cover, requires radiometric correction</li>
+          <li>Dominant sensing category by volume of use in WA agriculture</li>
+          <li>More environmentally constrained than active sensing</li>
+        </ul>
+        <aside class="notes">
+          Examine passive sensing in more depth. Discuss strengths and constraints with practical examples.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Active Sensing: Strengths and Constraints</h2>
+        <ul>
+          <li><strong>Strengths:</strong> Independent from ambient lighting, known signal simplifies interpretation, direct distance measurement via time-of-flight</li>
+          <li><strong>Constraints:</strong> Higher power consumption and complexity, higher unit cost, limited range than equivalent passive system</li>
+          <li>LiDAR, radar, ultrasonic rangefinders, active-illumination crop sensors</li>
+        </ul>
+        <aside class="notes">
+          Examine active sensing in more depth. Discuss strengths and constraints of this modality.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Sensing Platforms: The Four Tiers</h2>
+        <ul>
+          <li><strong>Satellite:</strong> Very wide area, systematic revisit, coarse spatial resolution, fixed schedule</li>
+          <li><strong>Aerial:</strong> Flexible timing, finer resolution, higher per-hectare cost</li>
+          <li><strong>UAV:</strong> Finest practical resolution, full timing control, limited coverage per flight</li>
+          <li><strong>Proximal:</strong> Centimetre range, point-level ground truth, no inherent area coverage</li>
+        </ul>
+        <aside class="notes">
+          Introduce the four platform tiers. Every sensing modality can, in principle, be deployed on more than one platform.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Resolution Trade-Off: Why You Can't Have It All</h2>
+        <ul>
+          <li>Platform choice and resolution trade-offs are the same decision</li>
+          <li>Satellite achieves wide coverage by sacrificing spatial detail and timing flexibility</li>
+          <li>UAV achieves fine detail and timing control by sacrificing coverage area per flight</li>
+          <li>No platform-sensor combination maximizes spectral, spatial, and temporal resolution simultaneously across a large area</li>
+          <li>Sensor selection = identifying which resolution types matter, accepting sacrifices in others</li>
+        </ul>
+        <aside class="notes">
+          Synthesize the resolution trade-offs into a single practical principle. This is the foundation for later sensor selection decisions.
+        </aside>
+      </section>
+
+      <!-- PART 3 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 3: Time of Flight, Sonar, and Radar</h2>
+        <p>Ranging Sensors</p>
+      </section>
+
+      <section>
+        <h2>The Time-of-Flight Principle</h2>
+        <ul>
+          <li><strong>Core idea:</strong> Emit a signal (light, sound, or radio waves), measure elapsed time until return</li>
+          <li>Distance = (signal speed × elapsed time) ÷ 2 (accounting for round trip)</li>
+          <li><strong>Phase-based alternative:</strong> Measure phase shift between emitted and returned continuous wave</li>
+          <li>Mathematically equivalent to fractional time delay</li>
+          <li>Underlies ultrasonic rangefinders, radar level sensors, and LiDAR</li>
+        </ul>
+        <aside class="notes">
+          Introduce Time of Flight as the foundational active-sensing principle. Explain both pulse-based and phase-based implementations.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Ultrasonic (Sonar) Sensing in Agriculture</h2>
+        <ul>
+          <li>Time-of-Flight applied using sound waves, typically 40–200 kHz band</li>
+          <li><strong>Key application:</strong> Automatic spray boom height control</li>
+          <li>Maintains constant target height across undulating paddocks, avoiding boom strikes</li>
+          <li><strong>Secondary application:</strong> Non-contact level sensing in tanks and storage bins</li>
+          <li>Inexpensive and robust, but limited range (~few metres) and affected by dust, foam, strong wind</li>
+        </ul>
+        <aside class="notes">
+          Explain ultrasonic sensing with emphasis on WA agricultural applications. Discuss strengths and limitations.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Radar Sensing in Agriculture</h2>
+        <ul>
+          <li>Time-of-Flight using radio-frequency electromagnetic waves</li>
+          <li>Longer range and better penetration through dust, fog, foam than ultrasonic</li>
+          <li><strong>Mature application:</strong> Non-contact radar level sensing in grain silos and storage tanks</li>
+          <li><strong>Emerging applications:</strong> Soil moisture profiling, canopy structure sensing</li>
+          <li>Can operate through cloud, dust, and smoke (unlike optical and LiDAR)</li>
+        </ul>
+        <aside class="notes">
+          Explain radar sensing with emphasis on agricultural applications. Introduce emerging research applications relevant to WA.
+        </aside>
+      </section>
+
+      <section>
+        <h2>From Single-Point Ranging to 3D: The Bridge to LiDAR</h2>
+        <ul>
+          <li>So far: measuring distance to single point or small number of points</li>
+          <li>Adequate for boom height or tank level</li>
+          <li>Scanning ToF laser rapidly across many angles builds a 3D "point cloud"</li>
+          <li><strong>This is LiDAR:</strong> A very fast, precisely-aimed ToF rangefinder repeated tens to hundreds of thousands of times per second</li>
+          <li>LiDAR is ToF's most information-rich application, not a separate technology</li>
+        </ul>
+        <aside class="notes">
+          Preview the conceptual link to LiDAR. Frame it as the logical extension of time-of-flight principles.
+        </aside>
+      </section>
+
+      <!-- PART 4 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 4: The Physics of Optical Sensing</h2>
+        <p>Spectroscopy Fundamentals</p>
+      </section>
+
+      <section>
+        <h2>Light Interacting with Matter</h2>
+        <ul>
+          <li><strong>Spectroscopy:</strong> Study of how light interacts with matter as a function of wavelength</li>
+          <li>Physical foundation for every optical sensor in this unit</li>
+          <li>Light striking material is absorbed, reflected, or transmitted in wavelength-dependent proportions</li>
+          <li><strong>Beer-Lambert relationship:</strong> Absorption increases with absorbing substance concentration and distance travelled through it</li>
+          <li>Underlies every spectroscopic calibration discussed later</li>
+        </ul>
+        <aside class="notes">
+          Introduce spectroscopy and establish it as the physical foundation for optical sensing. Explain the Beer-Lambert relationship at conceptual level.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Spectral Signatures: Material Fingerprints in Light</h2>
+        <ul>
+          <li><strong>Spectral signature:</strong> Characteristic pattern of absorption and reflection at different wavelengths</li>
+          <li>Determined by chemical bonds and molecular structure</li>
+          <li>Examples: Chlorophyll absorbs blue and red; water absorbs specific NIR and SWIR bands</li>
+          <li>Different soil minerals, organic matter, and grain proteins leave distinct absorption features</li>
+          <li>Allows inference of composition without direct chemical contact</li>
+        </ul>
+        <aside class="notes">
+          Explain spectral signatures as the conceptual basis for optical sensing applications. Provide concrete examples.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Multispectral vs Hyperspectral Sensing</h2>
+        <ul>
+          <li><strong>Multispectral:</strong> Few broad, well-separated bands; detects large spectral features economically</li>
+          <li>Blurs together finer absorption features</li>
+          <li><strong>Hyperspectral:</strong> Hundreds of narrow, contiguous bands; resolves subtle absorption features</li>
+          <li>Substantially higher cost, larger data volume, risk of overfitting</li>
+          <li>Choice reflects the spectral-resolution trade-off from Part 1</li>
+        </ul>
+        <aside class="notes">
+          Connect spectral resolution from Part 1 directly to sensor design choice. Explain practical implications of each approach.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Calibration: From Raw Spectrum to Meaningful Measurement</h2>
+        <ul>
+          <li><strong>Radiometric calibration:</strong> Corrects for sensor and illumination-specific effects</li>
+          <li>Converts raw sensor counts to true reflectance</li>
+          <li><strong>Chemometric calibration:</strong> Relates corrected spectral curve to property of interest</li>
+          <li>Uses reference set measured by trusted direct method (e.g., laboratory wet chemistry)</li>
+          <li><strong>Practical lesson:</strong> Accuracy only as good as calibration data set; may not transfer to different soil, crop, or season</li>
+        </ul>
+        <aside class="notes">
+          Explain why raw spectral measurement is not, by itself, useful. Discuss radiometric and chemometric calibration approaches.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Physics to Application: Soil and Vegetation Spectroscopy</h2>
+        <ul>
+          <li><strong>Soil spectroscopy (Part 6):</strong> Applies spectral signature and calibration principles to soil properties</li>
+          <li>Non-destructive estimation at far lower cost than wet-chemistry laboratory analysis</li>
+          <li><strong>Vegetation spectroscopy (Crop Spatial Variability chapter):</strong> Applies same physics to crop monitoring</li>
+          <li>Everything from Part 4 is the shared physical and statistical foundation</li>
+          <li>Developed separately for soil and crop targets</li>
+        </ul>
+        <aside class="notes">
+          Explicitly bridge physics to major application domains. Emphasize shared foundation while acknowledging separate development paths.
+        </aside>
+      </section>
+
+      <!-- PART 5 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 5: Radiative Transfer Models</h2>
+        <p>Simulating Light-Vegetation Interaction</p>
+      </section>
+
+      <section>
+        <h2>Radiative Transfer Models (RTMs): Simulating Light</h2>
+        <ul>
+          <li><strong>RTM:</strong> Physics-based simulation predicting reflectance from specified biophysical inputs</li>
+          <li><strong>Forward problem:</strong> Given leaf/canopy properties, predict reflectance</li>
+          <li><strong>Inverse problem:</strong> Given measured reflectance, estimate properties (addressed later)</li>
+          <li>Generates large, physically consistent training data sets spanning conditions impractical to measure</li>
+          <li>Tests sensitivity of spectral indices before deploying real sensors</li>
+          <li><strong>PROSAIL:</strong> Most widely used vegetation RTM (PROSPECT + SAIL)</li>
+        </ul>
+        <aside class="notes">
+          Introduce RTMs as physics-based simulations. Explain value of forward simulation capability. Introduce PROSAIL framework.
+        </aside>
+      </section>
+
+      <section>
+        <h2>PROSPECT: Leaf Optical Model</h2>
+        <ul>
+          <li>Treats leaf as layered optical system</li>
+          <li>Characterized by key absorbing constituents: chlorophyll, water, dry matter, carotenoids, anthocyanins</li>
+          <li>Calculates leaf reflectance and transmittance across full optical spectrum</li>
+          <li>Based on known absorption coefficients and internal leaf tissue scattering structure</li>
+          <li><strong>Value:</strong> Ask "what reflectance if only chlorophyll changed?" — impossible experimentally</li>
+        </ul>
+        <aside class="notes">
+          Explain PROSPECT leaf optical model in conceptual terms. Emphasize ability to isolate effects of individual properties.
+        </aside>
+      </section>
+
+      <section>
+        <h2>SAIL: Canopy Optical Model</h2>
+        <ul>
+          <li>Scales from leaf (PROSPECT) to canopy level</li>
+          <li>Treats canopy as layer of many leaves characterized by LAI and Leaf Angle Distribution</li>
+          <li>Simulates light scattering between leaf layers and soil background</li>
+          <li>Explicit treatment of viewing and illumination geometry</li>
+          <li>Reproduces bidirectional reflectance effects as direct output, not empirical correction</li>
+        </ul>
+        <aside class="notes">
+          Explain SAIL canopy model as the scaling step. Emphasize how it treats viewing geometry explicitly.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Forward Simulation and Inverse Retrieval</h2>
+        <ul>
+          <li><strong>Forward simulation:</strong> PROSAIL from known biophysical inputs to predicted reflectance</li>
+          <li><strong>Inverse retrieval:</strong> Given measured reflectance, search for PROSAIL inputs that produced it</li>
+          <li><strong>Fundamental difficulty:</strong> Multiple input combinations can produce similar reflectance</li>
+          <li><strong>Equifinality:</strong> Same observed spectrum, multiple plausible answers</li>
+          <li>Explains why spectral estimation always has inherent ambiguity</li>
+        </ul>
+        <aside class="notes">
+          Introduce inverse problem explicitly. Explain equifinality from first principles. This is foundational to understanding spectral index limitations.
+        </aside>
+      </section>
+
+      <!-- PART 6 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 6: Soil Spectroscopy and Digital Soil Mapping</h2>
+        <p></p>
+      </section>
+
+      <section>
+        <h2>Why Soil Has a Spectral Signature Too</h2>
+        <ul>
+          <li>Soil organic matter darkens reflectance broadly across visible spectrum</li>
+          <li>Clay minerals (kaolinite, smectite) produce absorption features in SWIR</li>
+          <li>Iron oxides (common in WA lateritic soils) produce characteristic visible and NIR features</li>
+          <li>Correlates with phosphorus-fixing behaviour</li>
+          <li><strong>Implication:</strong> Soil spectral curve carries genuine information about mineralogy, organic matter, texture</li>
+        </ul>
+        <aside class="notes">
+          Extend spectral signature concept to soil. Use WA-specific examples to ground the material.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Digital Soil Mapping (DSM)</h2>
+        <ul>
+          <li><strong>DSM:</strong> Predict soil properties continuously across landscape from limited point observations</li>
+          <li>Combines point measurements with spatially complete covariate layers</li>
+          <li>Covariates: terrain attributes (elevation, slope), electrical conductivity, satellite/aerial imagery</li>
+          <li><strong>Spectroscopy contributes two ways:</strong></li>
+          <li>1. Directly: spectrally predicts soil property at each sampled point (faster, cheaper than wet chemistry)</li>
+          <li>2. Indirectly: provides spectral covariate layers for statistical interpolation</li>
+        </ul>
+        <aside class="notes">
+          Define digital soil mapping. Explain how spectroscopy contributes to DSM workflows.
+        </aside>
+      </section>
+
+      <section>
+        <h2>NIR Benchtop Spectroscopy: Laboratory Workhorse</h2>
+        <ul>
+          <li>Most mature, widely deployed spectroscopic application in agriculture</li>
+          <li>Soil/grain/plant tissue sample scanned in laboratory instrument across NIR range</li>
+          <li>Spectrum converted to property estimate using chemometric calibration</li>
+          <li>Properties: soil organic carbon, clay content, grain protein/moisture</li>
+          <li><strong>Advantage:</strong> Seconds to minutes vs hours/days for wet chemistry, minimal sample prep</li>
+          <li><strong>Cost:</strong> Requires large, representative calibration data set</li>
+        </ul>
+        <aside class="notes">
+          Explain NIR benchtop spectroscopy. Discuss practical advantages and calibration requirements.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Field Soil Spectroscopy</h2>
+        <ul>
+          <li>Extends NIR spectroscopy from controlled laboratory to field environment</li>
+          <li><strong>Proximal:</strong> Mounts NIR sensor on vehicle or handheld probe</li>
+          <li>Scans soil directly in paddock (surface or via penetrating probe)</li>
+          <li><strong>Trade-offs:</strong> Trades precision and environmental control for dense, georeferenced data sets</li>
+          <li>Enables spatially continuous digital soil mapping (lab NIR alone produces point values only)</li>
+          <li>Affected by field moisture, temperature, ambient light</li>
+        </ul>
+        <aside class="notes">
+          Explain proximal soil spectroscopy and its role in enabling digital soil mapping at paddock scale.
+        </aside>
+      </section>
+
+      <section>
+        <h2>WA Application: Soil Spectroscopy for Carbon, Constraints, and Texture</h2>
+        <ul>
+          <li><strong>Soil organic carbon mapping:</strong> Supports productivity and carbon credit schemes</li>
+          <li>Cost-effective across WA's large broadacre holdings</li>
+          <li><strong>Texture and clay mapping:</strong> Supports toposequence interpretation, predicts CEC and P-fixing behaviour</li>
+          <li><strong>Subsoil constraint mapping:</strong> Sodicity, acidity, constraining layer depth</li>
+          <li>Informs targeted amendment decisions (lime, gypsum)</li>
+          <li><strong>Key insight:</strong> Makes paddock-scale soil chemistry affordable in WA</li>
+        </ul>
+        <aside class="notes">
+          Ground soil spectroscopy in concrete WA-relevant applications. Frame as enabling technology for paddock-scale soil management.
+        </aside>
+      </section>
+
+      <!-- PART 7 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 7: Computer Vision for Weed Management</h2>
+        <p></p>
+      </section>
+
+      <section>
+        <h2>Two Philosophies of Weed Detection</h2>
+        <ul>
+          <li><strong>Green-on-brown:</strong> Detecting green plant against bare soil, dead vegetation, or stubble</li>
+          <li>Scenario: chemical fallow or pre-emergent paddock with no living crop</li>
+          <li>Any green signal = weed by definition</li>
+          <li><strong>Green-on-green:</strong> Detecting weed among live, green crop plants of similar colour</li>
+          <li>Scenario: established, growing crop</li>
+          <li>Colour alone cannot distinguish weed from crop</li>
+          <li>Require entirely different sensing approaches</li>
+        </ul>
+        <aside class="notes">
+          Introduce the two fundamentally different weed-detection problems. Establish that they require entirely different solutions.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Green-on-Brown: Colour-Based Discrimination</h2>
+        <ul>
+          <li>Comparatively simple optical sensing problem solvable with reflectance contrast</li>
+          <li>Measure reflectance in red and near-infrared (vegetation index basis)</li>
+          <li>Reliably distinguish live green vegetation from bare soil or dead plant material</li>
+          <li>No need to identify specific weed species</li>
+          <li><strong>Commercial deployment:</strong> Spot-spray systems on boom sprayers</li>
+          <li>Each nozzle triggered only where green-vegetation signal detected</li>
+          <li>WA application: chemical fallow and summer weed control programs</li>
+          <li>Weed cover typically << full paddock area, substantial herbicide cost saving</li>
+        </ul>
+        <aside class="notes">
+          Explain green-on-brown detection. Emphasize simplicity and cost effectiveness for WA applications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Green-on-Green: Computer Vision and Deep Learning</h2>
+        <ul>
+          <li>Fundamentally more sophisticated approach required</li>
+          <li>Weed and crop both green, both strongly reflect NIR light</li>
+          <li>Reflectance-based discrimination provides essentially no useful signal</li>
+          <li><strong>Modern approach:</strong> Computer vision and deep learning (convolutional neural networks)</li>
+          <li>Trained on large, labelled image data sets</li>
+          <li>Learns subtler visual cues: leaf shape, texture, growth habit, spatial arrangement</li>
+          <li><strong>Challenges:</strong> Computationally demanding, requires real-time inference, crop/weed-specific training needed</li>
+        </ul>
+        <aside class="notes">
+          Explain why green-on-green requires deep learning. Discuss computational and training requirements.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Targeted Spot-Spraying: Economics and Resistance Management</h2>
+        <ul>
+          <li>Sensor signal must trigger individual nozzle/section with fast response latency</li>
+          <li><strong>Economic case (WA):</strong> Chemical fallow paddocks with &lt;50% weed cover</li>
+          <li>50–90% herbicide volume reductions compared to blanket spraying</li>
+          <li>Payback within 1–3 seasons on broadacre WA operation</li>
+          <li><strong>Herbicide resistance management:</strong> Targeted full-rate application vs blanket sub-lethal exposure</li>
+          <li>Reduces selection pressure driving resistance evolution</li>
+        </ul>
+        <aside class="notes">
+          Connect weed detection to actuation and management outcomes. Quantify economic case and resistance management benefits.
+        </aside>
+      </section>
+
+      <!-- PART 8 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 8: Thermal Sensing</h2>
+        <p></p>
+      </section>
+
+      <section>
+        <h2>The Physics of Thermal Sensing</h2>
+        <ul>
+          <li><strong>Thermal sensing:</strong> Passive modality measuring emitted infrared radiation</li>
+          <li>Converts to surface temperature estimate via temperature-radiation relationship</li>
+          <li><strong>Key physiological link:</strong> Well-watered, transpiring leaf cools through evaporative latent heat</li>
+          <li>Typically runs several degrees cooler than air temperature</li>
+          <li><strong>Water stress:</strong> Closes stomata, reduces evaporative cooling, canopy temperature rises</li>
+          <li>Single mechanism underlies all thermal sensing applications in this Part</li>
+        </ul>
+        <aside class="notes">
+          Explain thermal sensing as passive infrared measurement. Establish the physiological basis for agronomic interpretation.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Thermal Imaging for Plant Water Status and Irrigation</h2>
+        <ul>
+          <li><strong>Crop Water Stress Index (CWSI):</strong> Standard derived metric</li>
+          <li>Normalizes canopy temperature against fully-watered and fully-stressed references</li>
+          <li>More robust to changing ambient conditions than raw canopy temperature</li>
+          <li><strong>Application:</strong> Handheld sensors, UAV thermal cameras, fixed in-field thermal sensors</li>
+          <li>Detect water stress onset before visible wilting</li>
+          <li>Map spatial pattern of water stress across field</li>
+          <li><strong>Relevant to WA:</strong> Irrigated horticultural and pasture systems (clearer payoff than dryland broadacre)</li>
+        </ul>
+        <aside class="notes">
+          Develop water-status application from physiology. Explain CWSI metric and WA-relevant applications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Thermal Sensing in Crop Breeding</h2>
+        <ul>
+          <li><strong>Research and breeding application:</strong> Screening for drought/heat tolerance at scale</li>
+          <li>Manual physiological measurement (leaf gas exchange, water potential) is too slow</li>
+          <li><strong>UAV thermal cameras:</strong> Flown across breeding trial in single flight</li>
+          <li>Provides canopy temperature value for every plot simultaneously</li>
+          <li>Allows ranking of genotypes by stomatal regulation and water-use behaviour</li>
+          <li><strong>High-throughput phenotyping:</strong> Relevant to WA wheat and canola breeding for terminal drought</li>
+        </ul>
+        <aside class="notes">
+          Explain crop breeding application as high-throughput phenotyping. Connect to WA breeding goals for drought tolerance.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Thermal Sensing Beyond Water Status</h2>
+        <ul>
+          <li><strong>Frost risk and damage assessment:</strong> Detects characteristic frost-affected temperature signature</li>
+          <li>Maps topographically controlled cold-air drainage pattern</li>
+          <li>Visualizes frost risk concentration before damage occurs</li>
+          <li><strong>Disease and pest detection:</strong> Some alter canopy transpiration and temperature before visible symptoms</li>
+          <li>Offers early warning layer (with caution about equifinality)</li>
+          <li>Complements spectral and visual detection methods</li>
+        </ul>
+        <aside class="notes">
+          Extend thermal sensing beyond water status. Emphasize need for ground-truthing due to equifinality.
+        </aside>
+      </section>
+
+      <!-- PART 9 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 9: LiDAR and 3D Structural Sensing</h2>
+        <p></p>
+      </section>
+
+      <section>
+        <h2>LiDAR: Time-of-Flight at Laser Speed</h2>
+        <ul>
+          <li>LiDAR (Light Detection and Ranging) = ToF principle with laser, scanned rapidly across many angles</li>
+          <li>Emits tens to hundreds of thousands of laser pulses per second</li>
+          <li>Precisely times return of each pulse to calculate distance</li>
+          <li>Records angle at which each pulse was emitted</li>
+          <li>Combined with GNSS/IMU position and orientation</li>
+          <li>Builds dense 3D point cloud (potentially millions of points per hectare)</li>
+        </ul>
+        <aside class="notes">
+          Connect directly back to Part 3. Explain LiDAR as rapid scanning time-of-flight implementation.
+        </aside>
+      </section>
+
+      <section>
+        <h2>LiDAR for Digital Terrain Models</h2>
+        <ul>
+          <li>Most mature LiDAR application in agriculture: high-accuracy Digital Terrain Models (DTMs)</li>
+          <li>Single LiDAR pulse produces multiple returns through vegetation canopy gaps</li>
+          <li>Bare-earth filtering algorithms separate "last return" (ground) from "first return" (canopy)</li>
+          <li>Reconstructs accurate terrain surface even beneath substantial vegetation</li>
+          <li><strong>Advantage vs optical imagery:</strong> Works through vegetation cover</li>
+          <li>Supports terrain-driven spatial pattern analysis: frost drainage basins, waterlogging zones, erosion paths</li>
+        </ul>
+        <aside class="notes">
+          Explain most mature LiDAR application. Emphasize advantage over passive optical for terrain mapping.
+        </aside>
+      </section>
+
+      <section>
+        <h2>LiDAR for Crop Height and Canopy Structure</h2>
+        <ul>
+          <li>Extends LiDAR from bare-earth to vegetation analysis</li>
+          <li>Retain and analyse canopy returns (don't filter them out)</li>
+          <li><strong>Crop height:</strong> Vertical difference between canopy-return and bare-earth points</li>
+          <li><strong>Canopy structure metrics:</strong> Density at different height layers, gaps, row geometry</li>
+          <li>3D detail exceeds 2D optical imagery projection of canopy surface</li>
+          <li>Provides direct structural measurement where optical vegetation indices only offer indirect spectral proxy</li>
+        </ul>
+        <aside class="notes">
+          Explain LiDAR application to vegetation. Emphasize 3D measurement advantages over 2D optical approaches.
+        </aside>
+      </section>
+
+      <section>
+        <h2>LiDAR-Based Biomass Estimation</h2>
+        <ul>
+          <li>Calibrate statistical relationship between LiDAR-derived metrics and destructively-harvested biomass</li>
+          <li>Parallels calibration logic from spectroscopy (Part 4)</li>
+          <li><strong>LiDAR strength:</strong> Measures structure directly, not inferring from reflected light</li>
+          <li>Far less susceptible to soil-background and saturation confounds limiting spectral estimation</li>
+          <li><strong>LiDAR limitations:</strong> Substantially more expensive than multispectral camera</li>
+          <li>Computationally demanding point cloud processing</li>
+          <li>Accuracy only as good as reference biomass samples used for calibration</li>
+        </ul>
+        <aside class="notes">
+          Explain LiDAR biomass estimation. Discuss genuine strengths relative to spectral methods and practical limitations.
+        </aside>
+      </section>
+
+      <!-- PART 10 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 10: Mechanical and Force Sensors</h2>
+        <p></p>
+      </section>
+
+      <section>
+        <h2>Downforce Sensors: Measuring Seeder Force</h2>
+        <ul>
+          <li>Sensing modality outside optical and ranging families</li>
+          <li>Measures mechanical force (load cell or hydraulic pressure transducer)</li>
+          <li><strong>Mounted on seeder opener linkage:</strong> Measures actual force applied to soil in real time</li>
+          <li>Addresses key problem: Force needed for consistent seed depth changes with soil conditions</li>
+          <li>Gravel rise → sandy slope → clay valley within single pass</li>
+          <li><strong>Sensor-fed control:</strong> Automatically adjusts downforce row-by-row in real time</li>
+          <li>Fixed mechanical settings cannot achieve this</li>
+        </ul>
+        <aside class="notes">
+          Introduce downforce sensors as mechanical sensing modality. Explain problem they solve for seeding.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Downforce Matters: Seed-to-Soil Contact Loop</h2>
+        <ul>
+          <li>Seed-to-soil contact = critical, largely invisible variable for germination</li>
+          <li><strong>Insufficient downforce:</strong> Seed in open furrow, poor soil contact, air pockets</li>
+          <li><strong>Excessive downforce:</strong> Smearing and compaction restrict root development</li>
+          <li><strong>Automatic sensor-fed control:</strong> Closes loop in real time, row-by-row</li>
+          <li>Reduces mechanically-driven component of establishment-stage spatial variability</li>
+          <li>Fixed mechanical settings set for assumed "average" condition cannot achieve this</li>
+        </ul>
+        <aside class="notes">
+          Connect downforce sensing to establishment physiology. Explain how it closes the seed-to-soil contact loop.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Other Mechanical and Force Sensors</h2>
+        <ul>
+          <li><strong>Draft force sensors:</strong> Measure pulling force through implement</li>
+          <li>Tillage resistance mapping (direct detection of compacted zones, hard-pans)</li>
+          <li>Tractor performance and fuel-efficiency monitoring</li>
+          <li><strong>Soil penetrometers/cone penetrometers:</strong> Measure soil mechanical resistance with depth</li>
+          <li>Identify compaction layers and hard-pans</li>
+          <li>Pairs naturally with Controlled Traffic Farming verification</li>
+          <li>Standard ground-truthing method for CTF compaction-reduction benefits</li>
+        </ul>
+        <aside class="notes">
+          Survey broader family of mechanical and force sensors. Emphasize application to CTF and soil compaction assessment.
+        </aside>
+      </section>
+
+      <!-- PART 11 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 11: Selecting and Combining Sensors</h2>
+        <p>Synthesis</p>
+      </section>
+
+      <section>
+        <h2>Weather Stations: The Underpinning Sensor Network</h2>
+        <ul>
+          <li><strong>Essential sensor category:</strong> Underlies nearly every other decision in this unit</li>
+          <li><strong>Standard station components:</strong> Temperature, humidity, wind speed/direction, solar radiation, rainfall</li>
+          <li><strong>Derived product 1 - Reference evapotranspiration:</strong> Estimates atmospheric water demand</li>
+          <li>Basis for irrigation scheduling in WA irrigated horticulture and pasture</li>
+          <li><strong>Derived product 2 - Growth-degree-days:</strong> Thermal-time framework for Zadoks growth staging</li>
+          <li>Depends on continuous, reliable temperature data</li>
+          <li>Frame as the sensor network enabling every thermal-time and water-balance calculation elsewhere</li>
+        </ul>
+        <aside class="notes">
+          Introduce weather station as essential sensor category. Explain derived products and role in enabling other decisions.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Selecting Sensors: A Practical Decision Framework</h2>
+        <ul>
+          <li><strong>Start from the decision, not the sensor:</strong> What management action will this inform?</li>
+          <li>What accuracy and timeliness does that action require?</li>
+          <li><strong>Resolution trade-offs (Part 1):</strong> Which matters most: spectral detail, spatial detail, frequent revisit?</li>
+          <li><strong>Active/passive trade-off (Part 2):</strong> Need operation independent of ambient light/weather?</li>
+          <li><strong>Platform trade-off:</strong> Area to cover and operator effort favour proximal, UAV, aerial, or satellite?</li>
+          <li><strong>Calibration question (Part 4):</strong> Is there reliable, relevant calibration for this soil, crop, season?</li>
+        </ul>
+        <aside class="notes">
+          Consolidate entire lecture into practical selection framework. Emphasize starting from decision, not sensor.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Common Sensor Selection Mistakes</h2>
+        <ul>
+          <li><strong>Pitfall 1:</strong> Choose sensor based on headline resolution without checking temporal resolution matches how fast condition develops</li>
+          <li><strong>Pitfall 2:</strong> Deploy passive optical sensor in conditions (cloud, low sun, dust) where accuracy was never validated</li>
+          <li><strong>Pitfall 3:</strong> Apply spectroscopic/computer-vision calibration from one soil/crop/weed flora to another without retraining</li>
+          <li><strong>Pitfall 4:</strong> Treat single sensor reading as fact, forgetting indirect-measurement principle</li>
+          <li>Miss the ground-truthing step that every chapter emphasizes</li>
+        </ul>
+        <aside class="notes">
+          Provide practical pitfalls list drawn from principles developed across lecture. Emphasize common mistakes.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Bringing It Together: Sensors as the Foundation</h2>
+        <ul>
+          <li><strong>Unifying synthesis:</strong> Every precision agriculture technology depends on a sensor converting physical property into usable signal</li>
+          <li><strong>Sensing modalities covered:</strong> Ranging sensors, optical/spectroscopic, computer vision, thermal, LiDAR, mechanical force</li>
+          <li>Not independent technologies, but variations on shared physical principles:</li>
+          <li>— Time-of-flight</li>
+          <li>— Spectral signature and calibration</li>
+          <li>— Active vs passive energy use</li>
+          <li>— Resolution trade-offs governing every platform choice</li>
+          <li><strong>Recurring themes:</strong> Indirect measurement, ground-truthing</li>
+          <li>These same sensing principles apply throughout the remaining chapters</li>
+        </ul>
+        <aside class="notes">
+          Close lecture with unifying synthesis. Reiterate foundational themes and connect forward to remaining unit content.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- RevealJS Library Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/math/math.min.js"></script>
+  
+  <!-- Mermaid Engine & RevealJS Initialization -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    
+    // Initialize Mermaid with custom UWA palette parameters
+    mermaid.initialize({
+      securityLevel: 'loose',
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true
+      }
+    });
+
+    // RevealJS System Initialization with proper plugin references
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'slide',
+      backgroundTransition: 'fade',
+      controls: true,
+      progress: true,
+      center: true,
+      touch: true,
+      overview: true,
+      keyboard: true,
+      plugins: [ window.RevealNotes, window.RevealMath.KaTeX ]
+    });
+
+    // Enable speaker notes for both presentation and speaker view
+    Reveal.on('ready', () => {
+      console.log('RevealJS initialized successfully with speaker notes enabled');
+    });
+  </script>
+</body>
+</html>

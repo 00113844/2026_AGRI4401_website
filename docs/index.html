@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGRI4401 · Precision Agriculture · 2026</title>
+  <link rel="stylesheet" href="assets/css/AGRI4401_PrecisionAg.css">
+  <style>
+    :root {
+      --uwa-blue: #27348B;
+      --uwa-gold: #E2B600;
+      --uwa-navy: #002147;
+      --uwa-light-grey: #F5F5F5;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, var(--uwa-navy) 0%, var(--uwa-blue) 100%);
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 4rem 2rem 2rem 2rem;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin: 0;
+      color: var(--uwa-gold);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .subtitle {
+      font-size: 1.3em;
+      color: var(--uwa-light-grey);
+      margin-top: 0.5rem;
+    }
+
+    .lectures-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem 4rem 2rem;
+    }
+
+    .lecture-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: white;
+      display: block;
+    }
+
+    .lecture-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--uwa-gold);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .lecture-number {
+      font-size: 0.9em;
+      color: var(--uwa-gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .lecture-title {
+      font-size: 1.3em;
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--uwa-light-grey);
+      font-size: 0.9em;
+    }
+
+    footer a {
+      color: var(--uwa-gold);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AGRI4401 Precision Agriculture</h1>
+    <p class="subtitle">School of Agriculture and Environment · UWA · 2026</p>
+  </header>
+
+  <main class="lectures-grid">
+    <a href="presentations/lecture_01.html" class="lecture-card">
+      <div class="lecture-number">Lecture 01</div>
+      <div class="lecture-title">Introduction to Precision Agriculture</div>
+    </a>
+
+    <a href="presentations/lecture_02.html" class="lecture-card">
+      <div class="lecture-number">Lecture 02</div>
+      <div class="lecture-title">Agricultural Technologies</div>
+    </a>
+
+    <a href="presentations/lecture_04.html" class="lecture-card">
+      <div class="lecture-number">Lecture 04</div>
+      <div class="lecture-title">Sensing Technologies</div>
+    </a>
+
+    <a href="presentations/lecture_05.html" class="lecture-card">
+      <div class="lecture-number">Lecture 05</div>
+      <div class="lecture-title">Soil and Water Spatial Variability</div>
+    </a>
+
+    <a href="presentations/lecture_06.html" class="lecture-card">
+      <div class="lecture-number">Lecture 06</div>
+      <div class="lecture-title">Spatial Data Analysis</div>
+    </a>
+
+    <a href="presentations/lecture_07.html" class="lecture-card">
+      <div class="lecture-number">Lecture 07</div>
+      <div class="lecture-title">Crop Spatial Variability</div>
+    </a>
+
+    <a href="presentations/lecture_08.html" class="lecture-card">
+      <div class="lecture-number">Lecture 08</div>
+      <div class="lecture-title">Data Analysis</div>
+    </a>
+
+    <a href="presentations/lecture_10.html" class="lecture-card">
+      <div class="lecture-number">Lecture 10</div>
+      <div class="lecture-title">Crop Growth Models: From Physiology to APSIM</div>
+    </a>
+
+    <a href="presentations/lecture_11.html" class="lecture-card">
+      <div class="lecture-number">Lecture 11</div>
+      <div class="lecture-title">Telematics and Connected Farm Systems</div>
+    </a>
+
+    <a href="presentations/lecture_15.html" class="lecture-card">
+      <div class="lecture-number">Lecture 15</div>
+      <div class="lecture-title">Satellite Systems in Agriculture</div>
+    </a>
+  </main>
+
+  <footer>
+    <p>
+      <strong>Gustavo Alckmin</strong><br>
+      School of Agriculture and Environment, UWA<br>
+      <a href="https://github.com/00113844/2026_AGRI4401_website">View on GitHub</a>
+    </p>
+  </footer>
+</body>
+</html>

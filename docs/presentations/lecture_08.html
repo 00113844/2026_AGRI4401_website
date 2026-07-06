@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>L08 - Data Analysis with LLMs | AGRI4401 Precision Agriculture</title>
+  
+  <!-- RevealJS Core CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+  
+  <style>
+    /* ====================== UWA BRANDING ====================== */
+    :root {
+      --uwa-blue: #27348B;
+      --uwa-gold: #E2B600;
+      --uwa-dark: #002147;
+      --text-primary: #333333;
+      --text-light: #666666;
+      --background: #FFFFFF;
+    }
+
+    /* ====================== BASE TYPOGRAPHY ====================== */
+    .reveal {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 32px;
+      color: var(--text-primary);
+      background: var(--background);
+    }
+    
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-weight: 700;
+      color: var(--uwa-blue);
+      text-transform: none;
+      margin-bottom: 0.5em;
+    }
+    
+    .reveal h1 { font-size: 2.2em; line-height: 1.1; }
+    .reveal h2 { font-size: 1.6em; line-height: 1.2; margin-top: 0.2em; }
+    .reveal h3 { font-size: 1.3em; }
+    .reveal h4 { font-size: 1.1em; }
+
+    /* ====================== TITLE SLIDE ====================== */
+    .reveal .center-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+    }
+    
+    .reveal .center-content h1 {
+      color: #FFFFFF;
+      margin-bottom: 0.3em;
+    }
+    
+    .reveal .subtitle {
+      font-size: 0.85em;
+      color: var(--uwa-gold);
+      margin-top: 0.5em;
+      font-weight: 500;
+    }
+    
+    .reveal .institute {
+      font-size: 0.65em;
+      color: rgba(255,255,255,0.85);
+      margin-top: 1.5em;
+      line-height: 1.6;
+    }
+
+    /* ====================== CONTENT SLIDES ====================== */
+    .reveal .slides section {
+      text-align: left;
+      padding: 1.5em;
+      height: 100%;
+    }
+    
+    .reveal ul {
+      margin: 0.5em 0 0.8em 1.2em;
+      list-style: disc outside;
+    }
+    
+    .reveal ol {
+      margin: 0.5em 0 0.8em 1.2em;
+      list-style: decimal outside;
+    }
+    
+    .reveal li {
+      margin-bottom: 0.4em;
+      line-height: 1.4;
+      font-size: 0.9em;
+    }
+    
+    .reveal li::marker {
+      color: var(--uwa-blue);
+    }
+    
+    .reveal strong {
+      color: var(--uwa-blue);
+      font-weight: 600;
+    }
+    
+    .reveal em {
+      color: var(--text-light);
+      font-style: italic;
+    }
+    
+    .reveal code {
+      background: #F5F5F5;
+      padding: 0.15em 0.4em;
+      border-radius: 3px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85em;
+      color: #C7254E;
+    }
+    
+    .reveal pre {
+      background: #F8F8F8;
+      border-left: 4px solid var(--uwa-blue);
+      padding: 1em;
+      margin: 1em 0;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .reveal pre code {
+      background: transparent;
+      padding: 0;
+      color: #333;
+      font-size: 0.75em;
+      line-height: 1.5;
+    }
+
+    /* ====================== LINKS ====================== */
+    .reveal a {
+      color: var(--uwa-blue);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .reveal a:hover {
+      color: var(--uwa-gold);
+      border-bottom-color: var(--uwa-gold);
+    }
+
+    /* ====================== VIDEO THUMBNAILS ====================== */
+    .video-container {
+      text-align: center;
+      margin: 1.5em auto;
+    }
+    
+    .video-container a {
+      display: inline-block;
+      border: none;
+    }
+    
+    .video-container img {
+      width: 70%;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .video-container img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+    
+    .video-caption {
+      margin-top: 1em;
+      font-size: 0.85em;
+      color: var(--text-light);
+    }
+
+    /* ====================== UTILITY CLASSES ====================== */
+    .smaller { font-size: 0.85em; }
+    .emphasis { 
+      color: var(--uwa-blue);
+      font-weight: 600;
+    }
+    .highlight {
+      background: #FFF9E6;
+      padding: 0.2em 0.4em;
+      border-left: 3px solid var(--uwa-gold);
+    }
+
+    /* ====================== SECTION DIVIDERS ====================== */
+    .reveal section[data-background="#27348B"] h1,
+    .reveal section[data-background="#27348B"] h2,
+    .reveal section[data-background="#002147"] h1,
+    .reveal section[data-background="#002147"] h2 {
+      color: #FFFFFF;
+    }
+    
+    .reveal section[data-background="#27348B"] p,
+    .reveal section[data-background="#002147"] p {
+      color: rgba(255,255,255,0.9);
+    }
+
+    /* ====================== RESPONSIVE ADJUSTMENTS ====================== */
+    @media (max-width: 768px) {
+      .reveal { font-size: 24px; }
+      .reveal h2 { font-size: 1.4em; }
+      .video-container img { width: 90%; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE SLIDE -->
+      <section data-background-color="#27348B" class="center-content">
+        <h1>Data Analysis with Large Language Models</h1>
+        <p class="subtitle">Lecture 08 | AGRI4401 Precision Agriculture</p>
+        <p class="institute">School of Agriculture and Environment<br>The University of Western Australia</p>
+      </section>
+
+      <!-- AGENDA -->
+      <section>
+        <h2>Agenda</h2>
+        <ul>
+          <li>Using LLMs to accelerate data analysis workflows</li>
+          <li>GitHub Copilot in RStudio setup and usage</li>
+          <li>Setting up API keys for cloud LLMs (Google Gemini)</li>
+          <li>Ellmer package for interactive LLM assistance in R</li>
+          <li>Integration tips and best practices</li>
+        </ul>
+        
+        <aside class="notes">
+          Today's session focuses on practical tools that leverage Large Language Models (LLMs) to accelerate your data analysis work in R. We'll cover two primary approaches:
+          
+          APPROACH 1 — GitHub Copilot: An AI pair programmer that provides real-time code suggestions as you type in RStudio, helping write functions, generate boilerplate code, and answer questions through comments.
+          
+          APPROACH 2 — Ellmer + Google Gemini: An interactive chat interface within RStudio that allows you to ask questions about your code, request specific snippets, and get explanations for complex analysis tasks.
+          
+          Both tools complement each other: Copilot excels at inline autocomplete and quick suggestions, while Ellmer handles more complex conversational queries and explanations.
+          
+          We'll walk through complete setup procedures including API key management, demonstrate practical usage patterns, and establish best practices for incorporating LLM assistance into your precision agriculture data analysis workflow without compromising code quality or understanding.
+        </aside>
+      </section>
+
+      <!-- INTRODUCTION TO COPILOT -->
+      <section>
+        <h2>Introduction to GitHub Copilot in RStudio</h2>
+        <ul>
+          <li><strong>What it is:</strong> AI pair programmer for real-time code assistance</li>
+          <li><strong>How it works:</strong> Suggests code completions as you type</li>
+          <li><strong>Powered by:</strong> OpenAI Codex (trained on public code repositories)</li>
+          <li><strong>Student access:</strong> Free via GitHub Education</li>
+          <li><strong>Key benefit:</strong> Accelerates coding, reduces syntax errors</li>
+        </ul>
+        <p class="smaller"><strong>Sign up:</strong> <a href="https://docs.github.com/en/education/about-github-education/github-education-for-students/apply-to-github-education-as-a-student" target="_blank">GitHub Education for Students</a></p>
+        
+        <aside class="notes">
+          GitHub Copilot represents a new paradigm in programming assistance: instead of searching documentation or Stack Overflow, you describe what you want in comments or start typing code, and Copilot suggests completions in real-time.
+          
+          POWERED BY: OpenAI Codex, a descendant of GPT-3 specifically trained on billions of lines of public source code from GitHub repositories. This training enables Copilot to understand programming patterns across languages including R, Python, and JavaScript.
+          
+          HOW IT WORKS IN PRACTICE: As you type in RStudio, Copilot analyzes your current file context (existing code, comments, variable names) and generates suggestions displayed as "ghost text" that you can accept with Tab key or reject and continue typing. Suggestions are context-aware: if you're writing a function to calculate mean yield, Copilot understands agricultural context from surrounding code and variable names.
+          
+          STUDENT ACCESS: GitHub offers Copilot free to verified students through GitHub Education program. You'll need to link your UWA email to GitHub account and verify student status. This normally costs $10/month for individuals but is included in your student benefits.
+          
+          KEY BENEFIT FOR AGRI4401: When analyzing precision agriculture datasets (yield maps, sensor data, spatial statistics), Copilot accelerates exploratory analysis by suggesting appropriate dplyr pipelines, ggplot2 visualizations, and statistical tests based on your data structure and comments describing intent.
+          
+          IMPORTANT CAVEAT: Copilot suggests code based on patterns, not understanding. You must review and verify all suggestions against your specific requirements and data characteristics. Treat it as an experienced assistant, not an infallible oracle.
+        </aside>
+      </section>
+
+      <!-- INSTALLATION STEPS -->
+      <section>
+        <h2>Installing GitHub Copilot in RStudio</h2>
+        <ol>
+          <li><strong>Prerequisites:</strong> Active GitHub Copilot subscription (free for students)</li>
+          <li><strong>RStudio setup:</strong> Tools → Global Options → Copilot tab</li>
+          <li><strong>Enable:</strong> Tick "Enable GitHub Copilot"</li>
+          <li><strong>Install agent:</strong> Click Install if prompted (downloads Copilot components)</li>
+          <li><strong>Sign in:</strong> Click Sign In button</li>
+          <li><strong>Authenticate:</strong> Copy verification code → paste on GitHub verification page</li>
+          <li><strong>Finalize:</strong> Restart RStudio to complete setup</li>
+        </ol>
+        <p class="smaller emphasis">Complete setup docs: <a href="https://docs.posit.co/ide/user/ide/guide/tools/copilot.html" target="_blank">RStudio Copilot Setup</a></p>
+        
+        <aside class="notes">
+          Installation is straightforward but requires several authentication steps to link your RStudio instance to your GitHub account.
+          
+          PREREQUISITES CHECK: Before starting, verify you have GitHub Copilot access by logging into github.com and checking Settings → Copilot. If you see "GitHub Copilot is active for your account," you're ready. If not, apply for GitHub Education student benefits first (takes 1-3 days for approval).
+          
+          STEP 2 DETAIL — RStudio Setup: In RStudio, navigate to Tools menu (top menu bar) → Global Options (opens preferences dialog) → look for Copilot tab in left sidebar. If you don't see Copilot tab, update RStudio to latest version (Help → Check for Updates).
+          
+          STEP 3-4 — Installation: Ticking "Enable GitHub Copilot" activates the feature. If this is your first time, RStudio will prompt to download Copilot Agent (approximately 50 MB download). This component runs locally and communicates with GitHub's cloud service.
+          
+          STEP 5-6 — AUTHENTICATION: Clicking Sign In generates a unique verification code (8-character alphanumeric). You must copy this code, then RStudio opens your default browser to GitHub device activation page. Paste the code there and authorize "RStudio Copilot" to access your GitHub account. This links your IDE session to your Copilot subscription.
+          
+          STEP 7 — RESTART: After authentication succeeds, restart RStudio (File → Quit Session, then reopen). Copilot is now active and will begin suggesting code completions as you type.
+          
+          TROUBLESHOOTING: If Copilot doesn't appear to work after restart, check bottom-right status bar in RStudio for Copilot icon. Click it to verify connection status. Common issues: firewall blocking GitHub communication, or subscription not properly activated.
+        </aside>
+      </section>
+
+      <!-- USING COPILOT -->
+      <section>
+        <h2>Using GitHub Copilot: Workflow & Features</h2>
+        <ul>
+          <li><strong>Ghost text:</strong> Suggestions appear as greyed-out completions</li>
+          <li><strong>Accept:</strong> Press <code>Tab</code> to accept suggestion</li>
+          <li><strong>Cycle:</strong> Arrow keys to see alternative suggestions</li>
+          <li><strong>Reject:</strong> Keep typing to ignore and override</li>
+          <li><strong>Comment-driven:</strong> Write what you want in comments, Copilot generates code</li>
+        </ul>
+        
+        <pre><code class="language-r"># Calculate mean yield by management zone
+calculate_zone_means <- function(yield_data) {
+  # Copilot suggests: yield_data %>% group_by(zone) %>% 
+  #                   summarize(mean_yield = mean(yield, na.rm = TRUE))
+}</code></pre>
+        
+        <aside class="notes">
+          Copilot's "ghost text" interface feels magical when it works well but requires understanding how to guide it effectively.
+          
+          GHOST TEXT MECHANICS: As you type, Copilot analyzes context and generates suggestions displayed in light grey text extending from your cursor. This happens INSTANTLY as you type — no explicit invocation required. If suggestion looks correct, pressing Tab accepts it entirely. If partially correct, accept then edit. If wrong, ignore and keep typing.
+          
+          CYCLING ALTERNATIVES: Copilot typically generates multiple suggestion candidates. Use Alt+] (next suggestion) or Alt+[ (previous suggestion) to cycle through alternatives without accepting. This is useful when first suggestion is close but not quite right — often the second or third option is better.
+          
+          COMMENT-DRIVEN DEVELOPMENT: Copilot's most powerful feature is translating comments into code. Example workflow for yield analysis:
+          
+          1. Write comment: "# Load yield data and filter outliers beyond 3 standard deviations"
+          2. Press Enter → Copilot suggests complete code block loading CSV, calculating SD, applying filter
+          3. Review suggestion (verify column names match your data)
+          4. Accept with Tab or modify as needed
+          
+          This works because Copilot recognizes common agricultural data patterns from its training on public code, including precision agriculture repositories.
+          
+          COPILOT AS LEARNING TOOL: When Copilot suggests unfamiliar syntax (e.g., you've never used tidyr::pivot_wider), this is learning opportunity. Accept the suggestion, run it, observe output, then look up documentation to understand WHY it works. Over time, you internalize these patterns and become less dependent on suggestions.
+          
+          WHEN COPILOT STRUGGLES: Suggestions are weakest with: (1) novel or domain-specific algorithms not widely published, (2) code requiring deep understanding of data structure Copilot can't infer from context, (3) complex multi-step analyses where intermediate variables aren't clearly named. In these cases, break problem into smaller steps with explicit comments guiding each step.
+        </aside>
+      </section>
+
+      <!-- VIDEO: COPILOT DEMO -->
+      <section>
+        <h2>GitHub Copilot Demo Video</h2>
+        <div class="video-container">
+          <a href="https://www.youtube.com/watch?v=vgSOIMj6a8k" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.youtube.com/vi/vgSOIMj6a8k/maxresdefault.jpg" alt="GitHub Copilot in RStudio demonstration">
+          </a>
+          <p class="video-caption">Click the image to watch the demonstration on YouTube (5 min)</p>
+        </div>
+        
+        <aside class="notes">
+          This video demonstrates Copilot's practical usage in RStudio with real agricultural data analysis scenarios.
+          
+          VIDEO COVERS: (1) Setting up a new R script for yield data analysis, (2) using comments to generate dplyr data transformation pipelines, (3) creating ggplot2 visualizations with minimal typing, (4) debugging errors with Copilot's assistance, (5) asking questions through comment syntax.
+          
+          KEY MOMENTS TO WATCH: Around 2:15, presenter writes comment "# Create spatial yield map with viridis color scale" and Copilot generates complete ggplot code including geom_tile, coord_equal, and scale_fill_viridis. This shows how Copilot understands agricultural spatial data conventions.
+          
+          Around 3:40, presenter demonstrates error correction: after getting error about missing column, writes comment "# q: Why am I getting 'object not found' error?" and Copilot suggests checking spelling and filter conditions.
+          
+          PRACTICAL TAKEAWAY: Video shows realistic workflow including mistakes and corrections, not just perfect code generation. This is important — Copilot accelerates coding but doesn't eliminate need for debugging skills and data understanding.
+          
+          After watching, try replicating these techniques with your own AGRI4401 datasets (yield data from LMS). Start with simple comment-driven function generation, then progress to more complex multi-step analyses.
+        </aside>
+      </section>
+
+      <!-- ASKING QUESTIONS -->
+      <section>
+        <h2>Asking Questions with GitHub Copilot</h2>
+        <ul>
+          <li><strong>Question syntax:</strong> <code># q: [your question]?</code></li>
+          <li><strong>Answer format:</strong> Copilot responds with <code># a: [answer]</code></li>
+          <li><strong>Use cases:</strong> Syntax help, debugging, best practices</li>
+          <li><strong>Example questions:</strong>
+            <ul>
+              <li>"How to join two data frames by multiple columns in dplyr?"</li>
+              <li>"What's causing this 'subscript out of bounds' error?"</li>
+              <li>"Best way to handle missing values in spatial data?"</li>
+            </ul>
+          </li>
+        </ul>
+        
+        <pre><code class="language-r"># q: How to calculate spatial autocorrelation in R?
+# a: Use the 'spdep' package: 
+# library(spdep)
+# coords <- cbind(data$x, data$y)
+# nb <- knn2nb(knearneigh(coords, k=4))
+# moran.test(data$yield, nb2listw(nb))</code></pre>
+        
+        <aside class="notes">
+          The question-answer syntax transforms Copilot from autocomplete tool into interactive Q&A assistant.
+          
+          SYNTAX DETAILS: The "# q:" prefix signals Copilot that this is a question requiring explanation, not code to complete. Question mark at end is optional but improves response quality. Copilot responds with "# a:" comment containing answer, often followed by example code demonstrating the concept.
+          
+          QUALITY OF ANSWERS: Copilot's answers are better for: (1) syntax and API questions ("How do I use function X?"), (2) common programming patterns ("Best way to accomplish task Y?"), (3) error explanations when error message is included in question.
+          
+          Answers are weaker for: (1) conceptual statistical questions requiring judgment ("Should I use linear or nonlinear model?"), (2) domain-specific agricultural decisions ("Is this yield level normal for sandy soil?"), (3) questions requiring context Copilot can't infer from current file.
+          
+          PRACTICAL WORKFLOW INTEGRATION: When stuck during analysis, try asking Copilot before searching online. Example scenario: You're creating spatial variability map but forgot ggplot syntax for equal coordinate aspect ratio. Instead of googling, type:
+          
+          # q: How to make ggplot use equal x/y axis scales?
+          # a: Add coord_equal() or coord_fixed() layer
+          
+          This is faster than web search and keeps you in flow state within RStudio.
+          
+          COMBINING WITH WEB SEARCH: For complex questions, use hybrid approach: (1) Ask Copilot for quick answer, (2) if insufficient, use answer to formulate better web search query with correct terminology. Copilot's terminology often reveals what to search for.
+          
+          CAVEAT ON ACCURACY: Copilot occasionally generates plausible-sounding but incorrect answers (hallucination problem common to LLMs). Always verify suggestions against official documentation or test with small example before applying to full dataset. Treat answers as "probably right but confirm" not "definitely correct."
+        </aside>
+      </section>
+
+      <!-- SECTION DIVIDER: API SETUP -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Setting Up Cloud LLM APIs</h2>
+        <p class="subtitle">Google Gemini Integration</p>
+        
+        <aside class="notes">
+          Transitioning from GitHub Copilot (which uses Microsoft/OpenAI infrastructure) to Google's Gemini LLM accessed via API keys. This section covers why you might want additional LLM access and how to set it up securely.
+          
+          WHY USE GOOGLE GEMINI IN ADDITION TO COPILOT: Copilot excels at code completion but has limited conversational ability. Gemini (accessed via Ellmer package covered later) provides fuller chat interface for exploratory questions, data analysis planning, and statistical consulting that goes beyond code snippets.
+          
+          COST STRUCTURE: Google Gemini offers generous free tier (60 requests per minute for Gemini 1.5 Flash model as of 2025), sufficient for academic coursework. Paid tiers available if you exceed free quota, but unlikely for AGRI4401 usage patterns.
+          
+          PREVIEW OF WORKFLOW: After API setup (next slides), you'll be able to open interactive chat window within RStudio, ask "What statistical test should I use to compare yield between two management zones?" and receive detailed explanation with code examples, all without leaving IDE.
+        </aside>
+      </section>
+
+      <!-- GOOGLE CLOUD PROJECT -->
+      <section>
+        <h2>Creating Google Cloud Project & API Key</h2>
+        <ol>
+          <li><strong>Create project:</strong> Visit <a href="https://developers.google.com/workspace/guides/create-project" target="_blank">Google Cloud Console</a></li>
+          <li><strong>Enable Generative AI API:</strong> Navigate to APIs & Services</li>
+          <li><strong>Generate API key:</strong> Go to <a href="https://aistudio.google.com/app/apikey" target="_blank">AI Studio API Keys</a></li>
+          <li><strong>Copy key:</strong> Securely store the generated key (appears only once)</li>
+          <li><strong>Never share:</strong> Treat as password — do not commit to Git or share publicly</li>
+        </ol>
+        <p class="smaller emphasis">Your API key grants access to cloud resources charged to your account</p>
+        
+        <aside class="notes">
+          API key generation requires several steps through Google's developer interfaces. Work through these carefully.
+          
+          STEP 1 — PROJECT CREATION: Google Cloud organizes resources into "projects" — think of these as containers for related APIs and billing. For AGRI4401, create project named "AGRI4401-Analysis" or similar. You'll need Google account (your UWA email works if linked to Google).
+          
+          STEP 2 — ENABLE API: After creating project, you must explicitly enable "Generative Language API" (Gemini's underlying service). In Cloud Console, search for "Generative Language API" in API Library, click Enable button. This authorizes your project to call Gemini endpoints.
+          
+          STEP 3 — GENERATE KEY: Visit AI Studio (aistudio.google.com/app/apikey) while logged into the same Google account. Click "Get API key" → "Create API key in new project" (or select existing project if you created one in step 1). System generates key immediately.
+          
+          STEP 4 — COPY AND STORE: KEY APPEARS ONLY ONCE. After clicking "Copy," key is yours to use. If you lose it, you cannot retrieve — must generate new key and revoke old one. Store immediately in password manager or secure note. DO NOT paste into Slack, email, or any shared document.
+          
+          SECURITY IMPLICATIONS: Anyone with your API key can make requests to Google's services under your account, potentially incurring charges if you exceed free tier. If key is ever compromised (accidentally committed to public GitHub repo, shared in screenshot), immediately revoke it in API console and generate replacement.
+          
+          BEST PRACTICE: Generate separate keys for different purposes (one for coursework, separate one for research projects). This limits damage if one key is compromised and makes key rotation easier.
+          
+          NEXT STEP: After copying key, we'll store it securely in R environment variables (next slide) so R scripts can access without hardcoding key in code.
+        </aside>
+      </section>
+
+      <!-- VIDEO: API KEY SETUP -->
+      <section>
+        <h2>API Key Setup Walkthrough</h2>
+        <div class="video-container">
+          <a href="https://www.youtube.com/watch?v=RVGbLSVFtIk" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.youtube.com/vi/RVGbLSVFtIk/maxresdefault.jpg" alt="Google Cloud API key generation walkthrough">
+          </a>
+          <p class="video-caption">Click the image to watch the step-by-step guide on YouTube (4 min)</p>
+        </div>
+        
+        <aside class="notes">
+          Video demonstrates complete API key generation workflow from Google Cloud Console navigation through final key storage.
+          
+          VIDEO TIMELINE:
+          
+          0:00-1:00 — Shows logging into Google Cloud Console and creating new project. Demonstrates project naming conventions and organization selector.
+          
+          1:00-2:00 — Navigates to API Library, searches for "Generative Language API," shows Enable button and confirmation that API is now active for project.
+          
+          2:00-3:00 — Visits AI Studio, generates API key, demonstrates key visibility (shown once), and copying to clipboard.
+          
+          3:00-4:00 — Shows INCORRECT way to use key (hardcoded in script — bad!) versus correct secure storage method we'll cover next slide.
+          
+          KEY SECURITY MOMENT: Around 3:15, presenter intentionally shows common mistake — pasting API key directly into R script as `api_key <- "AIza..."`. This is tempting because it works immediately but creates security vulnerability. Instead, demonstrates proper environment variable approach.
+          
+          COMMON ERRORS ADDRESSED: Video troubleshoots common issues: (1) API not enabled error — solution: ensure Generative Language API specifically enabled, not just generic Cloud APIs, (2) billing account prompt — free tier doesn't require payment method but may require account verification, (3) key not working — solution: wait 1-2 minutes for key propagation through Google's systems.
+          
+          After watching, complete these steps yourself to generate your own API key before next slide where we'll store it securely.
+        </aside>
+      </section>
+
+      <!-- SECURE API KEY STORAGE -->
+      <section>
+        <h2>Securely Storing API Keys in R</h2>
+        <pre><code class="language-r"># Install usethis package if needed
+install.packages("usethis")
+
+# Open .Renviron file for editing
+usethis::edit_r_environ()</code></pre>
+
+        <p class="smaller">Add your key to the opened .Renviron file:</p>
+        
+        <pre><code class="language-r">GEMINI_API_KEY="AIza...your_actual_key_here"</code></pre>
+
+        <p class="smaller">Save file, restart RStudio, then access key in code:</p>
+        
+        <pre><code class="language-r"># Key is now available via Sys.getenv()
+api_key <- Sys.getenv("GEMINI_API_KEY")</code></pre>
+        
+        <aside class="notes">
+          Environment variables provide secure, version-control-safe method for storing sensitive credentials.
+          
+          WHY .Renviron FILE: R's .Renviron file is a hidden text file in your home directory that R reads at startup, loading key-value pairs as environment variables. This keeps secrets OUT of your code files (which might be committed to Git) while making them available to all R sessions.
+          
+          USETHIS PACKAGE: The usethis::edit_r_environ() function is convenience wrapper that: (1) locates correct .Renviron file (typically ~/.Renviron on Mac/Linux or Documents\.Renviron on Windows), (2) creates file if it doesn't exist, (3) opens in RStudio editor for easy editing. Without usethis, you'd need to manually locate and create this hidden file.
+          
+          SYNTAX DETAILS: In .Renviron file, format is VARIABLE_NAME="value" with NO spaces around = sign. Variable names conventionally UPPERCASE_WITH_UNDERSCORES. Quotes around value are optional for simple strings but recommended for API keys which may contain special characters.
+          
+          MULTIPLE KEYS: You can store multiple keys in same .Renviron file:
+          
+          GEMINI_API_KEY="AIza..."
+          OPENAI_API_KEY="sk-..."
+          DATABASE_PASSWORD="secret123"
+          
+          Each on separate line. This becomes your personal credential vault for all R projects.
+          
+          RESTART REQUIRED: After editing .Renviron, must restart R session (Session → Restart R in RStudio) to load new variables. This is ONE-TIME setup — afterwards, variables available automatically in every new R session.
+          
+          ACCESSING IN CODE: Sys.getenv("VARIABLE_NAME") retrieves stored value. Returns empty string "" if variable not found (useful for error checking). Example defensive code:
+          
+          api_key <- Sys.getenv("GEMINI_API_KEY")
+          if (api_key == "") {
+            stop("GEMINI_API_KEY not found in environment. Did you set it in .Renviron?")
+          }
+          
+          SECURITY BENEFIT: Now you can share your R scripts publicly (GitHub, with classmates) without exposing credentials. Anyone running your code needs their own .Renviron setup with their own keys.
+          
+          GIT CONFIGURATION: .Renviron file is automatically ignored by Git (part of default .gitignore patterns) so won't be accidentally committed. Double-check with `git status` before committing if you're paranoid.
+        </aside>
+      </section>
+
+      <!-- INTRODUCING ELLMER -->
+      <section>
+        <h2>Introducing Ellmer: LLM Assistant in RStudio</h2>
+        <ul>
+          <li><strong>What it is:</strong> R package providing interactive chat interface to Google Gemini</li>
+          <li><strong>Use cases:</strong> Ask questions, request code snippets, get explanations</li>
+          <li><strong>Complements Copilot:</strong> Chat-based vs inline suggestions</li>
+          <li><strong>Installation:</strong> Available on CRAN</li>
+        </ul>
+        
+        <pre><code class="language-r">install.packages("ellmer", dependencies = TRUE)</code></pre>
+        
+        <aside class="notes">
+          Ellmer (pronounced "elmer") bridges gap between Copilot's inline suggestions and full conversational LLM interface.
+          
+          PACKAGE BACKGROUND: Developed by Hadley Wickham and Posit team (creators of RStudio, tidyverse packages) as official R interface to major LLM providers. Currently supports Google Gemini (via API we just set up) with plans to support Anthropic Claude and other models.
+          
+          COPILOT VS ELLMER COMPARISON:
+          
+          COPILOT STRENGTHS:
+          - Real-time code completion as you type
+          - Zero-latency suggestions (feels instant)
+          - Great for writing boilerplate and repetitive code
+          - No explicit API call (happens automatically)
+          
+          ELLMER STRENGTHS:
+          - Conversational context (multi-turn dialogues)
+          - Longer, more detailed explanations
+          - Can attach code snippets or data samples to questions
+          - Better for exploratory "what should I do?" questions
+          
+          PRACTICAL USAGE PATTERN: Use Copilot as primary coding assistant (90% of time), but when you hit conceptual roadblock or need to plan complex analysis, open Ellmer chat for deeper consultation, then return to Copilot for implementation.
+          
+          INSTALLATION NOTE: Specify dependencies = TRUE to ensure all required packages installed (includes httr2 for HTTP requests, jsonlite for API response parsing, rstudioapi for browser integration).
+          
+          FIRST-TIME SETUP: After installation, Ellmer automatically detects GEMINI_API_KEY from environment (set in previous slide). If you properly configured .Renviron, no additional authentication needed — Ellmer just works.
+          
+          VERSION COMPATIBILITY: Requires RStudio version 2023.06.0 or newer for integrated browser window. On older RStudio versions, Ellmer falls back to external browser window (functional but less seamless experience).
+        </aside>
+      </section>
+
+      <!-- USING ELLMER -->
+      <section>
+        <h2>Starting an Ellmer Chat Session</h2>
+        <pre><code class="language-r">library(ellmer)
+
+# Create Gemini chat session
+chat <- chat_google_gemini()
+
+# Launch browser-based chat interface
+live_browser(chat)</code></pre>
+
+        <ul class="smaller">
+          <li><strong>Browser window:</strong> Opens in RStudio Viewer pane or system browser</li>
+          <li><strong>Persistent context:</strong> Chat remembers previous exchanges within session</li>
+          <li><strong>Code snippets:</strong> Can paste data/code for analysis</li>
+          <li><strong>Export:</strong> Copy responses back to R script</li>
+        </ul>
+        
+        <aside class="notes">
+          These three lines of code launch fully interactive LLM chat interface within RStudio environment.
+          
+          STEP-BY-STEP EXECUTION:
+          
+          LINE 1 — library(ellmer): Loads package functions into current session. Must run this in every new R session (or add to startup script).
+          
+          LINE 2 — chat <- chat_google_gemini(): Creates chat object representing conversation with Gemini model. This object stores conversation history (previous messages and responses) enabling contextual follow-up questions. The chat object uses your GEMINI_API_KEY from environment automatically.
+          
+          LINE 3 — live_browser(chat): Opens interactive chat interface. In RStudio 2023.06+, appears in Viewer pane (lower-right by default). In older versions or if viewer unavailable, opens system default web browser with localhost URL.
+          
+          CHAT INTERFACE FEATURES:
+          
+          - Text input box at bottom for typing questions
+          - Message history scrolls up as conversation progresses
+          - Code blocks in responses have "Copy" button for easy transfer to R script
+          - Session persists until you close RStudio or explicitly end chat
+          
+          EXAMPLE CONVERSATION FLOW:
+          
+          You: "I have yield data with outliers. What's the best approach to identify and handle them?"
+          
+          Gemini: "Several approaches depending on your goals: (1) Visual inspection with boxplots, (2) Statistical thresholds like 1.5×IQR or ±3SD, (3) Spatial filtering for geographically isolated anomalies. For precision ag data, I recommend combining approaches..."
+          
+          [Includes code examples for each method]
+          
+          You: "Show me the spatial filtering approach in more detail."
+          
+          Gemini: [Generates complete code example using spdep package for spatial outlier detection]
+          
+          Notice second question builds on first — Gemini remembers context that we're discussing yield outliers.
+          
+          PRACTICAL TIPS:
+          
+          - Include example data in questions: "Here's structure of my data: str(yield_df)" followed by your question improves response relevance
+          - Ask for clarification: "I don't understand step 3, can you explain differently?" works better than giving up
+          - Request code style: "Write this using tidyverse syntax" vs "Use base R" tailors responses to your preference
+          - Export useful responses: Copy code blocks to .R file with comment acknowledging LLM origin for future reference
+          
+          CONVERSATION MANAGEMENT: Chat history persists in `chat` object. To start fresh topic, create new chat object: `chat2 <- chat_google_gemini()`. Original chat remains available if you want to return to it.
+        </aside>
+      </section>
+
+      <!-- ELLMER USE CASES -->
+      <section>
+        <h2>Practical Ellmer Use Cases for Data Analysis</h2>
+        <ul>
+          <li><strong>Statistical guidance:</strong> "Which test for comparing means across 5 treatment zones?"</li>
+          <li><strong>Code explanation:</strong> Paste complex code, ask "What does this do?"</li>
+          <li><strong>Debugging help:</strong> Share error message, request troubleshooting steps</li>
+          <li><strong>Data exploration ideas:</strong> "What visualizations would reveal spatial patterns?"</li>
+          <li><strong>Best practices:</strong> "How should I handle missing GPS coordinates in yield data?"</li>
+        </ul>
+        
+        <aside class="notes">
+          Ellmer excels at different types of questions than simple code completion. These use cases showcase its strengths.
+          
+          USE CASE 1 — STATISTICAL GUIDANCE:
+          
+          Scenario: You've collected yield data from 5 management zones and need to determine if yields differ significantly between zones. You're unsure whether to use ANOVA, Kruskal-Wallis, or mixed effects model.
+          
+          Ellmer question: "I have continuous yield data (tonnes/ha) from 5 management zones with 30-50 observations per zone. Residuals appear non-normal based on Q-Q plot. Which statistical test is most appropriate for comparing means, and why?"
+          
+          Ellmer provides: (1) Explanation of assumptions for each test, (2) recommendation based on your data description (likely suggests Kruskal-Wallis for non-normal data), (3) R code for running chosen test and interpreting output, (4) guidance on post-hoc comparisons if overall test significant.
+          
+          This is MUCH faster than searching through statistics textbooks or multiple Stack Overflow threads.
+          
+          USE CASE 2 — CODE EXPLANATION:
+          
+          Scenario: You found complex dplyr pipeline online that does what you need, but you don't understand the syntax:
+          
+          yield_summary <- yield_data %>%
+            filter(!is.na(yield)) %>%
+            group_by(zone, year) %>%
+            mutate(yield_scaled = scale(yield)) %>%
+            summarize(across(starts_with("yield"), list(mean = mean, sd = sd)))
+          
+          Paste this into Ellmer with question: "Explain this code line by line, especially the 'across' and 'scale' parts."
+          
+          Ellmer breaks down: (1) filter removes NA yields, (2) group_by creates subgroups for summarization, (3) mutate with scale() creates z-scores within each group, (4) summarize with across() applies mean and sd to all columns starting with "yield", (5) resulting output structure.
+          
+          This builds your R skills by explaining patterns you can reuse, not just solving immediate problem.
+          
+          USE CASE 3 — DEBUGGING HELP:
+          
+          Scenario: Your script throws cryptic error:
+          "Error in `summarize()`: Problem while computing `mean_yield = mean(yield)`. ℹ In argument: `mean_yield = mean(yield)`. Caused by error: ℹ argument is not numeric or logical: returning NA"
+          
+          Paste entire error message and relevant code into Ellmer: "I'm getting this error when trying to calculate mean yield. Here's my code: [paste code]. What's wrong?"
+          
+          Ellmer diagnoses: Yield column likely stored as character not numeric (common with imported CSV files that have text like "3.2 t/ha" instead of just numbers). Suggests: `yield <- as.numeric(yield)` to convert, and explains why error message was misleading.
+          
+          This is faster than trial-and-error debugging and teaches you to recognize this error pattern in future.
+          
+          USE CASE 4 — DATA EXPLORATION IDEAS:
+          
+          Scenario: You have spatial dataset (x, y coordinates + yield + soil EC) but unsure how to visualize relationships.
+          
+          Ellmer question: "I have point data with coordinates, yield, and soil EC. What are 3-5 effective visualizations to explore relationships and spatial patterns?"
+          
+          Ellmer suggests: (1) Scatter plot of yield vs soil EC colored by spatial clusters, (2) Spatial heatmap of yield using geom_tile, (3) Variogram to assess spatial autocorrelation structure, (4) Faceted plots comparing yield distribution across EC quartiles, (5) Interactive map using leaflet for detailed exploration.
+          
+          Provides code examples for each, allowing you to quickly generate suite of exploratory plots.
+          
+          USE CASE 5 — BEST PRACTICES:
+          
+          Question: "I have yield monitor data with some missing GPS coordinates (equipment briefly lost signal). Should I delete those rows, interpolate positions, or something else?"
+          
+          Ellmer provides nuanced answer considering: (1) Percentage of missing data (1% vs 20% requires different approaches), (2) Spatial continuity (if brief GPS dropout, interpolating reasonable; if random dropouts, not reliable), (3) Analysis goals (if calculating field average, missing coordinates less critical; if creating spatial map, critical), (4) Code examples for each approach with pros/cons.
+          
+          This domain-specific guidance is valuable because precision ag best practices aren't always documented in standard R resources.
+        </aside>
+      </section>
+
+      <!-- BEST PRACTICES -->
+      <section>
+        <h2>Best Practices for LLMs in Data Analysis</h2>
+        <ul>
+          <li><strong>Always review:</strong> Verify AI-generated code before execution</li>
+          <li><strong>Understand output:</strong> Don't use code you can't explain</li>
+          <li><strong>Protect credentials:</strong> Store API keys in .Renviron, never in scripts</li>
+          <li><strong>Complementary tools:</strong> Copilot for speed, Ellmer for depth</li>
+          <li><strong>Keep learning:</strong> LLMs accelerate, not replace, skill development</li>
+          <li><strong>Update regularly:</strong> Keep packages current for best performance</li>
+        </ul>
+        
+        <aside class="notes">
+          As LLMs become standard tools in data analysis workflows, developing responsible usage habits is critical.
+          
+          PRINCIPLE 1 — ALWAYS REVIEW CODE:
+          
+          LLMs occasionally generate syntactically correct but logically wrong code. Example: Copilot suggests `filter(yield > 0)` to remove outliers, but this only removes negative values, not implausibly high values (typo errors like 85.3 t/ha instead of 8.53). ALWAYS run on small subset first, inspect output, verify logic matches intent.
+          
+          Risk scenarios: (1) Variable name close to but not exactly matching your data (e.g., suggests `yield_kg` but your column is `yield_tonnes`), (2) Function arguments with defaults different from what you need (e.g., `na.rm = TRUE` vs `na.rm = FALSE` changes result drastically), (3) Statistical tests with assumptions your data violates.
+          
+          PRINCIPLE 2 — UNDERSTAND OUTPUT:
+          
+          If LLM suggests unfamiliar function or approach, spend 5 minutes reading documentation before using. This builds mental model preventing future errors. Anti-pattern: Blindly copy-paste Ellmer suggestions into production analysis without understanding mechanism.
+          
+          Test yourself: After accepting Copilot suggestion, can you explain WHAT the code does and WHY it's correct approach? If not, investigate before proceeding.
+          
+          PRINCIPLE 3 — PROTECT CREDENTIALS:
+          
+          Real incident from 2023: Student committed API key to public GitHub repository. Key was scraped by bot within hours, used to make $200 worth of API calls in 24 hours before student noticed. GitHub notified Google who revoked key, but damage done.
+          
+          Prevention checklist:
+          - ✅ API keys in .Renviron only
+          - ✅ .Renviron in .gitignore (default behavior)
+          - ✅ Before `git push`, run `git diff` to verify no secrets
+          - ✅ Use GitHub secret scanning (automatically enabled for public repos)
+          - ❌ Never paste API key in Slack, Discord, or email
+          - ❌ Never hardcode as string in script
+          - ❌ Never share .Renviron file itself
+          
+          PRINCIPLE 4 — COMPLEMENTARY TOOLS:
+          
+          Optimal workflow combines both:
+          - Use Copilot continuously while coding (low friction, instant feedback)
+          - Open Ellmer when stuck or need strategic guidance (higher latency but deeper help)
+          - Use traditional documentation for foundational learning (LLMs supplement, not replace, reading official docs)
+          
+          Don't become dependent on any single tool — maintain ability to code without AI assistance for when you lack connectivity or tools unavailable.
+          
+          PRINCIPLE 5 — KEEP LEARNING:
+          
+          LLMs risk creating "competence ceiling" where you can implement solutions but not design them. Counter this by: (1) Deliberately practicing problems WITHOUT LLM assistance, (2) Studying LLM-generated code to understand patterns, (3) Taking on challenges slightly beyond your current skill level where LLMs scaffold learning.
+          
+          Goal: Use LLMs to accelerate journey from novice to expert, not replace expertise itself.
+          
+          PRINCIPLE 6 — UPDATE REGULARLY:
+          
+          LLM integrations evolve rapidly. Run `update.packages()` monthly to get improvements. Example: Ellmer version 0.1.0 (Jan 2025) had basic Gemini support; version 0.2.0 (Mar 2025) added streaming responses, chat export, and better error handling.
+          
+          Similarly, GitHub Copilot receives model updates automatically but RStudio extension requires updating through Tools → Check for Updates.
+        </aside>
+      </section>
+
+      <!-- SUMMARY -->
+      <section>
+        <h2>Summary & Next Steps</h2>
+        <ul>
+          <li><strong>Copilot:</strong> Inline code suggestions accelerate routine coding tasks</li>
+          <li><strong>API keys:</strong> Secure storage via .Renviron enables cloud LLM access</li>
+          <li><strong>Ellmer:</strong> Interactive chat for complex questions and guidance</li>
+          <li><strong>Workflow integration:</strong> Use both tools strategically, not reflexively</li>
+          <li><strong>Practice datasets:</strong> Three files on LMS ready for analysis</li>
+          <li><strong>Assignment context:</strong> LLMs permitted as tools, cite their use in methods</li>
+        </ul>
+        
+        <aside class="notes">
+          Recap key takeaways and outline immediate action steps for students.
+          
+          COPILOT SUMMARY: GitHub Copilot transforms coding from pure typing exercise to guided process where you describe intent and AI suggests implementation. Most valuable for: (1) Writing boilerplate (data loading, basic cleaning), (2) Remembering function syntax without constant documentation lookup, (3) Exploring unfamiliar packages through example suggestions. Limitations: Requires context in current file to generate relevant suggestions, weaker for novel analyses not well-represented in training data.
+          
+          API KEYS SUMMARY: Google Gemini API provides programmatic access to powerful language model. Setup requires: (1) Creating API key via AI Studio, (2) Storing in .Renviron file for security, (3) Using Sys.getenv() to retrieve in code. This pattern generalizes to other APIs (weather data, geospatial services, database connections) — .Renviron is universal credential management solution in R.
+          
+          ELLMER SUMMARY: Chat interface within RStudio for extended Q&A beyond inline suggestions. Best for: (1) Planning analysis approach, (2) Understanding error messages, (3) Learning statistical concepts, (4) Exploring alternative methods. Complements rather than replaces Copilot by handling different use cases (conversational depth vs inline speed).
+          
+          WORKFLOW INTEGRATION ADVICE: Avoid treating LLMs as magic "do my homework" button. Strategic usage pattern:
+          
+          1. Attempt problem yourself first (builds skills)
+          2. If stuck >10 minutes, consult Ellmer for guidance
+          3. Use Copilot to implement solution faster once you understand approach
+          4. Review and verify all LLM-generated code
+          5. Document any LLM assistance in analysis notes
+          
+          This balance maximizes learning while accepting practical efficiency gains.
+          
+          PRACTICE DATASETS: Three datasets on LMS (under Week 8 materials):
+          
+          1. yield_spatial.csv — Combine yield monitor data with spatial coordinates, includes outliers to practice cleaning
+          2. soil_ec_samples.csv — Electromagnetic induction soil survey points for interpolation practice
+          3. management_zones.csv — Classified zones for comparing agronomic outcomes
+          
+          Suggested exercises: (1) Load and explore each dataset using Copilot-assisted code, (2) Ask Ellmer for visualization strategies appropriate to data structure, (3) Implement suggested plots with Copilot completing syntax, (4) Document insights and any LLM assistance in R Markdown report.
+          
+          ASSIGNMENT CONTEXT: For AGRI4401 assignments and projects, LLM use IS permitted and encouraged as analytical tool, similar to using Stack Overflow or textbooks. HOWEVER, you must: (1) Cite when LLM significantly contributed to approach or code (e.g., "Spatial outlier detection approach developed with assistance from GitHub Copilot"), (2) Demonstrate understanding by explaining methodology in your own words, (3) Take responsibility for results — "the LLM told me to do it this way" is not excuse for incorrect analysis.
+          
+          Think of LLMs as advanced calculators: Acceptable to use for computation, but you must understand underlying concepts and interpret results.
+          
+          NEXT STEPS IMMEDIATELY AFTER LECTURE:
+          
+          1. Complete GitHub Copilot setup if not done during lecture (15 min)
+          2. Generate Google Gemini API key and store in .Renviron (10 min)
+          3. Install Ellmer package and test chat functionality (5 min)
+          4. Download practice datasets from LMS (1 min)
+          5. Spend 30-60 minutes exploring first dataset with both tools
+          
+          Total time investment: ~1 hour to fully configure tools that will save many hours over semester.
+        </aside>
+      </section>
+
+      <!-- CLOSING SLIDE -->
+      <section data-background-color="#27348B" class="center-content">
+        <h1>Questions?</h1>
+        <p class="subtitle">Explore LLMs in your next data analysis assignment</p>
+        <p class="institute">Practice datasets available on LMS</p>
+        
+        <aside class="notes">
+          Open floor for questions. Common anticipated questions and responses:
+          
+          Q: "Will Copilot write my entire assignment for me?"
+          A: No. Copilot assists with syntax and common patterns, but complex analysis requiring domain knowledge and critical thinking remains your responsibility. It accelerates implementation of ideas YOU conceive, not ideation itself.
+          
+          Q: "What if Copilot suggests wrong code?"
+          A: This happens occasionally. Why reviewing and testing all suggestions is mandatory practice. Over time, you'll develop intuition for which suggestions to trust and which to verify carefully. Incorrect suggestions are often learning opportunities — figuring out WHY code was wrong builds debugging skills.
+          
+          Q: "Can I use these tools in exams?"
+          A: Depends on exam format. Open-book exams with computer access: Yes. Closed-book written exams: No. Practical computing exams: Typically yes, but verify with exam instructions. Philosophy: We're teaching you to be effective data analysts in real world where these tools are standard, so artificially restricting them in assessment would be counterproductive.
+          
+          Q: "Does using LLMs count as cheating or plagiarism?"
+          A: No, when used as analytical tools with appropriate citation. Yes, if you copy entire analysis plan from LLM and present as your own thinking without acknowledgment. Guideline: If LLM made intellectual contribution to your approach (not just syntax help), acknowledge it in methods section. Similar to citing statistics textbook that informed your choice of test.
+          
+          Q: "What if I can't get API key working?"
+          A: Common issues: (1) Forgot to restart RStudio after editing .Renviron (solution: restart), (2) Typo in environment variable name (solution: check spelling is exactly GEMINI_API_KEY), (3) API key copied incorrectly (solution: regenerate new key). If still stuck, come to office hours or post in discussion forum — usually quick fix once we see error message.
+          
+          Q: "Are there alternatives to Gemini?"
+          A: Yes. Ellmer package supports multiple LLM providers. Alternatives include Anthropic Claude (via API), OpenAI GPT (via API, costs money beyond free tier), or running local models like Llama2 (requires powerful computer). Gemini chosen for this course because: (1) Generous free tier, (2) Good performance on code and statistical questions, (3) Official support from Posit (RStudio developers).
+          
+          Q: "Should I still learn base R and tidyverse if LLMs can write code for me?"
+          A: Absolutely yes. LLMs are tools that amplify your skills, not replacements for skills. Analogy: Calculator doesn't eliminate need to understand mathematics. You must understand programming fundamentals to: (1) Evaluate whether LLM suggestions are correct, (2) Debug when suggestions don't work, (3) Design overall analysis strategy that LLM then helps implement. Use LLMs to LEARN faster, not AVOID learning.
+          
+          Encourage students to experiment with both tools over next week using practice datasets, and report back any interesting discoveries or challenges in next week's practical session.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- RevealJS Library Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+
+  <!-- RevealJS Initialization -->
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      controls: true,
+      progress: true,
+      center: false,
+      transition: 'slide',
+      backgroundTransition: 'fade',
+      plugins: [ window.RevealNotes ]
+    });
+
+    // Enable speaker notes for both presentation and speaker view
+    Reveal.on('ready', () => {
+      console.log('RevealJS initialized with speaker notes enabled');
+    });
+  </script>
+</body>
+</html>

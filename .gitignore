@@ -1,0 +1,27 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Archive folder (if keeping Quarto source)
+archive/
+
+# Node modules (if using any JS tooling)
+node_modules/
+
+# Python virtual environments
+venv/
+env/
+__pycache__/

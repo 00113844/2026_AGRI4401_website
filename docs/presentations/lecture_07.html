@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crop Spatial Variability</title>
+  
+  <!-- RevealJS Core Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css" id="theme">
+
+  <!-- Compiled UWA Custom Theme SCSS Styles -->
+  <style>
+    /* ==================================================================
+       Universal UWA RevealJS Theme
+       Standard for all UWA academic units
+       ================================================================== */
+
+    /* ---------------------- CSS Variable Overrides (UWA Branding) -- */
+    :root {
+      --r-heading-color: #27348B;
+      --r-main-color: #333333;
+      --r-main-font: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      --r-heading-font: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      --r-background-color: #ffffff;
+    }
+
+    /* ---------------------- Section Dividers ----------------------- */
+    .reveal section[data-background-color="#002147"] h1,
+    .reveal section[data-background-color="#002147"] h2,
+    .reveal section[data-background-color="#002147"] h3,
+    .reveal section[data-background-color="#002147"] p {
+      color: white !important;
+    }
+
+    /* ---------------------- Title Slide & Section Break Slides ----- */
+    .reveal section[data-background-color="#27348B"] h1,
+    .reveal section[data-background-color="#27348B"] h2,
+    .reveal section[data-background-color="#27348B"] .title {
+      color: #E2B600 !important;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    }
+    .reveal section[data-background-color="#27348B"] h3 {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+    .reveal section[data-background-color="#27348B"] p,
+    .reveal section[data-background-color="#27348B"] .subtitle,
+    .reveal section[data-background-color="#27348B"] li {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+    .reveal section[data-background-color="#27348B"] .author,
+    .reveal section[data-background-color="#27348B"] .date,
+    .reveal section[data-background-color="#27348B"] .institute,
+    .reveal section[data-background-color="#27348B"] .quarto-title-author-name,
+    .reveal section[data-background-color="#27348B"] .quarto-title-affiliation {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    /* ---------------------- Learning Objectives -------------------- */
+    .learning-objectives-slide .learning-objectives {
+      background: linear-gradient(135deg, #F5F5F5 0%, #ffffff 100%);
+      border-left: 5px solid #27348B;
+      padding: 1.5em;
+      margin: 1em 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .learning-objectives strong {
+      color: #27348B;
+      font-size: 1.1em;
+    }
+
+    /* ---------------------- Two-Column Layouts --------------------- */
+    .reveal .columns {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      gap: 1.4em;
+      align-items: flex-start;
+      width: 100%;
+    }
+    .reveal .column {
+      flex: 1 1 0%;
+      min-width: 0;
+    }
+    .reveal .column ul,
+    .reveal .column ol {
+      margin: 0.2em 0 0.3em 1em;
+      padding: 0;
+    }
+    .reveal .column li {
+      margin-bottom: 0.25em;
+      line-height: 1.3;
+    }
+
+    /* ---------------------- Emphasis & Highlights ------------------ */
+    .emphasis {
+      color: #27348B;
+      font-weight: 600;
+    }
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(39, 52, 139, 0.08) 0%, rgba(85, 119, 187, 0.08) 100%);
+      border: 2px solid #5577BB;
+      padding: 1em 1.5em;
+      border-radius: 8px;
+      margin: 0.5em 0;
+    }
+
+    /* ---------------------- Tables --------------------------------- */
+    .reveal table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.5em 0 !important;
+      font-size: 0.8em !important;
+    }
+    .reveal table th {
+      background: #27348B;
+      color: white;
+      padding: 0.75em 1em;
+      text-align: left;
+      font-weight: 600;
+    }
+    .reveal table td {
+      padding: 0.75em 1em;
+      border-bottom: 1px solid #CCCCCC;
+    }
+    .reveal table tr:nth-child(even) {
+      background: #F5F5F5;
+    }
+
+    /* ---------------------- Mermaid Diagrams ----------------------- */
+    .reveal .mermaid {
+      background: transparent;
+      margin: 1em auto;
+      max-width: 92%;
+      max-height: 45vh !important;
+      overflow: auto;
+    }
+    .reveal pre.mermaid {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .reveal .mermaid svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ---------------------- Slide Content Overflow Prevention ------ */
+    .reveal .slides section {
+      overflow: visible;
+      max-height: none;
+      padding-bottom: 0.5em;
+      font-size: 0.78em !important;
+    }
+    .reveal .slides section ul,
+    .reveal .slides section ol {
+      margin: 0.2em 0 0.4em 1.1em;
+      padding: 0;
+    }
+    .reveal .slides section ul {
+      list-style: disc outside;
+    }
+    .reveal .slides section ol {
+      list-style: decimal outside;
+    }
+    .reveal .slides section li {
+      margin-bottom: 0.2em !important;
+      font-size: 0.9em !important;
+      line-height: 1.3;
+      display: list-item !important;
+      overflow: visible !important;
+      text-overflow: unset !important;
+    }
+    .reveal .slides section li::marker {
+      color: #27348B;
+    }
+
+    /* ---------------------- Font Scalings -------------------------- */
+    .reveal h2 {
+      margin-top: 0.1em;
+      margin-bottom: 0.2em !important;
+      line-height: 1.15;
+      word-break: break-word;
+      hyphens: auto;
+      font-size: 1.6em !important;
+    }
+    .reveal h3 {
+      margin-top: 0.1em;
+      margin-bottom: 0.25em;
+      font-size: 1.3em !important;
+    }
+    .reveal h4 {
+      font-size: 1.0em !important;
+    }
+
+    /* Utility Classes */
+    .smaller { font-size: 0.85em; }
+    .compact { line-height: 1.4; }
+    .center-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    @media (max-width: 480px) {
+      .reveal h2 { font-size: 1.3em !important; }
+      .reveal .slides section li { font-size: 0.75em !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE SLIDE -->
+      <section data-background-color="#27348B" class="center-content">
+        <h1>Crop Spatial Variability</h1>
+        <p>From Detection to Diagnosis to Management Response</p>
+        <p class="smaller" style="margin-top: 2em;">AGRI4401: Soil and Water Spatial Variability</p>
+      </section>
+
+      <!-- PART 1 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 1: The Scales of Variability</h2>
+        <p>Why crops are never uniform</p>
+      </section>
+
+      <section>
+        <h2>Why Crops Are Never Uniform</h2>
+        <ul>
+          <li>Even a uniformly sown paddock shows 2–3 t·ha⁻¹ yield variation across a few hundred metres</li>
+          <li>This variability is not random but nested outcomes of processes at different scales:</li>
+          <li><strong>Seed-soil microsite (cm):</strong> Moisture, contact, temperature for germination</li>
+          <li><strong>Individual plant (dm):</strong> Tillers, leaf area, light capture</li>
+          <li><strong>Canopy community (m):</strong> Competition for light, water, nutrients</li>
+          <li><strong>Paddock/landscape (ha):</strong> Soil type, terrain, management history</li>
+          <li>Each scale has different drivers and demands different sensing tools</li>
+        </ul>
+        <aside class="notes">
+          Open with a provocation: establish that variability is not random but nested. Use a "zoom out" framing device: seed → plant → quadrat → paddock → farm. This organizing idea structures the entire lecture.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A Tale of Three Zones: The Wongan Hills Example</h2>
+        <ul>
+          <li><strong>The Gravelly Rise:</strong> Shallow, water-repellent topsoil, P-fixing, consistently lowest-yielding</li>
+          <li><strong>The Sandplain Mid-Slope:</strong> Deep sand, free-draining, prone to early N leaching and terminal drought stress</li>
+          <li><strong>The Clay Valley Floor:</strong> High water-holding capacity, but prone to waterlogging and seasonal salinity</li>
+          <li>The SAME uniform management produces 2–3× yield range across these three zones</li>
+          <li><strong>Key question:</strong> How do we detect, diagnose, and respond to this variability?</li>
+        </ul>
+        <aside class="notes">
+          Ground the scale concept in a concrete, recurring example. Show how identical management produces vastly different outcomes across landscape positions.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Precision Agriculture Toolkit</h2>
+        <ul>
+          <li><strong>Value chain:</strong> Detect → Quantify → Diagnose → Respond</li>
+          <li><strong>Agronomic scouting:</strong> Ground truth, oldest and most reliable layer</li>
+          <li><strong>Biophysical/biochemical sensing:</strong> LAI, chlorophyll, fluorescence — direct physiological measurement</li>
+          <li><strong>Spectral remote sensing:</strong> Proximal, UAV, satellite — scale physiological inference</li>
+          <li><strong>Yield monitoring:</strong> Close the loop, measure the final outcome</li>
+          <li><strong>Key principle:</strong> No single layer sufficient alone — <strong>equifinality</strong> means different causes produce the same signal</li>
+          <li>Only triangulating across layers resolves ambiguity</li>
+        </ul>
+        <aside class="notes">
+          Preview the four categories of tools. Introduce equifinality as a central theme that will recur throughout the lecture.
+        </aside>
+      </section>
+
+      <!-- PART 2 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 2: Establishment — The Seed-Soil Interface</h2>
+        <p>From seed to seedling: where variability begins</p>
+      </section>
+
+      <section>
+        <h2>From Seed to Seedling: Germination Physiology</h2>
+        <ul>
+          <li><strong>Imbibition:</strong> Seed must absorb sufficient soil water to activate enzymes and begin metabolism</li>
+          <li>Without sustained moisture, germination stalls</li>
+          <li><strong>Thermal time:</strong> Once imbibed, germination rate governed by growth-degree-days (GDD)</li>
+          <li>Not calendar days — same crop sown 3 weeks apart reaches same stage at different dates</li>
+          <li><strong>WA complication:</strong> Dry sowing ahead of season break common practice</li>
+          <li>Seeds sit dormant weeks until rainfall trigger → patchy emergence timing within single paddock</li>
+          <li>Spatial variability exists before first leaf emerges</li>
+        </ul>
+        <aside class="notes">
+          Explain the physiological sequence determining germination success. Emphasize WA-specific complications with dry sowing that create emergence variability.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Seeding System: Mechanical Variability</h2>
+        <ul>
+          <li><strong>Furrow opening:</strong> Knife points vs disc openers — each handles soil conditions differently</li>
+          <li><strong>Seed metering/singulation:</strong> Precision of individual seed release and spacing</li>
+          <li><strong>Seed depth and orientation:</strong> Consistency affects emergence timing; orientation affects early leaf geometry</li>
+          <li><strong>Furrow closing:</strong> Press wheels re-firm soil around seed</li>
+          <li><strong>Critical invisible variable:</strong> Seed-to-soil contact — air pockets delay or prevent imbibition</li>
+          <li><strong>WA complication:</strong> Water-repellent ("non-wetting") sands cause irrigation/rainfall to channel preferentially along furrows</li>
+          <li>Adds soil-chemistry-driven establishment variability on top of mechanical variability</li>
+        </ul>
+        <aside class="notes">
+          Break down seeding system as chain of mechanical decisions. Introduce seed-to-soil contact as the critical factor that creates establishment variability.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Crop Stand Evaluation: Counting What Went Wrong</h2>
+        <ul>
+          <li><strong>Standard diagnostic:</strong> Walk representative row, count 100 consecutive plant stations</li>
+          <li>Tally: skips (no plant), doubles (two plants), late emergers (behind cohort)</li>
+          <li><strong>Failure mode causes:</strong></li>
+          <li>— Skips at fixed intervals → blocked tube or metering fault (equipment)</li>
+          <li>— Skips scattered randomly → poor contact or non-wetting soil</li>
+          <li>— Doubles → poor singulation at seed meter</li>
+          <li>— Late emergers in patches → variable depth or localised moisture deficit</li>
+          <li><strong>Target plant population WA wheat:</strong> ~150–180 plants·m⁻²</li>
+          <li>Determine if stand adequate or remedial re-sowing warranted</li>
+        </ul>
+        <aside class="notes">
+          Present standard field diagnostic. Each failure mode points to different upstream cause, guiding investigation and remedial action.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Seeding Technology: Closing the Gap</h2>
+        <ul>
+          <li><strong>NIR seed sensors:</strong> Monitor seed flow real-time, flag singulation faults as they occur</li>
+          <li>In-cab correction during seeding, not discovery weeks later</li>
+          <li><strong>Closing-wheel force control:</strong> Automatically adjust down-pressure as soil type changes within pass</li>
+          <li>Critical on paddocks crossing gravel, sand, clay zones in metres</li>
+          <li><strong>Air-seeder metering improvements:</strong> Brush/finger-style precision meters reduce seed damage</li>
+          <li>Improve singulation consistency at higher ground speeds</li>
+          <li>Direct engineering answer to diagnostic categories from previous slide</li>
+        </ul>
+        <aside class="notes">
+          Move from diagnosis to engineering response. Frame technology as direct solution to establishment variability sources identified above.
+        </aside>
+      </section>
+
+      <!-- PART 3 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 3: Crop Development and Canopy Construction</h2>
+        <p>Staging growth, scaling from leaf to canopy</p>
+      </section>
+
+      <section>
+        <h2>Staging the Crop: Zadoks Scale and Thermal Time</h2>
+        <ul>
+          <li><strong>Zadoks decimal code (0–99):</strong> Standard framework for cereal growth stages</li>
+          <li>Germination (0) → Tillering (2x) → Stem elongation (3x) → Booting (4x) → Heading (5x) → Anthesis (6x) → Grain fill/ripening (7x–9x)</li>
+          <li><strong>Why thermal time, not calendar days?</strong> WA season break varies by 4–6 weeks between years</li>
+          <li>Calendar predictions of flowering/maturity unreliable</li>
+          <li>Thermal-time models transfer well across seasons and locations</li>
+          <li>Backbone connecting establishment timing to every later developmental milestone</li>
+        </ul>
+        <aside class="notes">
+          Introduce Zadoks scale and explain why thermal time is superior to calendar days for WA conditions. This framework connects establishment to crop monitoring.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Phyllochron: Leaf Appearance Timing</h2>
+        <ul>
+          <li><strong>Phyllochron:</strong> Thermal time interval between successive main stem leaf appearances</li>
+          <li>Relatively stable for given genotype but shifts with vernalisation and photoperiod</li>
+          <li>Differs across WA wheat and barley varieties in different rainfall zones</li>
+          <li><strong>Operational importance:</strong> Sets pace of canopy expansion and leaf area development</li>
+          <li>Defines developmental window for tiller bud initiation at each leaf node</li>
+          <li><strong>Short phyllochron:</strong> Reaches canopy closure faster, useful for early weed suppression</li>
+          <li>But also faster early-season water use</li>
+        </ul>
+        <aside class="notes">
+          Define phyllochron and explain operational significance. Links leaf development to canopy closure and competitiveness.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Seed Orientation and Early Light Capture</h2>
+        <ul>
+          <li>Connect seed mechanics (Part 2) to canopy-level light capture</li>
+          <li><strong>Consistent orientation:</strong> Radicle down, coleoptile up</li>
+          <li>Produces predictable vertical emergence, consistent early leaf azimuth</li>
+          <li><strong>Inconsistent orientation:</strong> Variable leaf angle and clumping at emergence</li>
+          <li>Reduces early radiation interception efficiency when canopy most exposed</li>
+          <li>Highest soil evaporation losses at this stage</li>
+          <li><strong>Weed competition consequence:</strong> Later or uneven canopy closure leaves wider light-gap window</li>
+          <li>Weed seedlings can establish during this window</li>
+        </ul>
+        <aside class="notes">
+          Connect seed-level mechanics to canopy-level outcomes. Explain compounding effects on weed competition.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Tillering: The Plant's Strategy for Filling Space</h2>
+        <ul>
+          <li><strong>Tiller bud initiation:</strong> Occurs at base of each leaf node</li>
+          <li><strong>Bud outgrowth regulated by:</strong> Light quality (low R:FR ratio suppresses), N availability, assimilate availability</li>
+          <li><strong>WA reality:</strong> Typically only 2–3 tillers plus main stem produce heads</li>
+          <li>Later tillers frequently abort under terminal drought stress</li>
+          <li><strong>Critical implication:</strong> Early-season plant density and vigour largely determine head-bearing structure capacity</li>
+          <li>Poor establishment cannot reliably "tiller its way" to yield potential if water runs out before later tillers mature</li>
+        </ul>
+        <aside class="notes">
+          Explain tillering physiology and WA-specific limitations under water stress. Links establishment to yield potential.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Yield Component Chain</h2>
+        <ul>
+          <li><strong>Multiplicative sequence:</strong></li>
+          <li>Plant population × Tillers per plant × Spikelets per spike × Grains per spikelet × Grain weight = Yield</li>
+          <li><strong>Key implication:</strong> Error or stress at any single link propagates through every downstream link</li>
+          <li>Partial compensation between links common but rarely complete</li>
+          <li><strong>Water-limited WA spring:</strong> Compensating process (extra tillering) may lack resources</li>
+          <li><strong>Conceptual bridge:</strong> Establishment problem (Part 2) reappears as yield-map low zone at harvest (Part 8)</li>
+          <li>Even though measurements taken months apart</li>
+        </ul>
+        <aside class="notes">
+          Present yield component chain and explain how errors propagate. This bridges establishment problems to final yield outcomes.
+        </aside>
+      </section>
+
+      <!-- PART 4 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 4: Quantifying the Canopy</h2>
+        <p>LAI, light interception, and physiological status</p>
+      </section>
+
+      <section>
+        <h2>Leaf Area Index: The Crop's Solar Panel Area</h2>
+        <ul>
+          <li><strong>LAI:</strong> Total one-sided leaf area per unit ground area (dimensionless)</li>
+          <li>Determines how much incoming radiation the canopy intercepts</li>
+          <li><strong>Optimal LAI trajectory, not "more is always better":</strong></li>
+          <li>— Too low: radiation reaches bare soil, wasted on evaporation and weed seedlings</li>
+          <li>— Too high: crop accumulates luxury leaf area, consuming water needed for grain fill</li>
+          <li><strong>WA Mediterranean pattern:</strong> Sharp spring rainfall decline terminates grain fill</li>
+          <li>Crop with excessive winter LAI runs short of water exactly when grain fill peaks</li>
+          <li>LAI is the central biophysical variable Parts 4–6 attempt to estimate</li>
+        </ul>
+        <aside class="notes">
+          Define LAI and explain why optimal trajectory matters under WA conditions. Set up LAI as central theme for rest of Part 4.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Measuring Light Interception</h2>
+        <ul>
+          <li><strong>Direct instrumented measurement:</strong></li>
+          <li>Ceptometers, plant canopy analysers (LI-COR LAI-2000/2200)</li>
+          <li>Measure gap fraction or intercepted PAR beneath canopy</li>
+          <li>Invert light-transmission model to estimate LAI</li>
+          <li>Accurate but point measurement requiring field instrument and operator</li>
+          <li><strong>Indirect spectral inference:</strong></li>
+          <li>Vegetation indices correlate with LAI and fractional cover</li>
+          <li>Scale across paddock from single sensor pass</li>
+          <li>Indirect proxy, not direct physical measurement</li>
+          <li><strong>Trade-off:</strong> Ground instruments = trustworthy points; spectral proxies = scalable maps</li>
+          <li>NDVI saturation at moderate-to-high LAI motivates soil-adjusted indices</li>
+        </ul>
+        <aside class="notes">
+          Contrast direct and indirect approaches. Emphasize trade-offs and technical limitations of each method.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Radiation Use Efficiency: Light to Biomass</h2>
+        <ul>
+          <li><strong>RUE:</strong> Biomass accumulated per unit intercepted PAR (g·MJ⁻¹)</li>
+          <li>Relatively conservative within species under non-stressed conditions</li>
+          <li>Biomass accumulation approximately linear with cumulative intercepted radiation</li>
+          <li><strong>Agronomic value:</strong> RUE drops measurably under water deficit, nutrient deficiency, disease</li>
+          <li>Drops even before visible symptoms appear</li>
+          <li><strong>Falling RUE trend:</strong> More physiologically direct stress indicator than simple greenness index</li>
+          <li>Greenness can remain unchanged while RUE already declining</li>
+        </ul>
+        <aside class="notes">
+          Explain RUE concept and its value as stress indicator. Link to earlier spectroscopy discussion.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Proximal Sensing of Physiological Status</h2>
+        <ul>
+          <li><strong>SPAD meters:</strong> Transmittance-based proxy for leaf chlorophyll concentration</li>
+          <li>Rapid, low-cost nitrogen status indicator</li>
+          <li><strong>PhotosynQ MultispeQ:</strong> Comprehensive field instrument</li>
+          <li>Chlorophyll fluorescence (photosystem II efficiency)</li>
+          <li>Reflectance-based indices for richer physiological readout</li>
+          <li><strong>Photochemical Reflectance Index (PRI):</strong> Narrow-band index sensitive to xanthophyll cycle pigments</li>
+          <li>Proxy for photosynthetic light-use efficiency and photoprotective response</li>
+          <li>Detects stress response within hours, before chlorophyll loss or SPAD visible</li>
+        </ul>
+        <aside class="notes">
+          Survey proximal sensing tools for physiological assessment. Emphasize speed of detection and integration of multiple parameters.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Beyond Green: Biochemical and Biophysical Properties</h2>
+        <ul>
+          <li><strong>Properties to measure:</strong></li>
+          <li>LAI, chlorophyll content, anthocyanin content (stress/cold-induced)</li>
+          <li><strong>Solar-induced fluorescence (SIF):</strong> Direct photosynthetic activity proxy</li>
+          <li>Increasingly retrievable from hyperspectral and satellite sensors</li>
+          <li>Near-direct proxy rather than indirect structural proxy</li>
+          <li><strong>Grain quality traits:</strong> Protein, oil, starch content</li>
+          <li>Matter as much to WA profitability as yield given protein-based grading</li>
+          <li>Frame this as the "shopping list" of what sensing tries to measure</li>
+        </ul>
+        <aside class="notes">
+          Broaden inventory of plant properties that precision sensing aims to retrieve. Set up physics of measurement in Part 5.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Canopy Architecture: Why Leaf Angle Matters</h2>
+        <ul>
+          <li><strong>Leaf Angle Distribution (LAD):</strong> Major determinant of light distribution through canopy depth</li>
+          <li><strong>Erectophile (near-vertical leaves):</strong> Light penetrates deeper, supports higher optimal LAI</li>
+          <li>Typical of modern cereal varieties, relevant to WA dense canopies</li>
+          <li><strong>Planophile/plagiophile (horizontal leaves):</strong> Efficient top absorption but severe lower shading</li>
+          <li><strong>"Chlorophyll sieving":</strong> Upper leaves filter light before reaching lower layers</li>
+          <li><strong>Photoprotective traits:</strong> Carotenoids, anthocyanins dissipate excess energy</li>
+          <li>Waxy cuticles reduce radiation absorption and water loss under high spring radiation</li>
+          <li>Each trait implicitly recognized by spectral sensors</li>
+        </ul>
+        <aside class="notes">
+          Explain canopy architecture effects on light distribution. Connect to photoprotective mechanisms. Sets stage for Part 5 physics.
+        </aside>
+      </section>
+
+      <!-- PART 5 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 5: The Physics of Spectral Sensing</h2>
+        <p>From photons to pixel values</p>
+      </section>
+
+      <section>
+        <h2>Irradiance, Radiance, Reflectance: Terminology</h2>
+        <ul>
+          <li><strong>Irradiance:</strong> Incoming radiant flux per unit area (W·m⁻²)</li>
+          <li>Varies with sun angle, time of day, atmospheric conditions</li>
+          <li><strong>Radiance:</strong> Flux per unit area *leaving* surface toward sensor</li>
+          <li>What the sensor actually records</li>
+          <li><strong>Reflectance:</strong> Ratio of reflected to incident radiation</li>
+          <li>The intrinsic surface property agronomists actually want</li>
+          <li>Obtained only after correcting radiance for illumination and atmospheric conditions</li>
+          <li><strong>Critical point:</strong> Raw radiance from two flights, times, or satellite overpasses NOT directly comparable</li>
+          <li>Must convert to reflectance — often skipped in casual drone imagery use</li>
+          <li>Spurious "change" may just be change in illumination</li>
+        </ul>
+        <aside class="notes">
+          Establish precise vocabulary before vegetation indices can be interpreted correctly. Stress importance of radiometric correction.
+        </aside>
+      </section>
+
+      <section>
+        <h2>How Vegetation Interacts with Light</h2>
+        <ul>
+          <li><strong>Leaf-level optical behaviour:</strong> Foundation of all vegetation remote sensing</li>
+          <li><strong>Absorption:</strong> Chlorophyll in blue and red, water in specific NIR and SWIR bands</li>
+          <li><strong>Transmittance:</strong> Some light passes through thin leaf tissue, especially NIR</li>
+          <li><strong>Scattering:</strong> At internal cell walls and air-space interfaces</li>
+          <li>Produces characteristic high-reflectance NIR "plateau"</li>
+          <li>Underlies almost every vegetation index in use</li>
+          <li><strong>Canopy-level complications:</strong></li>
+          <li>— Multiple scattering between overlapping leaf layers</li>
+          <li>— Soil background reflectance at low LAI (early-season confound)</li>
+          <li>— Bidirectional reflectance (BRDF) — same canopy appears different depending on viewing/illumination geometry</li>
+        </ul>
+        <aside class="notes">
+          Explain leaf and canopy optical behavior. Introduce BRDF concept and its operational implications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Spectral Regions: Visible to SWIR</h2>
+        <ul>
+          <li><strong>Visible (400–700 nm):</strong> Chlorophyll absorption dominates, blue and red</li>
+          <li>Produces "green hump" reflectance peak</li>
+          <li>Red band most stress-sensitive in visible region</li>
+          <li><strong>Near-infrared (700–1300 nm):</strong> High-reflectance plateau from internal scattering</li>
+          <li>Strongly sensitive to LAI, canopy structure, biomass</li>
+          <li>Red edge (680–750 nm) steep transition — sensitive to chlorophyll and early stress</li>
+          <li>Valuable for nitrogen status assessment</li>
+          <li><strong>Shortwave infrared (1300–2500 nm):</strong> Dominated by leaf and canopy water content</li>
+          <li>Distinct absorption features near 1450 nm and 1940 nm</li>
+          <li>Features sensitive to lignin, cellulose, protein — basis for grain quality trait estimation</li>
+        </ul>
+        <aside class="notes">
+          Survey three spectral regions and their agronomic significance. Emphasize specific features relevant to WA crops.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Why Spectral Models Are Hard: Equifinality and Hughes</h2>
+        <ul>
+          <li><strong>Equifinality:</strong> Different combinations of LAI, chlorophyll, soil background produce statistically indistinguishable spectra</li>
+          <li>Single index value cannot uniquely identify which biophysical driver produced it</li>
+          <li><strong>Hughes phenomenon:</strong> "Curse of dimensionality" in hyperspectral calibration</li>
+          <li>Adding more spectral bands beyond optimal number can make prediction *worse*, not better</li>
+          <li>Especially with limited field samples</li>
+          <li><strong>Practical consequence:</strong> High R² in single-season, single-site paper does NOT guarantee transfer reliability</li>
+          <li>Accuracy depends on different soil type, season, growth stage</li>
+          <li><strong>Central "buyer beware" lesson:</strong> Before trusting an index, ask: validated where, on what, with what RMSE?</li>
+        </ul>
+        <aside class="notes">
+          Introduce two critical caveats. Explain equifinality and Hughes phenomenon in operational terms. This is central caution throughout lecture.
+        </aside>
+      </section>
+
+      <!-- PART 6 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 6: From Spectra to Insight</h2>
+        <p>Vegetation indices, time series, and applications</p>
+      </section>
+
+      <section>
+        <h2>Vegetation Indices: Compressing Information</h2>
+        <ul>
+          <li><strong>NDVI (Normalized Difference Vegetation Index):</strong> (NIR – Red) / (NIR + Red)</li>
+          <li>Simple, robust, by far most widely used</li>
+          <li>Saturates at moderate-to-high LAI (≈3–4) and sensitive to soil background at low cover</li>
+          <li><strong>SAVI (Soil-Adjusted Vegetation Index):</strong> Introduces soil brightness correction factor</li>
+          <li>Reduces background sensitivity</li>
+          <li><strong>OSAVI (Optimized SAVI):</strong> Tunes correction empirically across range of soils</li>
+          <li>No site-specific calibration needed</li>
+          <li><strong>Red-edge indices (NDRE):</strong> More sensitive at higher biomass than NDVI</li>
+          <li>Better for detecting in-season nitrogen status</li>
+          <li>Directly relevant to variable-rate topdressing on WA cereals</li>
+        </ul>
+        <aside class="notes">
+          Introduce most widely used vegetation indices. Explain strengths, limitations, and WA-relevant applications of each.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Reading the Crop Through Time: Time Series</h2>
+        <ul>
+          <li><strong>Single-date index value:</strong> Far less informative than trajectory across season</li>
+          <li><strong>Curve shape encodes:</strong> Rate of green-up, timing and magnitude of peak, rate of senescence</li>
+          <li>Each captures developmental and stress information no snapshot can</li>
+          <li><strong>Phenological metrics:</strong></li>
+          <li>— Green-up date</li>
+          <li>— Peak index value</li>
+          <li>— Integrated (cumulative) index as proxy for total intercepted radiation and biomass</li>
+          <li><strong>Critical point:</strong> WA season break varies by weeks between years</li>
+          <li>Meaningful comparison must reference thermal time or growth stage, not calendar date</li>
+          <li>Otherwise apparent "differences" may simply reflect different sowing dates</li>
+        </ul>
+        <aside class="notes">
+          Argue for time-series approach. Emphasize importance of thermal-time normalization for WA conditions.
+        </aside>
+      </section>
+
+      <section>
+        <h2>From Time Series to Decisions</h2>
+        <ul>
+          <li><strong>Stress detection:</strong> When zone trajectory diverges from its own pattern or paddock average</li>
+          <li>Flags emerging problem before visible to naked eye</li>
+          <li>Gives agronomist head start on field investigation</li>
+          <li><strong>Yield prediction:</strong> Integrated or peak-season index values correlate with final yield</li>
+          <li>Supports in-season yield forecasting</li>
+          <li>Valuable for marketing and harvest logistics planning</li>
+          <li><strong>Equifinality reminder:</strong> Stress signal tells WHERE and roughly WHEN problem emerging</li>
+          <li>Rarely tells WHY without ground-truthing visit</li>
+          <li>Directly motivates diagnostic framework in Part 7</li>
+        </ul>
+        <aside class="notes">
+          Translate time-series concept into concrete agronomic decisions. Reinforce equifinality caution in operational context.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Monitoring Operationally: Nested Measurement Layers</h2>
+        <ul>
+          <li><strong>Triangulate across nested layers:</strong></li>
+          <li><strong>Proximal sensors (SPAD, PhotosynQ):</strong> Rapid trusted spot-checks at specific points</li>
+          <li><strong>UAV multispectral/hyperspectral:</strong> Paddock-scale mapping at flexible flight time</li>
+          <li><strong>Satellite time series:</strong> Full-season context and multi-year history</li>
+          <li><strong>Equifinality strategy:</strong> No single layer trusted in isolation</li>
+          <li>Satellite-flagged anomaly checked against UAV for finer detail</li>
+          <li>Both confirmed or explained by proximal or ground measurement</li>
+          <li>Nested, cross-validating workflow is practical answer to Part 5 cautions</li>
+        </ul>
+        <aside class="notes">
+          Synthesize Parts 4–6 into operational workflow. Explain how triangulation manages equifinality risk.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Case Study: Spectral Biomass Estimation Accuracy Ceiling</h2>
+        <ul>
+          <li><strong>WA perennial ryegrass pastures:</strong> Published benchmark calibration</li>
+          <li>Spectral indices calibrated against ground-truth biomass cuts</li>
+          <li><strong>Typical RMSE:</strong> ~490 kg DM·ha⁻¹</li>
+          <li>Useful, genuinely actionable for paddock-scale grazing decisions</li>
+          <li>Well short of precision for subtle, early-stage stress at individual-plant scale</li>
+          <li><strong>Key lesson:</strong> Spectral biomass estimation is useful tool with known, non-zero error ceiling</li>
+          <li>Not a perfect measurement</li>
+          <li><strong>Always ask:</strong> What RMSE has this index-biomass relationship been validated against before trusting it?</li>
+        </ul>
+        <aside class="notes">
+          Ground theoretical discussion in concrete, honestly-reported WA case. Make equifinality and Hughes-phenomenon lessons concrete and practical.
+        </aside>
+      </section>
+
+      <!-- PART 7 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 7: Diagnosing Spatial Patterns</h2>
+        <p>A field framework for identifying causes</p>
+      </section>
+
+      <section>
+        <h2>Reading Patterns: A Diagnostic Framework</h2>
+        <ul>
+          <li><strong>Four diagnostic questions:</strong></li>
+          <li><strong>1. Geometry:</strong> Linear/rectilinear (equipment or management) vs circular/patchy (biological or soil)?</li>
+          <li><strong>2. Location:</strong> At border, rise, or low point?</li>
+          <li><strong>3. Persistence:</strong> Same place year-to-year (soil/terrain cause) or appear/disappear randomly (weather/pest/management)?</li>
+          <li><strong>4. Timing:</strong> Early (establishment/equipment), mid-season (nutrition/disease/water), or late (senescence/disease/lodging)?</li>
+          <li>Next six slides apply framework to specific cause classes</li>
+          <li>Final synthesis ties into single decision tree</li>
+        </ul>
+        <aside class="notes">
+          Introduce systematic framework before assigning causes. Establish four-question structure organizing rest of Part 7.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Equipment-Induced Patterns</h2>
+        <ul>
+          <li><strong>Tell-tale signature:</strong> Perfectly straight edges with repeat spacing matching equipment width</li>
+          <li><strong>Examples:</strong></li>
+          <li>— Blocked fertiliser/seed tube → narrow linear gaps at outlet spacing</li>
+          <li>— Tank-mix residual burn-down → sharp-edged patches matching spray pass boundaries</li>
+          <li>— Wheel-track compaction → parallel lines at tractor tramline spacing</li>
+          <li>— Boom section overlap/skip → linear strips at section width</li>
+          <li><strong>Why easiest category to confirm:</strong> Geometrically rigid, tied to specific machine dimension</li>
+          <li>Often resolved by checking machine width or pass log</li>
+          <li>No paddock digging needed</li>
+        </ul>
+        <aside class="notes">
+          Apply diagnostic framework to equipment causes. Emphasize ease of verification through machine records.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Soil-Driven Patterns: Fixed Properties</h2>
+        <ul>
+          <li><strong>Rooted in fixed soil properties:</strong> Persistent across seasons, correlate with soil maps</li>
+          <li><strong>WA examples:</strong></li>
+          <li>— Water-repellent sand → erratic speckled early establishment, fades later</li>
+          <li>— Shallow gravel/duplex on rises → chronic low vigour matching soil boundary</li>
+          <li>— Sodic/dispersive subsoils → restrict root depth, drought stress in dry years only</li>
+          <li><strong>Diagnostic tell:</strong> Strong, persistent correlation with independent soil map</li>
+          <li>Regardless of season — distinguishes from terrain and abiotic patterns below</li>
+        </ul>
+        <aside class="notes">
+          Apply framework to soil-driven causes. Explain WA-specific soil constraints and their spatial signatures.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Terrain-Driven Patterns: Topography Rules</h2>
+        <ul>
+          <li><strong>Patterns governed by topography rather than soil chemistry:</strong></li>
+          <li><strong>Frost:</strong> Cold air drainage concentrates in low-lying valleys and basins</li>
+          <li>Increasing risk as earlier sowing exposes reproductive stages to frost-prone season</li>
+          <li><strong>Waterlogging:</strong> Same low points saturate in wet years</li>
+          <li>Restricts root oxygen, induces nitrogen loss via denitrification</li>
+          <li><strong>Erosion:</strong> Water erosion follows flow paths and contours</li>
+          <li>Wind erosion affects exposed sandy rises</li>
+          <li>Each leaves geomorphically distinct, topographically predictable signature</li>
+          <li>Elevation model can anticipate before it occurs</li>
+        </ul>
+        <aside class="notes">
+          Apply framework to terrain-driven causes. Explain WA-specific frost and waterlogging risks and their predictability.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Disease Patterns: Airborne vs Soilborne</h2>
+        <ul>
+          <li><strong>Two fundamentally different spatial signatures pointing to opposite responses:</strong></li>
+          <li><strong>Airborne foliar pathogens:</strong> Stripe rust, septoria (high-rainfall WA), blackleg (canola)</li>
+          <li>Patches *actively expand* with directional downwind bias</li>
+          <li>Can worsen rapidly in one season under favourable weather</li>
+          <li><strong>Soilborne pathogens:</strong> Rhizoctonia bare patch (characteristic WA disease), take-all</li>
+          <li>Patches spatially *static*, slowly expanding year-to-year</li>
+          <li>Tied to paddock history (host stubble, pH, tillage)</li>
+          <li><strong>Diagnostic tell:</strong> Static patch = soilborne (rotation/cultivar decisions next season)</li>
+          <li>Actively spreading = airborne (fungicide timing this season)</li>
+        </ul>
+        <aside class="notes">
+          Explain two disease classes and their spatial dynamics. Emphasize different diagnostic and management implications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Weed-Driven Patterns: Borders and Banks</h2>
+        <ul>
+          <li><strong>Border concentration:</strong> Heaviest weed escapes at paddock borders</li>
+          <li>Reduced spray overlap, lower crop competition at edge, continuous seed introduction</li>
+          <li><strong>Seed-bank patches:</strong> Discrete "hot spots" reflect locally elevated seed bank</li>
+          <li>From prior poor control or uncontrolled summer weed set-seed cohort</li>
+          <li><strong>Near-row escapes:</strong> Weeds close to crop row harder to control</li>
+          <li>Seeding disturbance dilutes residual herbicide concentration where weed-crop compete most</li>
+          <li><strong>Technology response:</strong> PWM spray nozzles vary duty cycle at constant pressure</li>
+          <li>Allow variable application rate while maintaining droplet size and spray quality</li>
+          <li>Critical for controlling border and patch escapes and avoiding under-dosing driving resistance</li>
+        </ul>
+        <aside class="notes">
+          Apply framework to weed spatial ecology. Connect to herbicide resistance management and spray technology.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Abiotic Stress Patterns: WA's Three Dominants</h2>
+        <ul>
+          <li><strong>Frost:</strong> Topographically controlled, increasing risk as sowing earlier</li>
+          <li><strong>Terminal drought:</strong> Interacts with soil water-holding capacity</li>
+          <li>Sandy rises stress first and most severely — WA's central Mediterranean production constraint</li>
+          <li>Spring rainfall decline ends grain fill abruptly</li>
+          <li><strong>Dryland salinity:</strong> Long-standing WA degradation issue</li>
+          <li>Saline groundwater discharges at valley floors and break-of-slope</li>
+          <li>Produces chronically bare patches with salt-tolerant weed margins</li>
+          <li><strong>Integration point:</strong> Abiotic stress rarely sole independent cause</li>
+          <li>Almost always expressed through soil and topographic template</li>
+        </ul>
+        <aside class="notes">
+          Apply framework to WA's dominant abiotic stressors. Emphasize soil-terrain template interaction.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Diagnostic Decision Tree</h2>
+        <ul>
+          <li><strong>Synthesis of six cause categories anchored to four-question framework:</strong></li>
+          <li>"What does pattern look like and where?" → route to cause</li>
+          <li>Linear geometry → equipment</li>
+          <li>Matches soil map → soil constraint</li>
+          <li>Matches elevation → frost/waterlogging/erosion</li>
+          <li>Expanding directionally in-season → airborne disease</li>
+          <li>Static, tied to host history → soilborne disease</li>
+          <li>At borders or discrete hot spots → weeds</li>
+          <li>Wet/dry year only → abiotic stress interaction</li>
+          <li><strong>Capstone lesson:</strong> Real paddocks show overlapping causes</li>
+          <li>Ground-truthing (soil pit, disease ID, tissue test) always final necessary step</li>
+          <li>Equifinality caution: pattern alone, like spectra alone, suggestive but never conclusive</li>
+        </ul>
+        <aside class="notes">
+          Synthesize all cause categories. Emphasize overlapping causes and necessity of ground truthing as final verification step.
+        </aside>
+      </section>
+
+      <!-- PART 8 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 8: Yield Monitoring and Mapping</h2>
+        <p>Closing the loop with outcome measurement</p>
+      </section>
+
+      <section>
+        <h2>Yield Monitors: Sensor Stack on the Header</h2>
+        <ul>
+          <li><strong>Grain flow sensors:</strong> Optical, impact-plate, or photoelectric designs</li>
+          <li>Estimate mass flow rate of clean grain in elevator</li>
+          <li><strong>Moisture sensors:</strong> Typically capacitance-based</li>
+          <li>Measure grain moisture for standard-moisture yield basis</li>
+          <li><strong>GNSS position logging:</strong> Ties flow measurement to coordinate at ~1 Hz</li>
+          <li><strong>Header position and width sensors:</strong> Confirm engagement and working width</li>
+          <li><strong>Key conceptual point:</strong> Yield monitors *estimate* flow rate from indirect signal</li>
+          <li>Do not directly weigh grain</li>
+          <li>Calibration is not optional</li>
+        </ul>
+        <aside class="notes">
+          Explain sensor stack and measurement principles. Stress that monitoring is estimation, not direct weighing.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Calibrating Yield Monitors</h2>
+        <ul>
+          <li><strong>Multi-point calibration:</strong> Loads across representative range of flow rates and speeds</li>
+          <li>Not single load at one condition — sensor response rarely perfectly linear</li>
+          <li><strong>Ground-truth weighing:</strong> Weighbridge or calibrated chaser-bin scale as reference</li>
+          <li><strong>Crop-specific calibration:</strong> Grain density differs between wheat, barley, canola, lupins</li>
+          <li>Each grain type requires own calibration</li>
+          <li>Ideally repeat each season as sensors drift with wear</li>
+          <li><strong>Header verification:</strong> Width and overlap sensors must be verified</li>
+          <li>Width error compounds directly into area error across entire map</li>
+          <li><strong>Consequence:</strong> Uncalibrated monitor can misreport yield by 10–20%</li>
+          <li>Error propagates into every zone-delineation decision from that map</li>
+        </ul>
+        <aside class="notes">
+          Walk through practical calibration procedure. Stress importance of multi-point approach and crop-specific calibration.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Data Cleaning Pipeline: Points to Map</h2>
+        <ul>
+          <li><strong>Header lag correction:</strong> Grain was cut seconds before sensor measurement</li>
+          <li>Without correcting for travel-time offset (function of speed and header-to-sensor distance)</li>
+          <li>Every point smeared in direction of travel by tens of metres</li>
+          <li><strong>Start/stop artefacts:</strong> Header lift/lower and end-of-row deceleration produce spurious high/low values</li>
+          <li><strong>Partial-width passes:</strong> Common at irregular WA boundaries, incorrect area assumption unless corrected</li>
+          <li><strong>Statistical outlier filtering:</strong> Remove implausible values beyond thresholds</li>
+          <li><strong>Spatial interpolation:</strong> Grid cleaned point cloud into continuous yield surface</li>
+          <li>Suitable for overlay with soil, imagery, prior-year maps</li>
+          <li><strong>Skipping this pipeline:</strong> Single most common reason yield map "doesn't make agronomic sense"</li>
+        </ul>
+        <aside class="notes">
+          Detail data cleaning steps required. Emphasize importance of complete pipeline for defensible maps.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Interpreting Yield Maps: Signal vs Noise</h2>
+        <ul>
+          <li><strong>Key principle:</strong> Distinguish single-season from multi-year pattern before drawing conclusions</li>
+          <li>Single-season map heavily influenced by one-off events (isolated frost, unusual wet patch)</li>
+          <li>May not recur</li>
+          <li><strong>Multi-year yield stability analysis:</strong> Overlay/classify several seasons</li>
+          <li>Identify zones that are consistently high, consistently low, or genuinely unstable</li>
+          <li>Reveals fundamentally more reliable picture</li>
+          <li><strong>Practical payoff:</strong></li>
+          <li>— Consistently low zone (fixed soil constraint) → permanent zone-based variable-rate strategy</li>
+          <li>— Unstable zone (season-dependent interaction) → season-adaptive, in-season sensing</li>
+          <li>Direct practical link back to diagnostic categories in Part 7</li>
+        </ul>
+        <aside class="notes">
+          Present key principle for sound interpretation. Explain multi-year approach and its management implications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Quality Sensors: Composition Beyond Quantity</h2>
+        <ul>
+          <li><strong>On-header or post-harvest NIR protein sensors:</strong> Increasingly on WA combines</li>
+          <li>Allow real-time, spatially-resolved grain protein mapping</li>
+          <li><strong>WA relevance:</strong> Protein determines wheat grading and price premiums</li>
+          <li>Differentiates Australian Premium White from Australian Standard White</li>
+          <li><strong>Oil-content sensing:</strong> Equivalent role for canola</li>
+          <li><strong>Agronomic insight combining yield and quality maps:</strong></li>
+          <li>— High yield, low protein → N diluted by yield potential (not deficiency)</li>
+          <li>— Low yield, low protein → genuine nutrient or soil constraint</li>
+          <li>Very different management signals</li>
+          <li>Can only be made by overlaying quality on yield data</li>
+        </ul>
+        <aside class="notes">
+          Extend monitoring from quantity to composition. Explain how quality and yield overlay reveals distinct management signals.
+        </aside>
+      </section>
+
+      <!-- PART 9 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 9: Satellite and Aerial Remote Sensing at Scale</h2>
+        <p>Platforms and trade-offs</p>
+      </section>
+
+      <section>
+        <h2>Remote Sensing Platforms: Three Tiers</h2>
+        <ul>
+          <li><strong>Proximal/handheld:</strong> Centimetre-scale points, immediate feedback</li>
+          <li>Not scalable beyond few sampling points without significant labour</li>
+          <li><strong>UAV (drone) multispectral:</strong> Centimetre-decimetre resolution, full-paddock coverage in single flight</li>
+          <li>Flexible timing under operator control</li>
+          <li>Constrained by battery endurance and operator effort on large WA paddocks</li>
+          <li>200+ hectare paddock requires multiple battery swaps</li>
+          <li><strong>Satellite:</strong> Typically 10–30 m resolution, systematic free large-area coverage</li>
+          <li>Fixed revisit schedule, subject to cloud cover</li>
+          <li>Acquisition timing user cannot control</li>
+          <li><strong>No platform dominates every dimension:</strong> Choice depends on question being asked</li>
+        </ul>
+        <aside class="notes">
+          Compare three platform tiers. Emphasize trade-offs governing appropriate choice for different tasks.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Satellite Systems for Crop Monitoring</h2>
+        <ul>
+          <li><strong>Sentinel-2 (ESA):</strong> 10 m resolution, free, ~5-day revisit from paired constellation</li>
+          <li>Accessed through Copernicus data archive, decision-support platforms</li>
+          <li><strong>Landsat (USGS):</strong> 30 m resolution, free, continuously running archive extending decades</li>
+          <li>Valuable for multi-year yield and vegetation-index stability analysis</li>
+          <li><strong>Commercial high-resolution (Planet):</strong> Finer spatial detail at subscription cost</li>
+          <li><strong>WA limitation specific to Mediterranean climate:</strong> Cloud cover during wettest growing season</li>
+          <li>Precisely when in-season crop decisions matter most</li>
+          <li>Can leave weeks between usable cloud-free satellite images</li>
+          <li>Constraint proximal and UAV sensing do not share</li>
+        </ul>
+        <aside class="notes">
+          Survey relevant satellite systems. Highlight WA-specific cloud limitation during critical crop monitoring period.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Choosing the Right Platform</h2>
+        <ul>
+          <li><strong>In-season nitrogen topdressing decision:</strong> Needs fast, controllable timing</li>
+          <li>UAV or proximal sensing — waiting for cloud-free satellite pass could miss application window</li>
+          <li><strong>Multi-year management-zone delineation:</strong> Well served by free, long-running satellite archives</li>
+          <li>Low cost and long record length matter more than fine spatial/temporal control</li>
+          <li><strong>Fine-scale disease-patch confirmation:</strong> Whatever sensing layer flags anomaly</li>
+          <li>Ultimately requires ground-scouting visit to identify pathogen</li>
+          <li>Reinforces equifinality and ground-truthing lesson throughout lecture</li>
+          <li><strong>Frame:</strong> Practical translation of research remote sensing into everyday WA agronomist decisions</li>
+        </ul>
+        <aside class="notes">
+          Present practical decision framework. Tie directly back to toolkit overview and operational realities of WA farming.
+        </aside>
+      </section>
+
+      <!-- PART 10 -->
+      <section data-background-color="#002147" class="center-content">
+        <h2>Part 10: Synthesis — From Diagnosis to Action</h2>
+        <p>Putting the scales together</p>
+      </section>
+
+      <section>
+        <h2>Field Scouting Routine</h2>
+        <ul>
+          <li><strong>Translate lecture into structured, repeatable routine:</strong></li>
+          <li><strong>Walk pattern:</strong> Systematic transect (e.g., W-pattern) crossing known zones from prior maps</li>
+          <li>Not just easily-accessible borders (which bias toward edge effects)</li>
+          <li><strong>At each stop:</strong> Plant counts, soil pit/probe (compaction, sodicity, root depth)</li>
+          <li>Leaf disease ID, weed ID and seed-bank assessment, tissue sampling for anomalies</li>
+          <li><strong>Timing to WA windows (Part 3):</strong></li>
+          <li>— Post-emergence establishment check</li>
+          <li>— Mid-tillering nutrition and weed check</li>
+          <li>— Stem-elongation disease check</li>
+          <li>— Pre-harvest yield-potential and lodging/frost-damage assessment</li>
+          <li><strong>Close loop:</strong> Imagery and sensors generate hypotheses; structured scouting confirms or refutes</li>
+        </ul>
+        <aside class="notes">
+          Translate entire lecture into actionable scouting routine. Tie to developmental timing and closure of loop with sensors.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Worked Example: The Wongan Hills Paddock</h2>
+        <ul>
+          <li><strong>Return to Part 1 running example and layer in full toolkit:</strong></li>
+          <li><strong>Multi-year yield maps:</strong> Gravel rise stable low (soil-driven, Part 7)</li>
+          <li>Clay valley floor unstable across seasons (terrain/hydrology-driven)</li>
+          <li><strong>Early-season UAV NDVI flight:</strong> New circular patch on sandplain</li>
+          <li>Soil map doesn't explain it</li>
+          <li><strong>Ground scouting:</strong> Identifies Rhizoctonia bare patch (soilborne disease)</li>
+          <li>Prompts rotation and cultivar response for next season</li>
+          <li><strong>Persistent low-NDVI border strip:</strong> Investigated, found ryegrass escape</li>
+          <li>Prompts PWM-targeted herbicide response this season</li>
+          <li><strong>Explicit lesson:</strong> Each diagnostic layer contributed unique information</li>
+          <li>Appropriate management response differs sharply despite all initially looking like "low-yielding patch"</li>
+        </ul>
+        <aside class="notes">
+          Layer full toolkit on concrete example. Show how each diagnostic layer contributes unique information and how management response differs by cause.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Bringing It Together: The Multi-Scale Problem</h2>
+        <ul>
+          <li><strong>Unifying synthesis:</strong> Crop spatial variability = layered outcome of nested scales and causes</li>
+          <li><strong>Plant-scale (Part 2):</strong> Establishment processes</li>
+          <li><strong>Community-scale (Parts 3–4):</strong> Developmental and competitive dynamics</li>
+          <li><strong>Paddock-scale (Part 7):</strong> Soil, terrain, biotic, management drivers</li>
+          <li><strong>Every observation through lens of ambiguity (Part 5 equifinality):</strong></li>
+          <li>No single sensor, snapshot, or yield map resolves alone</li>
+          <li><strong>Precision agriculture toolkit most powerful when layers deliberately triangulated:</strong></li>
+          <li>Scouting, biophysical sensing, spectral remote sensing, yield mapping</li>
+          <li>As demonstrated in Wongan Hills worked example</li>
+          <li><strong>Preview next chapter:</strong> Having characterized WHERE variability comes from and HOW to detect/diagnose</li>
+          <li>Next step = turn diagnosis into prescription → management zones and variable-rate prescription maps</li>
+        </ul>
+        <aside class="notes">
+          Close lecture with unifying synthesis. Connect all parts and emphasize power of triangulated toolkit approach. Preview progression to prescription mapping in next chapter.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- RevealJS Library Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/math/math.min.js"></script>
+  
+  <!-- Mermaid Engine & RevealJS Initialization -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    
+    // Initialize Mermaid with custom UWA palette parameters
+    mermaid.initialize({
+      securityLevel: 'loose',
+      theme: 'default',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true
+      }
+    });
+
+    // RevealJS System Initialization with proper plugin references
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: 'slide',
+      backgroundTransition: 'fade',
+      controls: true,
+      progress: true,
+      center: true,
+      touch: true,
+      overview: true,
+      keyboard: true,
+      plugins: [ window.RevealNotes, window.RevealMath.KaTeX ]
+    });
+
+    // Enable speaker notes for both presentation and speaker view
+    Reveal.on('ready', () => {
+      console.log('RevealJS initialized successfully with speaker notes enabled');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,336 @@
+:root {
+    --uwa-blue: #003087;
+    --uwa-gold: #DAAA00;
+    --text-color: #333;
+    --background-color: #fff;
+    --section-background: #f5f5f5;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* SCORM-friendly styling */
+.chapter-header {
+    background-color: var(--uwa-blue);
+    color: white;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+}
+
+.chapter-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: bold;
+}
+
+.chapter-meta {
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--uwa-blue);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.2rem; border-bottom: 2px solid var(--uwa-gold); padding-bottom: 0.5rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+
+/* Math equations styling */
+.math {
+    font-family: 'Times New Roman', serif;
+    font-size: 1.1em;
+}
+
+/* Code blocks */
+pre {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+code {
+    background-color: #f0f0f0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+/* Mermaid diagrams */
+/* .mermaid {
+    margin: 2rem 0;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+} */
+
+/* Learning objectives box */
+.learning-objectives {
+    background-color: var(--section-background);
+    border-left: 4px solid var(--uwa-gold);
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.learning-objectives h3 {
+    color: var(--uwa-blue);
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.learning-objectives ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.learning-objectives li {
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+/* Enhanced RevealJS learning objectives styling */
+.reveal .learning-objectives-slide {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.reveal .learning-objectives-slide h2 {
+    background-color: var(--uwa-blue);
+    color: white;
+    padding: 1rem;
+    margin: -1rem -1rem 1rem -1rem;
+    text-align: center;
+}
+
+.reveal .learning-objectives-slide .incremental li {
+    font-size: 1.1em;
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+}
+
+.reveal .learning-objectives-slide .callout-note {
+    background-color: #e8f4f8;
+    border-left: 4px solid var(--uwa-blue);
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.9em;
+}
+
+/* Case study boxes */
+.case-study {
+    background-color: #e8f4f8;
+    border: 1px solid var(--uwa-blue);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+}
+
+.case-study h4 {
+    color: var(--uwa-blue);
+    margin-top: 0;
+}
+
+/* Review questions */
+.review-questions {
+    background-color: #fff8e1;
+    border: 1px solid var(--uwa-gold);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 2rem 0;
+}
+
+/* Tables - Enhanced styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+th {
+    background-color: var(--uwa-blue);
+    color: white;
+}
+
+/* Table caption styling */
+table caption {
+    caption-side: top;
+    padding: 0.5rem 0;
+    font-weight: bold;
+    color: var(--uwa-blue);
+    font-size: 1.1em;
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+
+/* Numeric columns alignment */
+td:nth-child(n+3),
+td.numeric {
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+/* First column (usually descriptive) styling */
+td:first-child {
+    font-weight: 500;
+    color: var(--uwa-blue);
+}
+
+/* Table wrapper for responsive design */
+.table-wrapper {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 48, 135, 0.1);
+}
+
+/* Enhanced comparison table styling */
+.comparison-table table {
+    border: 2px solid var(--uwa-blue);
+}
+
+.comparison-table th {
+    background: linear-gradient(135deg, var(--uwa-blue), #004BA0);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.comparison-table td:first-child {
+    background-color: var(--section-background);
+    font-weight: bold;
+    border-right: 2px solid var(--uwa-blue);
+}
+
+/* Enhanced data table styling */
+.data-table tr:nth-child(even) td {
+    background-color: #f0f7ff;
+}
+
+.data-table td.numeric {
+    background-color: #f8f9fa;
+    border-left: 1px solid #e0e0e0;
+}
+
+/* Highlight important cells */
+.highlight-cell {
+    background-color: var(--uwa-gold) !important;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Small table text for large datasets */
+.compact-table {
+    font-size: 0.9em;
+}
+
+.compact-table th,
+.compact-table td {
+    padding: 0.5rem;
+}
+
+/* Enhanced cost/currency formatting */
+.currency {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #006600;
+    background-color: #f0f8f0;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    border: 1px solid #d4edda;
+}
+
+/* Enhanced percentage formatting */
+.percentage {
+    font-weight: bold;
+    color: var(--uwa-blue);
+    background-color: #e8f4f8;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    border: 1px solid #bee5eb;
+}
+
+/* Table footer row */
+.table-footer {
+    background-color: var(--section-background);
+    font-weight: bold;
+    border-top: 2px solid var(--uwa-blue);
+}
+
+/* Table with alternating column colors */
+.striped-columns td:nth-child(odd) {
+    background-color: rgba(0, 48, 135, 0.05);
+}
+
+/* Sticky table headers for long tables */
+.sticky-header th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Table sorting indicators (if JavaScript sorting is added) */
+.sortable th {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable th:hover {
+    background-color: #002570;
+}
+
+.sort-asc::after {
+    content: " ▲";
+    font-size: 0.8em;
+}
+
+.sort-desc::after {
+    content: " ▼";
+    font-size: 0.8em;
+}
+
+
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .chapter-header {
+        padding: 1rem;
+    }
+    
+    .chapter-title {
+        font-size: 1.8rem;
+    }
+    
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.3rem; }
+}
