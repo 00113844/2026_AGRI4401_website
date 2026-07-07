@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spatial Interpolation and Geostatistics in Precision Agriculture</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.css">
+  
+  <style>
+    /* UWA Branding */
+    :root {
+      --uwa-blue: #27348B;
+      --uwa-gold: #E2B600;
+      --uwa-navy: #002147;
+      --uwa-light-grey: #F5F5F5;
+      --uwa-dark-grey: #333333;
+    }
+
+    .reveal {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--uwa-navy);
+      color: var(--uwa-light-grey);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      color: var(--uwa-blue);
+      text-transform: none;
+      font-weight: 600;
+    }
+
+    .reveal .slides section {
+      text-align: left;
+      font-size: 0.78em;
+    }
+
+    .reveal .title-slide h1 {
+      color: var(--uwa-gold);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      margin-bottom: 0.5em;
+    }
+
+    .reveal .title-slide h2 {
+      color: var(--uwa-light-grey);
+      font-size: 0.7em;
+      font-weight: 400;
+      margin-bottom: 1.5em;
+    }
+
+    .reveal .title-slide p {
+      color: var(--uwa-light-grey);
+      font-size: 0.6em;
+    }
+
+    .reveal section[data-background-color="#27348B"] h2,
+    .reveal section[data-background-color="#002147"] h2 {
+      color: var(--uwa-gold);
+      text-align: center;
+      font-size: 1.8em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .reveal ul {
+      margin-left: 0;
+      list-style-position: outside;
+    }
+
+    .reveal li {
+      margin-bottom: 0.6em;
+      line-height: 1.4;
+    }
+
+    .reveal strong {
+      color: var(--uwa-gold);
+      font-weight: 600;
+    }
+
+    .reveal em {
+      color: var(--uwa-blue);
+      font-style: italic;
+    }
+
+    .reveal a {
+      color: var(--uwa-blue);
+      text-decoration: underline;
+    }
+
+    .reveal a:hover {
+      color: var(--uwa-gold);
+    }
+
+    .reveal .smaller {
+      font-size: 0.75em;
+      color: #cccccc;
+    }
+
+    .reveal code {
+      background-color: rgba(255,255,255,0.1);
+      padding: 0.1em 0.3em;
+      border-radius: 3px;
+      color: var(--uwa-gold);
+    }
+
+    /* Two-column layout */
+    .reveal .two-col {
+      display: flex;
+      justify-content: space-between;
+      gap: 2em;
+    }
+
+    .reveal .two-col > div {
+      flex: 1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .reveal .slides section {
+        font-size: 0.65em;
+      }
+      .reveal .two-col {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE SLIDE -->
+      <section class="title-slide" data-background-color="#27348B">
+        <h1>Spatial Interpolation and Geostatistics</h1>
+        <h2>From Sample Points to Management Maps</h2>
+        <p><strong>AGRI4401</strong> Precision Agriculture</p>
+        <p>School of Agriculture and Environment<br>The University of Western Australia</p>
+      </section>
+
+      <!-- PART 1: WHY SPATIAL STRUCTURE MATTERS -->
+      <section data-background-color="#002147">
+        <h2>Part 1: Why Spatial Structure Matters</h2>
+      </section>
+
+      <section>
+        <h2>From Spreadsheet to Map: Why Location Changes Everything in PA</h2>
+        <ul>
+          <li><strong>Spreadsheet limitation:</strong> 40 soil P values = farm mean, but tells nothing about <em>where</em> to apply fertiliser</li>
+          <li><strong>GPS transformation:</strong> Add coordinates → spatially explicit record → management zones, VRA prescriptions, risk maps</li>
+          <li><strong>The PA shift:</strong> From table of numbers to spatially structured dataset</li>
+          <li><strong>Central problem:</strong> 40 sample points vs tens of thousands of potential management locations</li>
+          <li><strong>Interpolation question:</strong> How to predict values at unsampled locations as reliably as possible from collected samples?</li>
+          <li><strong>Answer depends on:</strong> Understanding spatial structure of data—the subject of this entire lecture</li>
+        </ul>
+        <aside class="notes">
+          Open by establishing the central problem this lecture addresses. A spreadsheet of soil phosphorus values—40 rows, each with a P concentration in mg/kg—is analytically useful for calculating a farm mean, but tells a farmer almost nothing about where to apply fertiliser, at what rate, and where the existing P is adequate or insufficient. The moment those 40 values are assigned the GPS coordinates at which each sample was collected, the dataset is transformed: it becomes a spatially explicit record from which management zones, variable-rate prescriptions, and risk maps can be derived. This transformation—from a table of numbers to a spatially structured dataset—is the fundamental shift that precision agriculture makes relative to conventional agronomy. But the 40 sample points still cover only 40 locations in a paddock that contains tens of thousands of potential management locations. The central analytical question this lecture addresses: how do we predict the value at every one of those unsampled locations as reliably as possible from the 40 samples we actually collected? That is the interpolation problem, and the answer depends critically on understanding the spatial structure of the data—the subject of this entire lecture.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Tobler's First Law: Near Things Are More Alike</h2>
+        <ul>
+          <li><strong>Tobler's First Law:</strong> "Everything is related to everything else, but near things are more related than distant things"</li>
+          <li><strong>Agricultural manifestation:</strong> Soil pH at one location better predicts pH 20 m away than 200 m away</li>
+          <li><strong>Why gradual change:</strong> Parent material, weathering, leaching, liming history change gradually, not discontinuously</li>
+          <li><strong>Spatial continuity = positive autocorrelation:</strong> Makes interpolation meaningful</li>
+          <li><strong>If spatially random:</strong> No interpolation method would outperform paddock mean everywhere</li>
+          <li><strong>Variable differences:</strong> WA sandplain pH autocorrelated over 200 m; yield variability over 80 m—changes sampling and interpolation decisions</li>
+        </ul>
+        <aside class="notes">
+          Introduce Tobler's First Law of Geography—"everything is related to everything else, but near things are more related than distant things"—as the empirical observation that underlies every interpolation method covered in this lecture. In an agricultural paddock, this law manifests consistently: a soil pH measurement at one location is a better predictor of pH 20 metres away than 200 metres away, because the processes that set soil pH—parent material, weathering depth, leaching history, cropping and liming history—change gradually across the landscape rather than discontinuously from point to point. This spatial continuity is called positive spatial autocorrelation and is the property that makes interpolation meaningful: if the world were spatially random—if knowing the pH at one point told you nothing about pH nearby—then no interpolation method would outperform simply predicting the paddock mean everywhere. The fact that spatial autocorrelation exists, and can be quantified, is what allows geostatistical methods to produce defensible, agronomically useful predictions at unsampled locations. Critically, the degree and scale of spatial autocorrelation differ between variables and between soil types: soil pH in a WA sandplain paddock may be autocorrelated over 200 m, while yield variability from the same paddock may be autocorrelated over only 80 m—and understanding this difference changes every subsequent decision about sample design and interpolation method.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Interpolation Problem: Predicting the Unsampled</h2>
+        <ul>
+          <li><strong>Definition:</strong> Using known values at sampled locations to estimate values at unsampled locations within study area</li>
+          <li><strong>All methods share:</strong> Make prediction at each unsampled location; weight nearby samples more; exactly reproduce observed values (honoring property)</li>
+          <li><strong>Methods differ in:</strong> How they compute those weights</li>
+          <li><strong>Deterministic methods (IDW):</strong> Assign weights by fixed geometric rule (inverse distance) without examining spatial structure</li>
+          <li><strong>Geostatistical methods (Kriging):</strong> Derive optimal weights from statistical model of spatial structure via semivariogram</li>
+          <li><strong>Why extra modelling matters:</strong> Kriging produces better prediction map + uncertainty map (defensible, risk-aware management)</li>
+        </ul>
+        <aside class="notes">
+          Define spatial interpolation precisely: the process of using a set of known values at sampled locations to estimate values at unsampled locations within the same study area. All interpolation methods share three characteristics: they make a prediction at each unsampled location, they weight nearby sample points more heavily than distant ones, and they exactly reproduce the observed values at the sample locations themselves (the honoring property—with the exception of smoothing methods that do not enforce exact reproduction). The methods differ in how they compute those weights. Deterministic methods (of which IDW is the leading example, covered in Part 5) assign weights according to a fixed geometric rule—typically inverse distance—without examining the spatial structure of the data itself. Geostatistical methods (Kriging and its variants, Parts 6–8) derive the optimal weights from a statistical model of the spatial structure, estimated from the data itself via the semivariogram. This lecture is structured to show why that extra modelling step is worth the effort: Kriging does not just produce a better prediction map—it also produces a map of prediction uncertainty that makes the resulting management prescriptions defensible and risk-aware in a way that IDW fundamentally cannot.
+        </aside>
+      </section>
+
+      <!-- PART 2: SPATIAL AUTOCORRELATION -->
+      <section data-background-color="#002147">
+        <h2>Part 2: Spatial Autocorrelation—The Foundation</h2>
+      </section>
+
+      <section>
+        <h2>Spatial Autocorrelation: Measuring How Similar Neighbours Are</h2>
+        <ul>
+          <li><strong>Definition:</strong> Correlation of variable with itself across space—degree of similarity at nearby locations vs random distribution</li>
+          <li><strong>Positive autocorrelation:</strong> Nearby values more similar than chance (most common for soil/crop properties; makes interpolation meaningful)</li>
+          <li><strong>Negative autocorrelation:</strong> Nearby values more dissimilar than expected (rare; checkerboard management patterns)</li>
+          <li><strong>Zero autocorrelation:</strong> Spatial randomness—no neighbour relationship; any pattern is noise</li>
+          <li><strong>Statistical caution:</strong> Classical t-tests/ANOVAs on spatially autocorrelated data systematically underestimate standard error → falsely significant results</li>
+          <li><strong>Dual role:</strong> Property to exploit for interpolation AND structural feature to account for in any PA statistical analysis</li>
+        </ul>
+        <aside class="notes">
+          Define spatial autocorrelation as the correlation of a variable with itself across space—the degree to which values at nearby locations are more (or less) similar than would be expected if the values were randomly distributed across the landscape. Three types: Positive autocorrelation—nearby values are more similar than chance would predict; the most common case for soil and crop properties, and the case that makes interpolation meaningful. Negative autocorrelation—nearby values are more dissimilar than expected; relatively rare in PA data but can occur in checkerboard management patterns or some spatial disease distributions. Zero autocorrelation—spatial randomness; values have no relationship with their neighbours' values, and any apparent spatial pattern is random noise. Distinguish spatial autocorrelation from temporal autocorrelation: both violate the classical statistical independence assumption, but in different dimensions. Classical t-tests and ANOVAs applied to spatially autocorrelated agricultural data—for example, comparing the mean yield of two zones within a paddock—will systematically underestimate the standard error of the difference, producing falsely significant results. Spatial autocorrelation is not just a property to exploit for interpolation; it is a structural feature of spatial data that must be accounted for in any statistical analysis of a PA dataset.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Measuring Spatial Structure: The Lag Concept and the Correlogram</h2>
+        <ul>
+          <li><strong>Lag h:</strong> Distance separating a pair of sample locations</li>
+          <li><strong>Typical pattern:</strong> Autocorrelation highest at short lags (close = very similar); decreases as lag increases; reaches zero at independence distance</li>
+          <li><strong>Spatial correlogram:</strong> Plots autocorrelation coefficient r(h) against lag distance h—characterizes spatial structure</li>
+          <li><strong>Slowly declining:</strong> Smoothly varying property (soil pH in uniform landscape)</li>
+          <li><strong>Sharply declining:</strong> Short-range variation (patchy waterlogging damage)</li>
+          <li><strong>Range:</strong> Lag where correlogram crosses zero—"sphere of influence" of each sample; sets minimum rational sample spacing</li>
+        </ul>
+        <aside class="notes">
+          Introduce the lag h as the distance separating a pair of sample locations, and explain how spatial autocorrelation changes as a function of lag. For most agricultural soil and crop variables, autocorrelation is highest at short lags (points close together are very similar) and decreases as lag increases, eventually reaching zero at some distance beyond which points are spatially independent. The spatial correlogram plots the autocorrelation coefficient r(h) against lag distance h, and its shape characterises the spatial structure of the variable. A slowly-declining correlogram (high autocorrelation maintained over large distances) indicates a smoothly varying property like soil pH in a uniform landscape. A sharply-declining correlogram indicates a property with short-range variation like patchily-distributed waterlogging damage. The lag at which the correlogram first crosses zero—the range—is the most practically important parameter: it defines the "sphere of influence" of each sample point. Knowing the range tells you the maximum distance at which one sample carries information about the value at another location, which in turn sets the minimum rational sample spacing for mapping that property.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Spatial Autocorrelation in WA Agricultural Data: What to Expect</h2>
+        <ul>
+          <li><strong>Soil Colwell P (WA sandplain):</strong> Range 60–150 m; 50 m grid provides appreciable spatial resolution</li>
+          <li><strong>Soil pH (WA wheatbelt):</strong> Range 100–300 m; reflects broad-scale liming history and leaching patterns</li>
+          <li><strong>ECa (EM induction):</strong> Range 20–80 m; very strong short-range from small-scale clay variation—ideal dense covariate for co-kriging</li>
+          <li><strong>Yield monitor data:</strong> Range 50–200 m; influenced by machinery width and soil constraint spatial scale</li>
+          <li><strong>Practical implication:</strong> Preliminary ECa survey or yield data analysis reveals approximate autocorrelation range → design sample grid spacing ≈ range → maximum spatial information for sampling cost</li>
+        </ul>
+        <aside class="notes">
+          Ground the theoretical concepts in empirical observations from WA precision agriculture. Soil Colwell phosphorus in WA sandplain paddocks typically shows positive autocorrelation with a range of 60–150 m: within this distance, the P values sampled at adjacent points are meaningfully correlated, so a dense 50 m grid provides appreciable spatial resolution above the practical minimum. Soil pH in WA wheatbelt paddocks shows longer-range autocorrelation (range 100–300 m), reflecting the broad-scale variation driven by liming history and leaching patterns. ECa from electromagnetic induction surveys shows very strong, short-range autocorrelation (range 20–80 m) driven by small-scale clay content variation, making it the ideal dense covariate for co-kriging applications developed in Part 8. Yield monitor data has intermediate-range autocorrelation (~50–200 m) strongly influenced by machinery operating width and the spatial scale of the underlying soil constraints. The practical implication: before designing a soil sampling campaign or choosing an interpolation method, a preliminary ECa survey or analysis of existing yield-monitor data can reveal the approximate autocorrelation range, allowing the sample grid to be designed so that its spacing is approximately equal to the range—providing maximum spatial information for the sampling cost.
+        </aside>
+      </section>
+
+      <!-- PART 3: MORAN'S I -->
+      <section data-background-color="#002147">
+        <h2>Part 3: Moran's I—Quantifying Global Spatial Pattern</h2>
+      </section>
+
+      <section>
+        <h2>Moran's I: A Single Number Summary of Spatial Pattern</h2>
+        <ul>
+          <li><strong>What it is:</strong> Most widely used global measure of spatial autocorrelation—spatial equivalent of Pearson's correlation</li>
+          <li><strong>Formula:</strong> I = (n / W) × [Σᵢ Σⱼ wᵢⱼ (zᵢ − z̄)(zⱼ − z̄)] / [Σᵢ (zᵢ − z̄)²]</li>
+          <li><strong>Interpretation:</strong> Weighted average of products of mean-centred values at all location pairs; close pairs get higher weights</li>
+          <li><strong>Range:</strong> −1 (perfect dispersion, checkerboard) through 0 (random) to +1 (perfect clustering)</li>
+          <li><strong>WA PA datasets:</strong> Typically I = 0.3–0.8 (moderate to strong positive autocorrelation)</li>
+          <li><strong>Confirms:</strong> Interpolation warranted and will outperform grand mean prediction</li>
+        </ul>
+        <aside class="notes">
+          Introduce Moran's I as the most widely used global measure of spatial autocorrelation for point or areal data—the spatial equivalent of Pearson's correlation coefficient. The formula: I = (n / W) × [Σi Σj wij (zi − z̄)(zj − z̄)] / [Σi (zi − z̄)²], where n is the number of observations, wij is the spatial weight between locations i and j, zi is the value at location i, z̄ is the mean, and W is the sum of all weights. Despite the apparent complexity, the formula simply computes a weighted average of the products of mean-centred values at all pairs of locations, where pairs that are spatially close receive higher weights than distant pairs. Interpretation: I ranges from −1 (perfect dispersion—a checkerboard pattern of high-low alternation) through 0 (spatial randomness) to +1 (perfect clustering of similar values). In practice, WA soil and crop PA datasets typically produce I values of 0.3–0.8, indicating moderate to strong positive spatial autocorrelation—confirming that interpolation is warranted and will outperform the grand mean as a prediction for unsampled locations.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Spatial Weights Matrices: Defining Who Is a Neighbour</h2>
+        <ul>
+          <li><strong>Matrix W:</strong> Most important methodological choice—defines what "spatially close" means</li>
+          <li><strong>Contiguity weights:</strong> wᵢⱼ = 1 if polygons share boundary (for areal data like yield map grid cells)</li>
+          <li><strong>Distance-band weights:</strong> wᵢⱼ = 1 if d(i,j) ≤ r (search radius); often r = average nearest-neighbour distance</li>
+          <li><strong>Inverse-distance weights:</strong> wᵢⱼ = 1/d(i,j); continuous decay, analogous to IDW</li>
+          <li><strong>K-nearest-neighbour:</strong> wᵢⱼ = 1 for k nearest neighbours; robust for irregular spacing</li>
+          <li><strong>Row standardisation:</strong> Each row sums to 1 → standardised average, comparable across datasets with different sample densities</li>
+          <li><strong>In R:</strong> spdep package: <code>dnearneigh()</code>, <code>knearneigh()</code>, <code>nb2listw()</code></li>
+        </ul>
+        <aside class="notes">
+          Explain that the spatial weights matrix W is the most important methodological choice in any Moran's I calculation—it defines what "spatially close" means for a given dataset. Row i, column j of W contains the weight wij given to the relationship between locations i and j. Four common definitions relevant to PA data: Contiguity weights: for areal data (yield map grid cells or management zones), wij = 1 if polygons i and j share a boundary, 0 otherwise. Distance-band weights: wij = 1 if d(i,j) ≤ r (the search radius), 0 otherwise; requires choosing r, often set to the average nearest-neighbour distance to ensure every point has at least one neighbour. Inverse-distance weights: wij = 1/d(i,j), giving greater weight to nearer pairs—a continuous decay analogous to the IDW concept from Part 5. K-nearest-neighbour weights: wij = 1 for each point's k nearest neighbours, 0 otherwise; robust choice when sample spacing is irregular. Row standardisation: each row of W is divided by its sum so all rows sum to 1—converting Moran's I into a standardised average of neighbours' values regardless of how many neighbours each point has, making the statistic comparable across datasets with different sample densities. In R: the spdep package provides dnearneigh(), knearneigh(), and nb2listw() for constructing weights matrices.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Testing and Interpreting Moran's I in PA Contexts</h2>
+        <ul>
+          <li><strong>Significance test:</strong> Is spatial pattern more clustered than expected by chance?</li>
+          <li><strong>Null hypothesis:</strong> Values randomly distributed across sample locations</li>
+          <li><strong>Analytical approximation:</strong> Compare observed I against E(I) = −1/(n−1) under randomisation</li>
+          <li><strong>Monte Carlo permutation:</strong> Randomly reassign values 999 times, compute I for each, calculate p-value (robust for non-normal PA data)</li>
+          <li><strong>Moran scatterplot:</strong> Plots standardised zᵢ vs spatially lagged average Σⱼ wᵢⱼ zⱼ; slope = Moran's I; four quadrants (HH, LL, HL, LH) show local contributions</li>
+          <li><strong>Practical guideline:</strong> I > 0.3 and significant → interpolation adds value; I < 0.15 and non-significant → essentially random at sample spacing, need more samples</li>
+        </ul>
+        <aside class="notes">
+          Explain how to test whether an observed Moran's I is statistically significant—whether the spatial pattern is more clustered than would be expected by chance. The null hypothesis is that the observed values are randomly distributed across the sample locations. Two testing approaches: analytical approximation (compares observed I against the expected value E(I) = −1/(n−1) under randomisation, using the variance of I); and Monte Carlo permutation test (randomly reassigns values to locations 999 times, computes I for each permutation, and calculates the proportion of permuted I values that exceed the observed I). The permutation approach is more robust for non-normal data, which is common in PA (skewed yield data, heavy-tailed P distributions on some WA soils). Moran's scatterplot: the graphical companion to the statistic—plots each standardised value zi against its spatially lagged average Σj wij zj (the weighted average of its neighbours). The slope of the best-fit line through the origin equals Moran's I, and the four quadrants (HH, LL, HL, LH) show the local contribution of each point to the global statistic. A practical guideline: I > 0.3 and statistically significant confirms that spatial interpolation will add meaningful information relative to the paddock mean; I < 0.15 and non-significant suggests that the variable is essentially randomly distributed at the sample spacing used and that additional samples are needed before interpolation is meaningful.
+        </aside>
+      </section>
+
+      <!-- PART 4: LISA -->
+      <section data-background-color="#002147">
+        <h2>Part 4: LISA—Local Spatial Autocorrelation</h2>
+      </section>
+
+      <section>
+        <h2>LISA: From Global Pattern to Local Hot Spots</h2>
+        <ul>
+          <li><strong>Moran's I limitation:</strong> One number for entire dataset—cannot identify <em>where</em> clustering or outliers are located</li>
+          <li><strong>WA paddock example:</strong> Strong overall autocorrelation might mask that structure is concentrated in two zones (high-P sheep camp + low-P leached rise), rest essentially random</li>
+          <li><strong>LISA solution:</strong> Decomposes global I into location-specific contribution from each sample point → statistic Lᵢ for each point</li>
+          <li><strong>Local Moran statistic:</strong> Iᵢ = zᵢ × Σⱼ wᵢⱼ zⱼ (standardised value × weighted average of neighbours)</li>
+          <li><strong>Large positive Iᵢ:</strong> Similar to neighbours (HH or LL)—local cluster</li>
+          <li><strong>Large negative Iᵢ:</strong> Dissimilar to neighbours (HL or LH)—local spatial outlier</li>
+          <li><strong>Statistical test:</strong> Conditional randomisation; Bonferroni or FDR correction for multiple testing</li>
+        </ul>
+        <aside class="notes">
+          Introduce LISA (Local Indicators of Spatial Association) as the solution to a critical limitation of Moran's I: the global statistic produces one number for the entire dataset and cannot identify *where* in the study area the spatial clustering or spatial outliers are located. In a 500 ha WA paddock, strong overall positive autocorrelation might mask the fact that most of the spatial structure is concentrated in two zones—a high-P cluster on the old sheep camp site and a low-P cluster on the leached sandplain rise—with the remaining area essentially random. LISA decomposes the global Moran's I into a location-specific contribution from each sample point, producing a statistic Li for each point. The local Moran statistic: Ii = zi × Σj wij zj (where zi is the standardised value at i and Σj wij zj is the standardised weighted average of i's neighbours). A large positive Ii means location i has a value similar to its neighbours (either both high, HH, or both low, LL)—a local cluster. A large negative Ii means location i has a value dissimilar to its neighbours (High-Low or Low-High)—a local spatial outlier. The statistical significance of each Ii is tested against a conditional randomisation distribution, and only significant LISA values are typically mapped, preserving the expected proportion of false positives at a controlled rate (the Bonferroni correction or the false-discovery-rate correction is often applied when testing hundreds of locations simultaneously).
+        </aside>
+      </section>
+
+      <section>
+        <h2>LISA Cluster Maps: Visualising Local Structure</h2>
+        <ul>
+          <li><strong>Cluster map:</strong> Each significant sample location coloured by quadrant assignment from Moran scatterplot</li>
+          <li><strong>High-High (HH):</strong> Warm red—local high-value cluster</li>
+          <li><strong>Low-Low (LL):</strong> Cool blue—local low-value cluster</li>
+          <li><strong>High-Low (HL):</strong> Light pink—high value surrounded by low neighbours</li>
+          <li><strong>Low-High (LH):</strong> Light blue—low value surrounded by high neighbours</li>
+          <li><strong>Non-significant:</strong> Grey</li>
+          <li><strong>Agronomic insight:</strong> HH zones = above-average performance (reduced input candidates); LL zones = under-performing areas (targeted remediation); HL/LH outliers = deserving scrutiny (buried horizon, blocked drain, old water trough)</li>
+          <li><strong>Software:</strong> GeoDa (free, point-and-click); R spdep <code>localMoran()</code></li>
+        </ul>
+        <aside class="notes">
+          Explain how LISA results are visualised as a cluster map, where each significant sample location is coloured by its quadrant assignment from the Moran scatterplot: High-High (HH) in warm red—local high-value cluster; Low-Low (LL) in cool blue—local low-value cluster; High-Low (HL) in light pink—high value surrounded by low neighbours; Low-High (LH) in light blue—low value surrounded by high neighbours. Non-significant locations are left grey. The LISA cluster map provides immediate agronomic insight that Moran's I alone cannot: HH zones identify the areas of consistently above-average performance (candidates for management zones that may tolerate reduced inputs without yield penalty); LL zones identify the persistently under-performing areas (candidates for targeted remediation or reduced expectations); HL and LH locations are spatial outliers deserving scrutiny—a field visit or additional sampling may reveal an unusual feature (a buried soil horizon, a blocked drainage point, an old water trough creating a localised nutrient hot spot) rather than a spatial pattern. In software: GeoDa (free, by Luc Anselin's group) provides LISA maps with a few mouse clicks; the spdep package in R computes localMoran() and enables custom mapping.
+        </aside>
+      </section>
+
+      <section>
+        <h2>LISA in WA Precision Agriculture: Finding What Matters, Where</h2>
+        <ul>
+          <li><strong>Yield map interpretation:</strong> LISA on multi-year composite yield reliably recovers toposequence zones (HH = well-drained mid-slope; LL = gravelly rises + saline valley floors); filters single-year weather anomalies, retains persistent structure justifying zone-based management</li>
+          <li><strong>Targeted soil sampling:</strong> Stratify subsequent sampling to include representative points from each LISA cluster type (HH, LL, HL/LH) instead of uniform grid → captures full spatial structure efficiently (conditioned sampling from Nutrient Spatial Variability chapter)</li>
+          <li><strong>Spatial outlier investigation:</strong> HL and LH outliers = most information-rich scouting locations—anomalous patches unpredicted by landscape; causes (equipment failure, soil feature, biotic stress) often most actionable per-hectare discoveries</li>
+        </ul>
+        <aside class="notes">
+          Ground LISA in three concrete WA precision agriculture applications. Yield map interpretation: applying LISA to a multi-year composite yield map of a WA wheatbelt paddock reliably recovers the toposequence zones established in the companion Soil and Water Spatial Variability and Crop Spatial Variability chapters—HH zones correspond to the well-drained mid-slope loam positions; LL zones to the gravelly rises and saline valley floors. Because LISA tests statistical significance of each local cluster, it filters out the single-year weather-driven yield anomalies that would contaminate a single-season yield map, retaining only the persistent spatial structure that justifies permanent zone-based management. Targeted soil sampling: by stratifying subsequent soil sampling to include representative points from each LISA cluster type (HH, LL, HL/LH), rather than using a uniform grid, the sampling design captures the full range of spatial structure efficiently—directly implementing the conditioned sampling logic introduced in the companion Nutrient Spatial Variability chapter. Spatial outlier investigation: HL and LH outliers identified by LISA in a yield map are the most information-rich locations to visit during crop scouting—they represent anomalous patches that the surrounding landscape does not predict, and their causes (equipment failure, soil feature, biotic stress) are often the most actionable per-hectare discoveries in a precision management programme.
+        </aside>
+      </section>
+
+      <!-- PART 5: THE SEMIVARIOGRAM -->
+      <section data-background-color="#002147">
+        <h2>Part 5: The Semivariogram</h2>
+      </section>
+
+      <section>
+        <h2>From Spatial Correlation to the Semivariogram</h2>
+        <ul>
+          <li><strong>Semivariogram:</strong> Measures how dissimilarity increases as distance separating sample points increases—spatial structure description Kriging requires</li>
+          <li><strong>Empirical semivariogram:</strong> γ̂(h) = [1 / (2N(h))] × Σ[z(xᵢ) − z(xᵢ+h)]²</li>
+          <li><strong>N(h):</strong> Number of point pairs separated by lag distance h (within tolerance band)</li>
+          <li><strong>Averages:</strong> Squared difference between paired values across all pairs in each lag class</li>
+          <li><strong>Relationship to autocorrelation:</strong> Strong positive autocorrelation at short lags → small squared differences → low γ̂(h); as lag increases and correlation decreases → γ̂(h) increases</li>
+          <li><strong>Inverts correlogram:</strong> Plots dissimilarity (not similarity) vs lag—computationally convenient for Kriging equations</li>
+          <li><strong>Practical requirement:</strong> ≥ 30 point pairs per lag class for reliable γ̂ estimate—drives minimum sample size</li>
+        </ul>
+        <aside class="notes">
+          Introduce the semivariogram as the mathematical tool that measures how dissimilarity between pairs of sample points increases as the distance separating them increases—the direct spatial-structure description that Kriging requires. The empirical semivariogram γ̂(h) is computed as: γ̂(h) = [1 / (2N(h))] × Σ[z(xi) − z(xi+h)]², where N(h) is the number of point pairs separated by lag distance h (within a tolerance band), z(xi) is the value at location xi, and z(xi+h) is the value at the paired location at distance h away. The formula averages the squared difference between paired values across all pairs in each lag class. Note the relationship to autocorrelation: when nearby points are very similar (strong positive autocorrelation at short lags), the squared differences are small and γ̂(h) is low. As lag increases and point-pairs become less correlated, γ̂(h) increases. The semivariogram inverts the correlogram—it plots dissimilarity (not similarity) against lag, and this choice proves more computationally convenient for the Kriging system of equations. Key practical note: the experimental semivariogram is estimated from the data as a set of discrete (lag, γ̂) pairs, typically for a set of lag classes covering distances from the minimum sample spacing to roughly half the maximum pairwise distance. At least 30 point pairs per lag class are generally needed for a reliable estimate of γ̂ at that lag—a constraint that drives minimum sample size requirements in PA surveys.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Semivariogram Model: Sill, Range, and Nugget</h2>
+        <ul>
+          <li><strong>Nugget (C₀):</strong> Y-intercept; variability at distances shorter than minimum sample spacing + measurement error; large nugget = highly erratic at fine scales or substantial measurement noise; nugget/sill ratio > 0.5 = more than half variance is spatially unstructured</li>
+          <li><strong>Range (a):</strong> Lag distance where variogram reaches sill—maximum distance for spatial autocorrelation persistence; WA examples: Colwell P 60–150 m, pH 100–300 m, EC 30–100 m, yield 50–200 m; sampling at intervals > range provides no spatial information gain</li>
+          <li><strong>Sill (C₀ + C):</strong> Total variance, reached at range; above sill, point pairs are spatially independent</li>
+          <li><strong>Unbounded variogram:</strong> Never reaches stable sill, continues rising → large-scale trend violates stationarity; requires detrending or Universal Kriging</li>
+        </ul>
+        <aside class="notes">
+          Explain the three structural parameters of the semivariogram model, and what each tells a precision agronomist about the spatial structure of the variable being mapped. Nugget (C0): the y-intercept of the variogram model, representing variability at distances shorter than the minimum sample spacing plus pure measurement error. A large nugget indicates either that the variable is highly erratic at fine scales (sub-sample-spacing variability) or that the measurement process introduces substantial noise (yield monitor calibration error, for example). The nugget-to-sill ratio (C0 / (C0 + C)) is a key diagnostic: a ratio above 0.5 means more than half the total variance is spatially unstructured—interpolation will produce maps that are only modestly better than the paddock mean. Range (a): the lag distance at which the variogram reaches the sill—the maximum distance over which spatial autocorrelation persists. In WA PA contexts: soil Colwell P range 60–150 m, soil pH range 100–300 m, soil EC range 30–100 m, yield range 50–200 m. Sampling at intervals greater than the range provides no spatial information gain over independent random sampling. Sill (C0 + C): the total variance of the variable, reached at the range; above the sill, point pairs are spatially independent. If the variogram never reaches a stable sill but continues rising indefinitely (an "unbounded" variogram), this indicates a large-scale trend in the data that violates the stationarity assumption of Ordinary Kriging and requires detrending or Universal Kriging.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Common Variogram Models: Spherical, Exponential, and Gaussian</h2>
+        <ul>
+          <li><strong>Why theoretical models:</strong> Empirical variogram estimated at finite lag classes; Kriging requires variogram value at any distance → need smooth mathematical function fitted to experimental points</li>
+          <li><strong>Spherical:</strong> γ(h) = C₀ + C × [1.5(h/a) − 0.5(h/a)³] for h ≤ a; rises linearly at origin, reaches sill exactly at finite range a; most common for WA soil properties with smooth variation and clear spatial scale</li>
+          <li><strong>Exponential:</strong> γ(h) = C₀ + C × [1 − exp(−h/a)]; steep rise near origin, approaches sill asymptotically (effective range = 3a); for properties with high short-range variability (ECa, grain protein in WA)</li>
+          <li><strong>Gaussian:</strong> γ(h) = C₀ + C × [1 − exp(−(h/a)²)]; initially parabolic, very smooth; rarely appropriate for soil properties; can cause numerical instability</li>
+          <li><strong>Model choice:</strong> Compare visual fit to experimental variogram; use cross-validation to select model minimizing prediction error</li>
+        </ul>
+        <aside class="notes">
+          Explain the three theoretical variogram models most commonly used in PA geostatistics, and the practical differences between them. Theoretical models are necessary because the empirical variogram is only estimated at a finite set of lag classes, but Kriging requires the variogram value at any distance—necessitating a smooth mathematical function fitted to the experimental points. Spherical model: γ(h) = C0 + C × [1.5(h/a) − 0.5(h/a)³] for h ≤ a, and C0 + C for h > a; rises linearly at the origin and reaches the sill exactly at the finite range a; the most common choice for soil properties in WA that show smooth spatial variation with a clearly defined spatial scale. Exponential model: γ(h) = C0 + C × [1 − exp(−h/a)]; rises steeply near the origin and approaches the sill asymptotically (effective range = 3a); appropriate for properties with high short-range variability relative to long-range—common for ECa and grain protein in WA. Gaussian model: γ(h) = C0 + C × [1 − exp(−(h/a)²)]; initially parabolic near the origin, implying very smooth spatial variation; rarely appropriate for soil properties but sometimes used for terrain-driven covariates; can cause numerical instability in the Kriging system. Model choice: compare the visual fit of each model to the experimental variogram; use cross-validation (next slide) to select the model that minimises prediction error, not just the one with the best visual appearance.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Fitting and Evaluating a Variogram: Practical Guidance</h2>
+        <ul>
+          <li><strong>Step 1:</strong> Compute experimental variogram using <code>variogram(formula, data)</code>; max lag ≈ half paddock diagonal; lag class width ≈ minimum sample spacing</li>
+          <li><strong>Step 2:</strong> Visual assessment—clear sill and range? Nugget large or small vs sill? Directional anisotropy (different rise rates in different directions)?</li>
+          <li><strong>Step 3:</strong> Fit model using <code>fit.variogram(vgram, vgm(psill, model, range, nugget))</code> with weighted least squares → fitted parameters C₀+C, a, C₀</li>
+          <li><strong>Step 4:</strong> Cross-validate using <code>gstat.cv()</code> leave-one-out; diagnostics: mean error ≈ 0, RMSE (compare vs IDW), MSPE ≈ 1 (kriging variances correctly calibrated)</li>
+          <li><strong>WA-specific:</strong> Duplex soils with abrupt textural break → surface ECa and subsoil properties can show zonal anisotropy; compute variogram in ≥ 4 directions rather than assuming isotropy</li>
+        </ul>
+        <aside class="notes">
+          Walk through the variogram fitting and evaluation workflow as it is performed in practice using gstat in R (the standard environment for PA geostatistics in WA research). Step 1—Compute the experimental variogram using variogram(formula, data) specifying a maximum lag of roughly half the paddock's maximum diagonal, and a lag class width of approximately the minimum sample spacing. Step 2—Visually assess the experimental variogram: is there a clear sill and range? Is the nugget large or small relative to the sill? Is there any directional anisotropy (the variogram rises faster in one direction than another, indicating that spatial continuity varies with direction—common when topography creates a directional soil-property gradient)? Step 3—Fit a model using fit.variogram(vgram, vgm(psill, model, range, nugget)) with weighted least squares; the fitted parameters provide the sill C0+C, range a, and nugget C0. Step 4—Cross-validate using gstat.cv() performing leave-one-out validation; the diagnostic statistics are mean error (should be ≈ 0), RMSE (compare across models and against IDW), and mean standardised squared prediction error MSPE (should be ≈ 1 if the kriging variances are correctly calibrated). WA-specific note: on duplex soils with an abrupt textural break at depth, the surface-soil ECa and subsoil properties can show zonal anisotropy—the variogram should be computed in at least 4 directions to detect and model this, rather than assuming isotropy.
+        </aside>
+      </section>
+
+      <!-- PART 6: IDW -->
+      <section data-background-color="#002147">
+        <h2>Part 6: IDW—Deterministic Interpolation</h2>
+      </section>
+
+      <section>
+        <h2>Inverse Distance Weighting: The Intuitive Workhorse</h2>
+        <ul>
+          <li><strong>Principle:</strong> Predicted value at unsampled location = weighted average of all (or nearby) samples; weight decreases as distance increases</li>
+          <li><strong>Formula:</strong> ẑ(x₀) = Σ wᵢ z(xᵢ) / Σ wᵢ, where wᵢ = 1 / d(x₀, xᵢ)ᵖ</li>
+          <li><strong>Power parameter p:</strong> Detailed next slide</li>
+          <li><strong>Deterministic method:</strong> Weights determined entirely by geometric distances—no statistical model of spatial structure</li>
+          <li><strong>Advantages:</strong> Fast, transparent, no distributional assumptions or preliminary model fitting—appealing for operational PA software</li>
+          <li><strong>Default:</strong> Many commercial PA platforms (several WA packages); appropriate for quick exploratory spatial visualization</li>
+          <li><strong>Limitations vs Kriging:</strong> No prediction uncertainty estimates; geometrically fixed weights vs data-derived weights (developed in slide 4 of this Part)</li>
+        </ul>
+        <aside class="notes">
+          Introduce IDW as the simplest and most widely-used spatial interpolation method in precision agriculture practice. The principle is intuitively compelling: the predicted value at an unsampled location is a weighted average of all (or nearby) sample values, where the weight given to each sample decreases as its distance from the prediction location increases. The formula: ẑ(x0) = Σ wi z(xi) / Σ wi, where wi = 1 / d(x0, xi)^p, d(x0, xi) is the distance from the prediction point x0 to sample i, and p is the power parameter (detailed in the next slide). IDW is a deterministic method—the weights are determined entirely by the geometric distances between points, without any statistical model of the spatial structure. This makes IDW fast, transparent, and requiring no distributional assumptions or preliminary model fitting—an appealing property in operational precision agriculture software where computational simplicity and speed are valued. IDW is the default interpolation in many commercial PA platforms (including several PA software packages used in WA), and is appropriate for quick, exploratory spatial visualisation of soil test results, yield data, or sensor readings. Its limitations relative to Kriging—the inability to provide prediction uncertainty estimates and the use of geometrically fixed rather than data-derived weights—are developed in the final slide of this Part.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Power Parameter p: Controlling the Decay of Influence</h2>
+        <ul>
+          <li><strong>p = 1 (linear IDW):</strong> Weights decrease linearly; sample 100 m away retains influence to 200 m; very smooth surface; tends to underestimate highs and overestimate lows; may lose fine-scale structure</li>
+          <li><strong>p = 2 (most common default):</strong> Weights decrease as square of distance; point 100 m away has 1/4 weight of 50 m point; reasonable compromise between smoothness and local responsiveness for WA soil mapping at 50–150 m spacing</li>
+          <li><strong>p > 3 (high power):</strong> Weight drops off rapidly; only 1–2 nearest samples dominate; sharp "bullseye" rings around each sample point—mathematical artefact, not genuine spatial feature</li>
+          <li><strong>Limiting case p → ∞:</strong> Voronoi (Thiessen) tessellation—every point takes nearest sample value</li>
+          <li><strong>Choosing p:</strong> Leave-one-out cross-validation over range (p = 1, 1.5, 2, 2.5, 3), select p minimizing RMSE; p = 2 performs well across wide range of soil datasets</li>
+        </ul>
+        <aside class="notes">
+          Explain the power parameter p as the single most influential decision in IDW, controlling the rate at which weights decrease with distance and therefore the spatial smoothness of the interpolated surface. At p = 1 (linear IDW): weights decrease linearly with distance, so a sample 100 m away still retains meaningful influence on predictions up to 200 m away; the resulting surface is very smooth, tends to underestimate local highs and over-estimate local lows, and may lose fine-scale structure that is genuinely present in the data. At p = 2 (the most common default): weights decrease as the square of distance; a point 100 m away has one-quarter the weight of a point 50 m away; a reasonable compromise between smoothness and local responsiveness for most WA soil property mapping at 50–150 m sample spacing. At p > 3 (high power): the weight drops off so rapidly that only the one or two nearest samples dominate each prediction; the interpolated surface develops sharp "bullseye" rings of equal value centred on each sample point—a mathematical artefact of the formula rather than a genuine spatial feature. The limiting case p → ∞ is a Voronoi (Thiessen) tessellation: every unsampled point takes the value of its single nearest sample. Choosing p: in the absence of a fitted variogram, a leave-one-out cross-validation over a range of p values (p = 1, 1.5, 2, 2.5, 3) and selecting the p that minimises RMSE is good practice; p = 2 performs well across a wide range of soil property datasets.
+        </aside>
+      </section>
+
+      <section>
+        <h2>IDW in Practice: Search Neighbourhood and Implementation</h2>
+        <ul>
+          <li><strong>Full-dataset approach:</strong> Every sample contributes to every prediction, influence scales by 1/dᵖ; fine for small datasets (< 200 samples); globally smooth surface</li>
+          <li><strong>Fixed-radius neighbourhood:</strong> Only samples within radius R contribute; fast for large datasets (yield monitor millions of points); choosing R: too small = some locations have no samples; too large = slow computation</li>
+          <li><strong>K-nearest-neighbour:</strong> Always use exactly k closest samples regardless of distance; practical default (k = 8–16); ensures every prediction has same number of contributing points; eliminates radius choice</li>
+          <li><strong>In R:</strong> <code>idw()</code> in gstat package</li>
+          <li><strong>In QGIS:</strong> IDW tool in Interpolation plugin</li>
+          <li><strong>In ArcGIS:</strong> Spatial Analyst → IDW</li>
+          <li><strong>WA context:</strong> VESPER software (discussed Part 7) offers both IDW and Kriging for direct comparison</li>
+          <li><strong>Post-processing:</strong> Always clip IDW output to paddock boundary—will extrapolate beyond sample convex hull into unsupported areas</li>
+        </ul>
+        <aside class="notes">
+          Explain the search neighbourhood settings that govern which sample points contribute to each prediction, and how they are configured in practice. The full-dataset approach: every sample contributes to every prediction, with influence scaling by 1/d^p; fine for small datasets (< 200 samples) and produces a globally smooth surface. Fixed-radius neighbourhood: only samples within a user-defined radius R contribute; fast for large datasets (yield monitor data with millions of points); requires choosing R thoughtfully—too small and some prediction locations have no contributing samples; too large and computation slows unnecessarily. K-nearest-neighbour: always uses exactly the k closest samples regardless of distance; a practical default (k = 8–16) that ensures every prediction has the same number of contributing points and eliminates the choice of radius. In R: idw() in the gstat package; in QGIS: the IDW tool in the QGIS Interpolation plugin; in ArcGIS: Spatial Analyst → IDW; in the WA-developed precision agriculture context, the commonly used Vesper software (discussed in Part 7) offers both IDW and Kriging for direct comparison on the same dataset. Important post-processing step: always clip the IDW output to the paddock boundary after interpolation, since IDW will extrapolate beyond the sample convex hull into areas where predictions are not supported by data.
+        </aside>
+      </section>
+
+      <section>
+        <h2>IDW Limitations: Why Geostatistics Offers More</h2>
+        <ul>
+          <li><strong>No uncertainty quantification:</strong> Single predicted value, no confidence measure—crucial PA limitation; two 40 mg/kg P predictions with SE 3 vs 20 mg/kg are very different management decisions—IDW can't distinguish</li>
+          <li><strong>No data-driven weights:</strong> Weights determined only by distance and p; can't adjust for spatial clustering → systematically over-weights clustered samples → biased prediction; Kriging solves via variogram covariance matrix accounting for all sample configurations</li>
+          <li><strong>Bullseye artefacts:</strong> At high p or irregular spacing, produces geographically implausible ring patterns—visual signal surface doesn't capture real structure</li>
+          <li><strong>No statistical framework:</strong> Can't be cross-validated in principled way accounting for spatial autocorrelation of prediction errors</li>
+          <li><strong>Conclusion:</strong> IDW not wrong—appropriate for quick exploratory analysis; but for final management maps generating VRA prescriptions, Kriging's additional investment well justified</li>
+        </ul>
+        <aside class="notes">
+          Make the case for Kriging by systematically identifying what IDW cannot provide, motivating the additional complexity of the geostatistical approach. No uncertainty quantification: IDW produces a single predicted value at each location but no measure of prediction confidence—a crucial limitation for PA, where the decision-relevance of a map depends on whether the uncertainty is small enough to justify differential management. Two predictions of 40 mg/kg Colwell P are very different management decisions if one has a standard error of 3 mg/kg and the other has a standard error of 20 mg/kg—IDW cannot distinguish them. No data-driven weights: the IDW weights are determined entirely by distance and the chosen p value; they cannot adjust for the spatial clustering of samples, which systematically over-weights clustered samples and produces a biased prediction. Kriging solves this declustering problem automatically through the variogram covariance matrix, which accounts for the configuration of all samples relative to each other and to the prediction point. Bullseye artefacts: at high p values or with irregular sample spacing, IDW produces geographically implausible ring patterns around sample points—a visual signal that the surface is not capturing real spatial structure. No statistical framework: IDW cannot be cross-validated in a principled way that accounts for the spatial autocorrelation of prediction errors. The conclusion is not that IDW is wrong—for quick exploratory analysis it is entirely appropriate—but that for final management maps used to generate VRA prescriptions, Kriging's additional investment of time is well justified.
+        </aside>
+      </section>
+
+      <!-- PART 7: KRIGING THEORY -->
+      <section data-background-color="#002147">
+        <h2>Part 7: Kriging Theory</h2>
+      </section>
+
+      <section>
+        <h2>What Is Kriging? The Best Linear Unbiased Predictor</h2>
+        <ul>
+          <li><strong>Named after:</strong> Danie Krige (South African mining engineer, 1950s gold ore estimation), formalized by Georges Matheron (France)</li>
+          <li><strong>BLUP:</strong> Best Linear Unbiased Predictor of spatially varying quantity</li>
+          <li><strong>Best:</strong> Minimizes prediction variance—among all linear weight sets, produces smallest expected squared prediction error</li>
+          <li><strong>Linear:</strong> Prediction = weighted sum of observed values: ẑ(x₀) = Σλᵢ z(xᵢ)</li>
+          <li><strong>Unbiased:</strong> Expected prediction error = zero: E[ẑ(x₀) − z(x₀)] = 0</li>
+          <li><strong>Optimality vs IDW:</strong> Weights λᵢ solved from equations using fitted variogram to account for (1) distance between sample and prediction point AND (2) spatial configuration of samples relative to each other</li>
+          <li><strong>Declustering:</strong> Second component absent from IDW; allows unbiased predictions even with clustered samples (e.g., extra samples near problem areas)</li>
+        </ul>
+        <aside class="notes">
+          Introduce Kriging (named after South African mining engineer Danie Krige who developed the approach for gold ore estimation in the 1950s, later formalised by Georges Matheron in France) as the foundation of geostatistical prediction. Kriging is the Best Linear Unbiased Predictor (BLUP) of a spatially varying quantity. Breaking down this description: Best means it minimises the prediction variance—among all possible sets of linear weights, Kriging weights produce the smallest expected squared prediction error. Linear means the prediction is a weighted sum of the observed values: ẑ(x0) = Σλi z(xi). Unbiased means the expected prediction error is zero: E[ẑ(x0) − z(x0)] = 0. The optimality of Kriging relative to IDW arises because its weights λi are not set by a distance formula but are solved from a system of equations that uses the fitted variogram model to account for: (1) the distance between each sample and the prediction point, and (2) the spatial configuration of the samples relative to each other. This second component—declustering of spatially correlated samples—is entirely absent from IDW and is what allows Kriging to produce unbiased predictions even when samples are spatially clustered, as they routinely are in farm surveys where the farmer has placed extra samples near known problem areas.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Kriging System of Equations</h2>
+        <ul>
+          <li><strong>Ordinary Kriging assumption:</strong> Constant but unknown mean—most practical for PA datasets without large-scale spatial trend</li>
+          <li><strong>System:</strong> For each prediction location x₀, solve (n+1) × (n+1) linear system:</li>
+          <li>Σⱼ λⱼ γ(xᵢ, xⱼ) + μ = γ(xᵢ, x₀) for all i = 1,...,n</li>
+          <li>Σ λᵢ = 1 (unbiasedness constraint)</li>
+          <li><strong>γ(xᵢ, xⱼ):</strong> Semivariogram value between sample points i and j (from fitted model)</li>
+          <li><strong>γ(xᵢ, x₀):</strong> Semivariogram between sample point i and prediction point</li>
+          <li><strong>μ:</strong> Lagrange multiplier</li>
+          <li><strong>Left-hand matrix:</strong> All pairwise variogram values between samples—encodes how spatially clustered samples are</li>
+          <li><strong>Right-hand vector:</strong> How far each sample is (in variogram distance) from prediction point</li>
+          <li><strong>Kriging variance:</strong> σ²ₖ(x₀) = μ + Σλᵢ γ(xᵢ, x₀)—by-product of same system; minimum prediction variance; depends only on variogram model and sample configuration, NOT on observed values</li>
+        </ul>
+        <aside class="notes">
+          Present the Ordinary Kriging equations at a conceptual level, providing enough mathematical detail to understand what the software is solving without requiring students to do so by hand. Ordinary Kriging assumes the mean is constant but unknown—the most practical assumption for PA datasets where a large-scale spatial trend is absent or has been removed. The system: for each prediction location x0, solve the (n+1) × (n+1) linear system: Σj λj γ(xi, xj) + μ = γ(xi, x0) for all i = 1,...,n, and Σ λi = 1 (the unbiasedness constraint), where γ(xi, xj) is the semivariogram value between sample points i and j (from the fitted variogram model), γ(xi, x0) is the semivariogram between sample point i and the prediction point, and μ is a Lagrange multiplier. The left-hand side matrix contains all the pairwise variogram values between samples—it encodes how spatially clustered the samples are. The right-hand side vector contains how far each sample is (in variogram distance) from the prediction point. Solving for λi gives the optimal weights that account for both proximity to the prediction point and spatial redundancy among samples. The Kriging variance: σ²K(x0) = μ + Σλi γ(xi, x0)—a by-product of solving the same system, giving the minimum achievable prediction variance at x0. Importantly, σ²K depends only on the variogram model and the sample configuration, not on the observed values themselves.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Kriging Variance: Mapping Uncertainty Alongside Predictions</h2>
+        <ul>
+          <li><strong>Most distinctive output:</strong> Kriging variance map—most clearly distinguishes from IDW; most practically valuable</li>
+          <li><strong>σ²ₖ(x₀) highest where:</strong> Prediction point far from any samples (beyond variogram range); variogram has large nugget/sill ratio (high measurement noise); samples sparse relative to range</li>
+          <li><strong>σ²ₖ(x₀) lowest where:</strong> Samples dense and closely spaced relative to range; variogram well-structured with low nugget</li>
+          <li><strong>Kriging standard deviation:</strong> √σ²ₖ in same units as original variable—directly interpretable as ±1 SD confidence margin</li>
+          <li><strong>Example:</strong> ±5 mg/kg margin on 35 mg/kg Colwell P prediction has very different management implications than ±20 mg/kg margin on same mean</li>
+          <li><strong>Practical PA applications:</strong> Identify under-sampled areas for next season additional sampling; assess if sample density sufficient for VRA with required confidence; design adaptive sampling targeting highest-uncertainty zones → iterative precision sampling</li>
+        </ul>
+        <aside class="notes">
+          Develop the Kriging variance map as arguably the most distinctive and practically valuable output of the Kriging approach—and the feature that most clearly distinguishes it from IDW. The Kriging variance σ²K(x0) is highest where the prediction point is far from any samples (beyond the variogram range), where the variogram has a large nugget-to-sill ratio (indicating high measurement-scale noise), and where samples are sparse relative to the variogram range. It is lowest where samples are dense and closely spaced relative to the range, and where the variogram is well-structured with a low nugget. The Kriging standard deviation √σ²K is in the same units as the original variable and can be directly interpreted as a ±1 standard deviation confidence margin on each prediction—a ±5 mg/kg margin on a 35 mg/kg Colwell P prediction has very different management implications than a ±20 mg/kg margin on the same mean prediction. Practical PA applications of the uncertainty map: identify under-sampled areas where additional sampling in the next season would most reduce overall prediction uncertainty; assess whether the current sample density is sufficient to support VRA prescriptions with the required confidence level; design adaptive sampling strategies that target the highest-uncertainty zones identified from a preliminary coarse survey, converting a fixed-grid sampling design into an iterative precision sampling workflow.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Types of Kriging: Ordinary, Universal, and Simple</h2>
+        <ul>
+          <li><strong>Ordinary Kriging (OK):</strong> Assumes constant but unknown local mean within neighbourhood; most widely used in PA; appropriate when no systematic spatial trend at paddock scale in WA</li>
+          <li><strong>Simple Kriging:</strong> Assumes mean is known (set to global sample mean); slightly lower Kriging variance than OK but assumption rarely justified in PA; occasionally used in data assimilation (APSIM-satellite integration, Chapter 15)</li>
+          <li><strong>Universal Kriging (Kriging with Trend):</strong> Models mean as deterministic polynomial trend in X,Y coordinates (or external covariates), Kriges residuals; for clear directional gradient (topographically driven soil depth, management-history gradients)</li>
+          <li><strong>Indicator Kriging:</strong> Converts samples to binary indicator (above/below threshold), Kriges probability of exceeding threshold (e.g., P > critical or pH < 5.5); produces probability map for risk-based zone management</li>
+          <li><strong>In R:</strong> All four via <code>krige()</code> in gstat by specifying appropriate formula argument</li>
+        </ul>
+        <aside class="notes">
+          Survey the three main Kriging variants and the contexts in which each is appropriate for PA applications. Ordinary Kriging (OK): assumes a constant but unknown local mean within the neighbourhood of each prediction point; the most widely used form in PA; appropriate when no systematic spatial trend is present in the data, which is the case for most soil property mapping at paddock scale in WA. Simple Kriging: assumes the mean is known (set to the global sample mean); produces slightly lower Kriging variance than OK but the assumption of a known mean is rarely justified in PA; occasionally used in data-assimilation contexts where a model-predicted mean is available (as in the APSIM-satellite data assimilation concept developed in Chapter 15). Universal Kriging (Kriging with a Trend): models the mean as a deterministic polynomial trend in X and Y coordinates (or in external covariates), and Kriges the residuals; appropriate when there is a clear directional gradient across the paddock—for example, topographically driven variation in soil depth from one side of a paddock to the other, or management-history gradients. Indicator Kriging: converts each sample to a binary indicator (above or below a threshold) and Kriges the probability of exceeding a management threshold (e.g., P > critical level or pH < 5.5) at each location; produces a probability map directly usable for risk-based zone management. In R: all four are available via krige() in the gstat package by specifying the appropriate formula argument.
+        </aside>
+      </section>
+
+      <!-- PART 8: KRIGING IN PRACTICE -->
+      <section data-background-color="#002147">
+        <h2>Part 8: Kriging in Practice</h2>
+      </section>
+
+      <section>
+        <h2>The Full Kriging Workflow in R and VESPER</h2>
+        <ul>
+          <li><strong>Step 1—Data prep:</strong> Load soil samples with coordinates into spatial object (sf or SpatialPointsDataFrame); check outliers (boxplots, histograms); consider log-transformation for skewed variables (Colwell P, EC); create prediction grid using paddock boundary</li>
+          <li><strong>Step 2—Variogram:</strong> <code>variogram(log_P ~ 1, data = samples)</code> computes experimental variogram; <code>fit.variogram()</code> fits model; inspect fitted parameters</li>
+          <li><strong>Step 3—Ordinary Kriging:</strong> <code>krige(log_P ~ 1, locations = samples, newdata = pred_grid, model = fitted_vgm)</code> returns predictions and kriging variances on grid</li>
+          <li><strong>Step 4—Back-transform:</strong> If log-transformed, back-transform with bias correction (lognormal kriging)</li>
+          <li><strong>Step 5—Validation:</strong> <code>gstat.cv()</code> computes leave-one-out predictions; plot observed vs predicted; compute RMSE and MSPE</li>
+          <li><strong>Step 6—Export:</strong> Write raster to GeoTIFF for import into QGIS (map production) or farm management software (zone delineation)</li>
+          <li><strong>VESPER:</strong> Dedicated PA Kriging software (Uni Sydney Precision Agriculture group); widely used in WA GRDC research; point-and-click interface for variogram fitting, local block Kriging, uncertainty mapping without R scripting</li>
+        </ul>
+        <aside class="notes">
+          Walk through the complete Ordinary Kriging workflow as executed in practice, using the R gstat package as the primary environment. Step 1—Data preparation: load soil sample points with coordinates into a spatial object (sf or SpatialPointsDataFrame); check for outliers with boxplots and histograms; consider log-transformation for strongly skewed variables (Colwell P, EC); create the prediction grid using the paddock boundary. Step 2—Variogram analysis: variogram(log_P ~ 1, data = samples) computes the experimental variogram; fit.variogram() fits a model; inspect fitted parameters. Step 3—Ordinary Kriging: krige(log_P ~ 1, locations = samples, newdata = pred_grid, model = fitted_vgm) returns both predictions and kriging variances on the prediction grid. Step 4—Back-transform if log-transformed: predictions on the log scale must be back-transformed with a bias correction (lognormal kriging). Step 5—Validation: gstat.cv() computes leave-one-out predictions; plot observed vs predicted; compute RMSE and MSPE. Step 6—Export: write the raster to GeoTIFF for import into QGIS for map production or into the farm management software for zone delineation. VESPER (Variogram Estimation and Spatial Prediction with Error): a dedicated PA Kriging software developed by the Precision Agriculture group at the University of Sydney, widely used in WA GRDC research; provides an accessible point-and-click interface for variogram fitting, local block Kriging, and uncertainty mapping without requiring R scripting.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Kriging for Soil Properties in WA: Worked Example</h2>
+        <ul>
+          <li><strong>Dataset:</strong> 48 Colwell P samples, 250 ha sandplain paddock near Three Springs, WA, ~75 m spacing using stratified design guided by ECa zone map</li>
+          <li><strong>Exploratory:</strong> P distribution positively skewed (range 8–65 mg/kg, median 26 mg/kg) → log-transformation before variogram</li>
+          <li><strong>Fitted variogram:</strong> Spherical model, nugget C₀ = 0.08 (log scale), partial sill C = 0.22, range a = 130 m; nugget/sill ratio = 0.27 (relatively low → good spatial structure at 75 m spacing)</li>
+          <li><strong>Cross-validation:</strong> RMSE = 5.8 mg/kg (back-transformed); IDW p=2 gives RMSE = 7.9 mg/kg on same dataset—27% improvement from Kriging; MSPE = 1.04 (kriging variances well-calibrated)</li>
+          <li><strong>Agronomic interpretation:</strong> Kriged map shows clear P-deficient zone (< 15 mg/kg) on leached gravel ridge (NE corner), transition zone (15–25 mg/kg) on mid-slope, P-adequate zones (> 30 mg/kg) on former sheep-camp (south boundary)—consistent with paddock management history and toposequence soil distribution (Soil and Water Spatial Variability chapter)</li>
+        </ul>
+        <aside class="notes">
+          Present a detailed worked example of Ordinary Kriging applied to a WA precision agriculture dataset, connecting every step to the theory developed in this Part. Dataset: 48 Colwell P soil samples collected on a 250 ha sandplain paddock near Three Springs, WA, at approximately 75 m spacing using a stratified design guided by an ECa zone map. Exploratory analysis: the P distribution is positively skewed (range 8–65 mg/kg, median 26 mg/kg)—log-transformation is applied before variogram analysis. Fitted variogram: spherical model, nugget C0 = 0.08 (log scale), partial sill C = 0.22, range a = 130 m; nugget/sill ratio = 0.27 (relatively low, indicating good spatial structure at the 75 m sample spacing). Cross-validation: RMSE = 5.8 mg/kg (back-transformed); IDW p = 2 gives RMSE = 7.9 mg/kg on the same dataset—a 27% improvement from Kriging. MSPE = 1.04, confirming the kriging variances are well-calibrated. Agronomic interpretation: the kriged map shows a clear P-deficient zone (< 15 mg/kg) on the leached gravel ridge in the paddock's north-east corner, a transition zone (15–25 mg/kg) on the mid-slope, and P-adequate zones (> 30 mg/kg) on the former sheep-camp area near the south boundary—a spatial pattern consistent with the paddock's management history and the toposequence soil distribution discussed in the companion Soil and Water Spatial Variability chapter.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Cross-Validation: Checking a Kriged Map Before Using It</h2>
+        <ul>
+          <li><strong>Essential QC step:</strong> Before using Kriged map for VRA prescription</li>
+          <li><strong>Leave-one-out cross-validation (LOOCV):</strong> Each sample temporarily removed; remaining points predict removed location using same variogram model; compare predicted vs observed</li>
+          <li><strong>Mean Error (ME):</strong> mean(z̃ᵢ − zᵢ) should be ≈ 0; systematic bias indicates mis-specified variogram or large-scale trend violating Ordinary Kriging stationarity</li>
+          <li><strong>RMSE:</strong> In data units—primary accuracy metric; compare against baseline RMSE of predicting paddock mean everywhere (zero-information prediction) and against IDW RMSE to quantify Kriging benefit</li>
+          <li><strong>MSPE:</strong> mean[(z̃ᵢ − zᵢ)² / σ²ₖ(xᵢ)]—most informative for variogram model quality; MSPE ≈ 1 = predictions and uncertainty consistent; MSPE > 1 = variogram underestimates uncertainty (too confident, dangerous for VRA); MSPE < 1 = overestimates uncertainty (too conservative)</li>
+          <li><strong>Three Springs example:</strong> ME = 0.18 mg/kg (essentially zero), RMSE = 5.8 mg/kg, MSPE = 1.04—well-calibrated model, use with confidence for VRA P zone boundary</li>
+        </ul>
+        <aside class="notes">
+          Present cross-validation as the essential quality-control step before a Kriged map is used to generate a VRA prescription. Leave-one-out cross-validation (LOOCV): each sample point is temporarily removed from the dataset in turn; the remaining points are used to predict the value at the removed location using exactly the same variogram model; the predicted and observed values are compared. Key diagnostic statistics and their target values: Mean Error (ME = mean(z̃i − zi)) should be ≈ 0—systematic bias indicates either a mis-specified variogram or a large-scale trend that violates Ordinary Kriging's stationarity assumption. RMSE in data units—the primary accuracy metric; compare against the baseline RMSE of predicting the paddock mean at every location (equivalent to a zero-information prediction) and against IDW RMSE to quantify the benefit of Kriging. Mean Standardised Prediction Error MSPE = mean[(z̃i − zi)² / σ²K(xi)]—the most informative diagnostic for the variogram model quality; MSPE ≈ 1 means predictions and their uncertainty estimates are consistent; MSPE > 1 means the variogram underestimates uncertainty (the model is too confident—dangerous for VRA); MSPE < 1 means the variogram overestimates uncertainty (the model is too conservative). A worked example: the Three Springs P data from the previous slide yields ME = 0.18 mg/kg (essentially zero), RMSE = 5.8 mg/kg, MSPE = 1.04—a well-calibrated model that can be used with confidence to generate the zone boundary for VRA P application.
+        </aside>
+      </section>
+
+      <section>
+        <h2>From Kriged Map to Management Zone: The Final Step</h2>
+        <ul>
+          <li><strong>Bridge:</strong> Kriging output to management decision—completing spatial analysis chain begun with Moran's I and LISA</li>
+          <li><strong>Challenge:</strong> Kriged prediction map is continuous surface; VRA equipment operates in discrete zones (zone boundary triggers rate change in spreader controller)</li>
+          <li><strong>Converting to zones requires:</strong> (1) Choose number of zones based on predicted value range, VRA equipment's minimum rate-change resolution, agronomic significance of differences; (2) Thresholding/classification (defined management thresholds like critical P levels, or k-means clustering of Kriged values); (3) Smoothing zone boundaries to remove isolated pixels impractical for differential application</li>
+          <li><strong>Kriging variance adds risk layer:</strong> Where uncertainty high (under-sampled Three Springs paddock corner), conservative default rate more appropriate than full zone-specific rate (prediction not well-supported by nearby data)</li>
+          <li><strong>Uncertainty-informed zone management:</strong> Applying "safety buffer" in high-uncertainty areas—only possible with Kriging, not IDW; practical benefit of additional geostatistical modelling</li>
+        </ul>
+        <aside class="notes">
+          Bridge from the Kriging output to the management decision it supports, completing the spatial analysis chain begun with Moran's I and LISA in earlier parts of this lecture. The Kriged prediction map is a continuous surface, but VRA equipment operates in discrete zones (a zone boundary triggers a rate change in the granular spreader controller). Converting a continuous map to management zones requires: (1) choosing the number of zones based on the range of predicted values, the VRA equipment's minimum rate-change resolution, and the agronomic significance of the differences between zones; (2) a thresholding or classification step (using defined management thresholds like critical P levels, or using k-means clustering of the Kriged values); (3) smoothing the zone boundaries to remove isolated pixels that are impractical to apply differentially. The Kriging variance map adds a risk layer: where uncertainty is high (the under-sampled corner of the Three Springs paddock), a conservative default rate may be more appropriate than the full zone-specific rate, since the prediction is not well-supported by nearby data. This uncertainty-informed zone management—applying a "safety buffer" in high-uncertainty areas—is only possible with Kriging, not with IDW, and represents the practical benefit of the additional geostatistical modelling investment.
+        </aside>
+      </section>
+
+      <!-- PART 9: CO-KRIGING -->
+      <section data-background-color="#002147">
+        <h2>Part 9: Co-Kriging</h2>
+      </section>
+
+      <section>
+        <h2>Co-Kriging: Borrowing Strength from a Secondary Variable</h2>
+        <ul>
+          <li><strong>Ordinary Kriging:</strong> Uses only primary variable of interest (soil N, P, pH)</li>
+          <li><strong>WA PA reality:</strong> Often have secondary variable—ECa (EM induction survey), yield (monitor), elevation (DEM), gamma-radiometrics (airborne)—at many more locations, lower cost, spatially correlated with expensive primary variable</li>
+          <li><strong>Co-kriging:</strong> Multivariate extension of Kriging; incorporates secondary variable into primary variable prediction; weights both primary samples and secondary measurements in single prediction equation</li>
+          <li><strong>Potential benefit:</strong> When cross-correlation strong (|ρ| > 0.6 for WA ECa-clay, ECa-P, ECa-pH on clay-variable soils) and secondary substantially more densely sampled → substantially reduces primary variable prediction variance vs ordinary kriging alone → fewer primary samples for same prediction accuracy</li>
+          <li><strong>Cost:</strong> Requires fitting additional variogram models (cross-variogram between primary and secondary); adds model complexity</li>
+          <li><strong>Alternative:</strong> Regression Kriging (later in this Part) achieves similar outcome more simply</li>
+        </ul>
+        <aside class="notes">
+          Introduce the motivation for co-kriging by identifying the common PA scenario it was designed for. Ordinary Kriging uses only the primary variable of interest (e.g., soil N, P, or pH) to build predictions. In WA precision agriculture, we often have access to a secondary variable—ECa from an on-the-go electromagnetic induction survey, yield from a yield monitor, elevation from a digital elevation model, or gamma-radiometric counts from an airborne survey—measured at many more locations, at much lower cost, and spatially correlated with the expensive-to-measure primary variable. Co-kriging (the multivariate extension of Kriging) incorporates the secondary variable into the prediction of the primary variable, weighting both the primary samples and the secondary measurements in a single prediction equation. The potential benefit: when the cross-correlation between primary and secondary variable is strong (|ρ| > 0.6 in the WA ECa-clay, ECa-P, or ECa-pH relationships is common on clay-variable soils) and when the secondary variable is substantially more densely sampled, co-kriging can substantially reduce prediction variance for the primary variable relative to ordinary kriging alone—meaning fewer primary samples are needed to achieve the same prediction accuracy. The cost: co-kriging requires fitting additional variogram models, specifically the cross-variogram between primary and secondary variables, adding model complexity. Regression Kriging (see later in this Part) achieves a similar outcome more simply.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Cross-Variogram and the Linear Model of Coregionalisation</h2>
+        <ul>
+          <li><strong>Auto-variogram:</strong> γ₁₁(h) describes how dissimilarity in primary variable increases with lag</li>
+          <li><strong>Cross-variogram:</strong> γ₁₂(h) measures how joint dissimilarity of primary and secondary variable changes with lag: γ₁₂(h) = (1/2N(h)) × Σ[z₁(xᵢ) − z₁(xᵢ+h)][z₂(xᵢ) − z₂(xᵢ+h)]</li>
+          <li><strong>Positive cross-variogram:</strong> When primary increases between two points, secondary also tends to increase (positive cross-correlation weakening with lag)</li>
+          <li><strong>Negative cross-variogram:</strong> Inverse relationship</li>
+          <li><strong>Mathematical validity:</strong> Complete covariance model (both auto-variograms + cross-variogram) must be positive definite</li>
+          <li><strong>Linear Model of Coregionalisation (LMC):</strong> Enforces validity—all variogram/cross-variogram models share same basic structures (nugget, spherical, exponential) with same range parameters, differing only in co-regionalisation coefficients</li>
+          <li><strong>In R:</strong> gstat handles via <code>gstat(g, id, formula, data, model)</code> to add each variable, <code>krige()</code> to execute</li>
+          <li><strong>Warning:</strong> Fitting LMC requires care—automatic tools can produce mathematically invalid models that crash Kriging system; visual inspection of fitted LMC against all three experimental variograms essential</li>
+        </ul>
+        <aside class="notes">
+          Explain the cross-variogram as the additional piece of spatial structure modelling required for co-kriging. Just as the auto-variogram γ11(h) describes how dissimilarity in the primary variable increases with lag, the cross-variogram γ12(h) measures how the joint dissimilarity of the primary and secondary variable changes with lag: γ12(h) = (1/2N(h)) × Σ[z1(xi) − z1(xi+h)][z2(xi) − z2(xi+h)]. A positive cross-variogram indicates that when the primary variable increases between two points, the secondary variable also tends to increase (positive cross-correlation that weakens with lag). A negative cross-variogram indicates an inverse relationship. The mathematical validity constraint: the complete covariance model—comprising both auto-variograms and the cross-variogram—must be positive definite; this is enforced through the Linear Model of Coregionalisation (LMC), which requires all variogram and cross-variogram models to share the same set of basic structures (nugget, spherical, exponential) with the same range parameters, differing only in their co-regionalisation coefficients. In R: gstat handles co-kriging through the coregionalisation framework using gstat(g, id, formula, data, model) to add each variable and krige() to execute. Practical warning: fitting the LMC correctly requires careful attention—automatic fitting tools can produce mathematically invalid models that will crash the Kriging system; visual inspection of the fitted LMC against experimental variograms for all three combinations (primary auto-, secondary auto-, and cross-variogram) is essential.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Co-Kriging with ECa: The WA Sandplain Example</h2>
+        <ul>
+          <li><strong>Application:</strong> Predict soil clay content at 10 m resolution across 500 ha sandplain paddock near Northam, WA</li>
+          <li><strong>Primary variable:</strong> Clay content from 42 lab-analyzed soil samples at ~110 m spacing</li>
+          <li><strong>Secondary variable:</strong> ECa (0–30 cm depth, EM38) measured at 10 m spacing on-the-go → ~50,000 measurements across paddock</li>
+          <li><strong>Cross-correlation:</strong> Pearson r(clay, ECa) = 0.71—strong enough to justify co-kriging</li>
+          <li><strong>Ordinary Kriging (clay from 42 samples alone):</strong> RMSE = 3.8%, mean kriging variance (σₖ) = 2.9%</li>
+          <li><strong>Co-Kriging (using ECa as secondary):</strong> RMSE = 2.6%, mean kriging variance = 1.9%—32% reduction in RMSE, 34% reduction in average uncertainty</li>
+          <li><strong>10 m resolution output:</strong> Co-kriged clay map reveals fine-scale texture discontinuities—abrupt sand-over-clay boundaries (WA duplex soils) entirely missed by 110 m primary grid but crucial for water management and fertiliser zone design</li>
+          <li><strong>Published WA GRDC research:</strong> Consistent 20–40% RMSE reductions through ECa co-kriging for clay, CEC, pH across WA sandplain and duplex soil types</li>
+        </ul>
+        <aside class="notes">
+          Demonstrate co-kriging with a concrete WA dataset where ECa is the secondary variable used to improve prediction of a soil property of management interest. Application: predicting soil clay content at a 10 m resolution across a 500 ha sandplain paddock near Northam, WA. Primary variable: clay content from 42 laboratory-analysed soil samples at approximately 110 m spacing. Secondary variable: ECa (0–30 cm depth, EM38) measured at 10 m spacing on the go, producing ~50 000 measurements across the same paddock. Pearson correlation r(clay, ECa) = 0.71—strong enough to justify co-kriging. Ordinary Kriging of clay from 42 samples alone: RMSE = 3.8%, mean kriging variance (σK) = 2.9%. Co-Kriging using ECa as secondary variable: RMSE = 2.6%, mean kriging variance = 1.9%—a 32% reduction in RMSE and a 34% reduction in average uncertainty. The co-kriged clay map, with its 10 m prediction resolution (the ECa grid resolution), reveals fine-scale texture discontinuities—the abrupt sand-over-clay boundaries characteristic of WA duplex soils that are entirely missed by the 110 m primary-sample grid but crucial for water management and fertiliser zone design. Published WA GRDC research has found consistent 20–40% reductions in primary-variable RMSE through ECa co-kriging for clay, CEC, and pH across a range of WA sandplain and duplex soil types.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Regression Kriging: A Practical Alternative to Full Co-Kriging</h2>
+        <ul>
+          <li><strong>Regression Kriging (RK):</strong> Simpler but largely equivalent alternative to full co-kriging; more accessible for operational PA; avoids LMC fitting complexity</li>
+          <li><strong>Three-step procedure:</strong></li>
+          <li><strong>Step 1—Regression:</strong> Fit OLS (or weighted, or GAM) regression of primary variable z₁ against secondary covariate z₂ at primary sample locations: z₁(xᵢ) = α + β z₂(xᵢ) + ε(xᵢ)</li>
+          <li><strong>Step 2—Residual Kriging:</strong> Compute regression residuals ε(xᵢ) = z₁(xᵢ) − ẑ₁(xᵢ); residuals = part of primary variable's spatial structure NOT explained by secondary covariate; fit variogram to residuals; Krige them on prediction grid</li>
+          <li><strong>Step 3—Prediction:</strong> Combine regression prediction (uses dense secondary covariate grid) + kriged residuals: ẑ_RK(x₀) = (α + β z₂(x₀)) + ê(x₀)</li>
+          <li><strong>Components:</strong> Regression = large-scale correlated structure with covariate; residual Kriging = remaining short-range spatial structure not explained by covariate</li>
+          <li><strong>Theoretical equivalence:</strong> Under certain conditions, RK and full Co-Kriging give identical predictions</li>
+          <li><strong>Practical advantages:</strong> Interpretability (β quantifies ECa-clay relationship); robustness (no LMC fitting); multiple covariates straightforward (multiple regression simple; multi-covariate full co-kriging rapidly complex)</li>
+        </ul>
+        <aside class="notes">
+          Present Regression Kriging (RK) as a simpler but largely equivalent alternative to full co-kriging that is more accessible for operational PA use and avoids the LMC fitting complexity. The RK procedure has three steps: Step 1—Regression: fit an ordinary least squares (or weighted, or generalised additive) regression of the primary variable z1 against the secondary covariate z2 at the primary sample locations: z1(xi) = α + β z2(xi) + ε(xi). Step 2—Residual Kriging: compute the regression residuals ε(xi) = z1(xi) − ẑ1(xi); these residuals represent the part of the primary variable's spatial structure not explained by the secondary covariate; fit a variogram to the residuals and Krige them on the prediction grid. Step 3—Prediction: combine the regression prediction (which uses the dense secondary covariate grid) with the kriged residuals: ẑRK(x0) = (α + β z2(x0)) + ê(x0). The regression component captures the large-scale correlated structure with the covariate; the residual Kriging component captures the remaining short-range spatial structure not explained by the covariate. Under certain theoretical conditions, RK and full Co-Kriging give identical predictions; in practice, RK is often preferred for its interpretability (the regression coefficient β quantifies how much a unit change in ECa corresponds to a unit change in clay), its robustness (fitting the LMC is not required), and its compatibility with multiple covariates (multiple regression is straightforward; multi-covariate full co-kriging becomes rapidly complex).
+        </aside>
+      </section>
+
+      <!-- PART 10: COMPARING METHODS -->
+      <section data-background-color="#002147">
+        <h2>Part 10: Comparing Methods and Choosing Wisely</h2>
+      </section>
+
+      <section>
+        <h2>IDW vs Kriging vs Co-Kriging: A Systematic Comparison</h2>
+        <ul>
+          <li><strong>Common WA dataset:</strong> 48 Colwell P samples, 250 ha Three Springs paddock</li>
+          <li><strong>IDW (p=2):</strong> RMSE = 7.9 mg/kg, no uncertainty map, ~5 sec processing</li>
+          <li><strong>Ordinary Kriging:</strong> RMSE = 5.8 mg/kg (27% improvement over IDW), full uncertainty map, ~5 min processing</li>
+          <li><strong>Regression Kriging with ECa:</strong> RMSE = 4.4 mg/kg (44% improvement over IDW), full uncertainty map, highest spatial resolution (10 m grid), ~20 min processing</li>
+          <li><strong>Uncertainty quantification:</strong> Only Kriging and co-kriging</li>
+          <li><strong>Optimal weights:</strong> Only Kriging and co-kriging</li>
+          <li><strong>Spatial resolution:</strong> Limited by primary sample spacing for IDW and Kriging; can exploit secondary data resolution for co-kriging</li>
+          <li><strong>Required inputs:</strong> IDW = only primary samples; Kriging = primary + fitted variogram; Co-kriging = primary + secondary + jointly fitted variogram models</li>
+          <li><strong>Clustering resistance:</strong> IDW over-weights clustered samples; Kriging automatically declusters</li>
+          <li><strong>Conclusion:</strong> IDW for speed/simplicity without uncertainty; Kriging for final management maps where uncertainty adds decision value; co-kriging/RK when dense, well-correlated secondary variable available</li>
+        </ul>
+        <aside class="notes">
+          Compare the three main interpolation approaches across the key dimensions that matter for PA decision-making, using a common WA dataset (48 Colwell P samples, 250 ha Three Springs paddock) as the reference. On this dataset: IDW (p=2) RMSE = 7.9 mg/kg, no uncertainty map, processing time ~ 5 seconds. Ordinary Kriging RMSE = 5.8 mg/kg (27% improvement over IDW), full uncertainty map, processing time ~ 5 minutes. Regression Kriging with ECa RMSE = 4.4 mg/kg (44% improvement over IDW), full uncertainty map, highest spatial resolution (10 m grid), processing time ~ 20 minutes. Key dimension comparisons: Uncertainty quantification—only Kriging and co-kriging; Optimal weights—only Kriging and co-kriging; Spatial resolution—limited by primary sample spacing for IDW and Kriging, but can exploit secondary data resolution for co-kriging; Required inputs—IDW: only the primary samples; Kriging: primary samples + fitted variogram; Co-kriging: primary + secondary + jointly fitted variogram models. Resistance to clustered sampling—IDW will over-weight clustered samples; Kriging automatically declusters. The conclusion: IDW is the right choice when speed and simplicity are paramount and no uncertainty map is needed; Kriging is the right choice for final management maps where an uncertainty map adds genuine decision value; co-kriging or RK is the right choice when a dense, well-correlated secondary variable is available.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Optimal Sample Design: Using Spatial Structure to Plan Before You Sample</h2>
+        <ul>
+          <li><strong>Variogram range → optimal sample spacing:</strong> Sampling at intervals < range = statistically redundant information; sampling at intervals > range = misses spatial structure, degrades interpolation accuracy</li>
+          <li><strong>Unknown paddock:</strong> Preliminary ECa survey can approximate range through its own autocorrelation structure before any soil samples collected</li>
+          <li><strong>Conditioned Latin Hypercube Sampling (cLHS):</strong> Modern sample design algorithm ensures samples span full multivariate space of available covariates (ECa, elevation, remote sensing indices) while maintaining spatial balance—current best-practice for digital soil mapping in WA; implemented in R clhs package</li>
+          <li><strong>Kriging variance-guided adaptive sampling:</strong> (1) Compute first Kriging pass from coarse initial sample; (2) Identify highest-variance prediction locations; (3) Direct next sampling round to those locations; (4) Iterate → converges on minimum sample density for target prediction accuracy across paddock</li>
+          <li><strong>Three Springs simulation:</strong> 25 cLHS-designed samples achieve equivalent Kriging RMSE to 48 regular-grid samples—effectively halving soil analysis cost for same prediction accuracy</li>
+        </ul>
+        <aside class="notes">
+          Explain how the geostatistical framework developed in this lecture can be used prospectively—before sampling—to design an efficient, purpose-built sampling scheme rather than relying on a default grid. The variogram range directly informs optimal sample spacing: sampling at intervals smaller than the range provides statistically redundant information; sampling at intervals larger than the range misses spatial structure and degrades interpolation accuracy. For an unknown paddock, a preliminary ECa survey can approximate the range through its own autocorrelation structure before any soil samples are collected. Conditioned Latin Hypercube Sampling (cLHS): a modern sample design algorithm that ensures samples span the full multivariate space of available covariates (ECa, elevation, remote sensing indices) while maintaining spatial balance—the current best-practice for digital soil mapping in WA, implemented in the clhs package in R. Kriging variance-guided adaptive sampling: compute a first Kriging pass from a coarse initial sample, identify the highest-variance prediction locations, and direct the next sampling round to those locations; iterating this process converges on the minimum sample density needed to achieve a target prediction accuracy across the paddock. Applied to the Three Springs dataset: simulations show that 25 cLHS-designed samples achieve equivalent Kriging RMSE to 48 regular-grid samples—effectively halving the soil analysis cost for the same prediction accuracy.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Choosing a Method: A Decision Framework</h2>
+        <ul>
+          <li><strong>Entry point:</strong> Do you need to know whether interpolation is worthwhile? Compute Moran's I first</li>
+          <li><strong>If I < 0.15 and non-significant:</strong> No detectable spatial structure at sample spacing—collect more samples or accept zone-free prescription</li>
+          <li><strong>If I > 0.15 and significant:</strong> Interpolation adds value; proceed</li>
+          <li><strong>Next:</strong> Need spatial hot-spot or outlier map? Add LISA analysis to identify cluster types and spatial outliers for targeted investigation</li>
+          <li><strong>Next:</strong> Need quick exploratory map without model fitting? Use IDW with p = 2</li>
+          <li><strong>Next:</strong> Need defensible map with uncertainty quantification for VRA? Use Ordinary Kriging after fitting variogram</li>
+          <li><strong>Next:</strong> Have dense, correlated secondary variable available? If cross-correlation |ρ| > 0.6, use Regression Kriging; if highest spatial resolution needed, use full Co-Kriging</li>
+          <li><strong>Final check:</strong> Always validate with LOOCV before using any interpolated map for prescription</li>
+          <li><strong>Hierarchy principle:</strong> Match complexity of analysis to value of decision—quick IDW for initial characterisation; full co-kriging only when soil sampling + ECa survey investment justifies rigorous spatial modelling</li>
+        </ul>
+        <aside class="notes">
+          Synthesise the lecture into a practical decision tree for selecting the right spatial analysis approach for a given PA task. Entry point—do you need to know whether interpolation is worthwhile? Compute Moran's I first. If I < 0.15 and non-significant: the variable shows no detectable spatial structure at the sample spacing used—collect more samples or accept a zone-free prescription. If I > 0.15 and significant: interpolation adds value; proceed. Next—do you need a spatial hot-spot or outlier map? Add LISA analysis to identify cluster types and spatial outliers for targeted investigation. Next—do you need a quick exploratory map without model fitting? Use IDW with p = 2. Next—do you need a defensible map with uncertainty quantification for VRA? Use Ordinary Kriging after fitting the variogram. Next—do you have a dense, correlated secondary variable available? If cross-correlation |ρ| > 0.6, use Regression Kriging; if highest possible spatial resolution is needed, use full Co-Kriging. Final check—always validate with LOOCV before using any interpolated map to generate a prescription. The hierarchy of methods is not about which is theoretically superior in all cases but about matching the complexity of the analysis to the value of the decision it is informing—a quick IDW for an initial paddock characterisation; full co-kriging only when the investment in soil sampling and ECa survey justifies the more rigorous spatial modelling.
+        </aside>
+      </section>
+
+      <!-- PART 11: SYNTHESIS -->
+      <section data-background-color="#002147">
+        <h2>Part 11: Synthesis</h2>
+      </section>
+
+      <section>
+        <h2>Bringing It Together: Spatial Statistics in the PA Data Pipeline</h2>
+        <ul>
+          <li><strong>Spatial autocorrelation analysis (Moran's I, LISA):</strong> Tells whether interpolation warranted and where spatial structure concentrated—starting question Chapters 06–07 assumed but didn't quantify</li>
+          <li><strong>Semivariogram:</strong> Quantifies spatial structure Kriging exploits—directly determines optimal sample spacing for soil surveys (Chapter 06)</li>
+          <li><strong>IDW:</strong> Fast, transparent interpolation adequate for exploratory analysis and field-side decision support without statistical infrastructure</li>
+          <li><strong>Ordinary Kriging:</strong> Provides BLUP and, critically, uncertainty map making interpolated management maps defensible for VRA prescriptions (Chapter 06 zone delineation workflow)</li>
+          <li><strong>Co-Kriging and Regression Kriging:</strong> Leverage dense ECa surveys and satellite imagery (Chapters 05, 15) to improve prediction of expensive primary soil variables</li>
+          <li><strong>Full pipeline:</strong> ECa survey (Ch 05) → Moran's I + LISA for pattern characterisation → variogram fitting → Ordinary or Regression Kriging → management zone delineation (Ch 06) → VRA prescription → ground-truth via yield mapping (Ch 07) and APSIM scenario analysis (Ch 14)</li>
+          <li><strong>Not standalone:</strong> Spatial statistics = quantitative bridge connecting raw field measurements to spatially explicit management decisions across every chapter of this unit</li>
+        </ul>
+        <aside class="notes">
+          Synthesise the full lecture by positioning each method in the complete PA spatial analysis chain and connecting it to the content of other chapters in this unit. Spatial autocorrelation analysis (Moran's I, LISA) tells you whether interpolation is warranted and where spatial structure is concentrated—the starting question that Chapter 06 (Nutrient Spatial Variability) and Chapter 07 (Crop Spatial Variability) assumed but did not quantify. The semivariogram quantifies the spatial structure that Kriging will exploit—directly determining the optimal sample spacing for soil surveys described in Chapter 06. IDW provides a fast, transparent interpolation adequate for exploratory analysis and field-side decision support without statistical infrastructure. Ordinary Kriging provides the BLUP and, critically, an uncertainty map that makes interpolated management maps defensible for VRA prescriptions as designed in Chapter 06's zone delineation workflow. Co-Kriging and Regression Kriging leverage the dense ECa surveys and satellite imagery described in Chapters 05 and 15 to improve prediction of expensive-to-measure primary soil variables. The full pipeline: ECa survey (Chapter 05) → Moran's I + LISA for pattern characterisation → variogram fitting → Ordinary or Regression Kriging → management zone delineation (Chapter 06) → VRA prescription → ground-truth verification via yield mapping (Chapter 07) and APSIM scenario analysis (Chapter 14). Spatial statistics is not a standalone topic—it is the quantitative bridge connecting raw field measurements to spatially explicit management decisions across every chapter of this unit.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/math/math.min.js"></script>
+  
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      controls: true,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      plugins: [ RevealNotes, RevealMath.KaTeX ]
+    });
+  </script>
+</body>
+</html>
