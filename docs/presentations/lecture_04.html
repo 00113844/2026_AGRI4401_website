@@ -349,12 +349,7 @@
 
       <section>
         <h2>Sensing Platforms: The Four Tiers</h2>
-        <ul>
-          <li><strong>Satellite:</strong> Very wide area, systematic revisit, coarse spatial resolution, fixed schedule</li>
-          <li><strong>Aerial:</strong> Flexible timing, finer resolution, higher per-hectare cost</li>
-          <li><strong>UAV:</strong> Finest practical resolution, full timing control, limited coverage per flight</li>
-          <li><strong>Proximal:</strong> Centimetre range, point-level ground truth, no inherent area coverage</li>
-        </ul>
+        <img src="../images/Chapter_04_01.jpg" alt="Remote Sensing Platforms: Altitude and Scale" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Introduce the four platform tiers. Every sensing modality can, in principle, be deployed on more than one platform.
         </aside>
@@ -382,13 +377,7 @@
 
       <section>
         <h2>The Time-of-Flight Principle</h2>
-        <ul>
-          <li><strong>Core idea:</strong> Emit a signal (light, sound, or radio waves), measure elapsed time until return</li>
-          <li>Distance = (signal speed × elapsed time) ÷ 2 (accounting for round trip)</li>
-          <li><strong>Phase-based alternative:</strong> Measure phase shift between emitted and returned continuous wave</li>
-          <li>Mathematically equivalent to fractional time delay</li>
-          <li>Underlies ultrasonic rangefinders, radar level sensors, and LiDAR</li>
-        </ul>
+        <img src="../images/Chapter_04_02.jpg" alt="Active Sensing Principle: Signal Pulse and Return" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Introduce Time of Flight as the foundational active-sensing principle. Explain both pulse-based and phase-based implementations.
         </aside>
@@ -396,13 +385,7 @@
 
       <section>
         <h2>Ultrasonic (Sonar) Sensing in Agriculture</h2>
-        <ul>
-          <li>Time-of-Flight applied using sound waves, typically 40–200 kHz band</li>
-          <li><strong>Key application:</strong> Automatic spray boom height control</li>
-          <li>Maintains constant target height across undulating paddocks, avoiding boom strikes</li>
-          <li><strong>Secondary application:</strong> Non-contact level sensing in tanks and storage bins</li>
-          <li>Inexpensive and robust, but limited range (~few metres) and affected by dust, foam, strong wind</li>
-        </ul>
+        <img src="../images/Chapter_04_03.jpg" alt="Ultrasonic Boom Height Control System" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Explain ultrasonic sensing with emphasis on WA agricultural applications. Discuss strengths and limitations.
         </aside>
@@ -444,13 +427,7 @@
 
       <section>
         <h2>Light Interacting with Matter</h2>
-        <ul>
-          <li><strong>Spectroscopy:</strong> Study of how light interacts with matter as a function of wavelength</li>
-          <li>Physical foundation for every optical sensor in this unit</li>
-          <li>Light striking material is absorbed, reflected, or transmitted in wavelength-dependent proportions</li>
-          <li><strong>Beer-Lambert relationship:</strong> Absorption increases with absorbing substance concentration and distance travelled through it</li>
-          <li>Underlies every spectroscopic calibration discussed later</li>
-        </ul>
+        <img src="../images/Chapter_04_05.jpg" alt="Beer-Lambert Relationship and Leaf Light Interaction" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Introduce spectroscopy and establish it as the physical foundation for optical sensing. Explain the Beer-Lambert relationship at conceptual level.
         </aside>
@@ -458,13 +435,7 @@
 
       <section>
         <h2>Spectral Signatures: Material Fingerprints in Light</h2>
-        <ul>
-          <li><strong>Spectral signature:</strong> Characteristic pattern of absorption and reflection at different wavelengths</li>
-          <li>Determined by chemical bonds and molecular structure</li>
-          <li>Examples: Chlorophyll absorbs blue and red; water absorbs specific NIR and SWIR bands</li>
-          <li>Different soil minerals, organic matter, and grain proteins leave distinct absorption features</li>
-          <li>Allows inference of composition without direct chemical contact</li>
-        </ul>
+        <img src="../images/Chapter_04_04.jpg" alt="Spectral Signatures: Soil vs. Vegetation" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Explain spectral signatures as the conceptual basis for optical sensing applications. Provide concrete examples.
         </aside>
@@ -472,13 +443,7 @@
 
       <section>
         <h2>Multispectral vs Hyperspectral Sensing</h2>
-        <ul>
-          <li><strong>Multispectral:</strong> Few broad, well-separated bands; detects large spectral features economically</li>
-          <li>Blurs together finer absorption features</li>
-          <li><strong>Hyperspectral:</strong> Hundreds of narrow, contiguous bands; resolves subtle absorption features</li>
-          <li>Substantially higher cost, larger data volume, risk of overfitting</li>
-          <li>Choice reflects the spectral-resolution trade-off from Part 1</li>
-        </ul>
+        <img src="../images/Chapter_04_06.jpg" alt="Multispectral vs Hyperspectral Sensing Comparison" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Connect spectral resolution from Part 1 directly to sensor design choice. Explain practical implications of each approach.
         </aside>
@@ -535,13 +500,7 @@
 
       <section>
         <h2>PROSPECT: Leaf Optical Model</h2>
-        <ul>
-          <li>Treats leaf as layered optical system</li>
-          <li>Characterized by key absorbing constituents: chlorophyll, water, dry matter, carotenoids, anthocyanins</li>
-          <li>Calculates leaf reflectance and transmittance across full optical spectrum</li>
-          <li>Based on known absorption coefficients and internal leaf tissue scattering structure</li>
-          <li><strong>Value:</strong> Ask "what reflectance if only chlorophyll changed?" — impossible experimentally</li>
-        </ul>
+        <img src="../images/Chapter_04_07.jpg" alt="PROSPECT-SAIL Radiative Transfer Models" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Explain PROSPECT leaf optical model in conceptual terms. Emphasize ability to isolate effects of individual properties.
         </aside>
@@ -627,14 +586,7 @@
 
       <section>
         <h2>Field Soil Spectroscopy</h2>
-        <ul>
-          <li>Extends NIR spectroscopy from controlled laboratory to field environment</li>
-          <li><strong>Proximal:</strong> Mounts NIR sensor on vehicle or handheld probe</li>
-          <li>Scans soil directly in paddock (surface or via penetrating probe)</li>
-          <li><strong>Trade-offs:</strong> Trades precision and environmental control for dense, georeferenced data sets</li>
-          <li>Enables spatially continuous digital soil mapping (lab NIR alone produces point values only)</li>
-          <li>Affected by field moisture, temperature, ambient light</li>
-        </ul>
+        <img src="../images/Chapter_04_08.jpg" alt="Western Australian Broadacre Proximal Sensing System" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Explain proximal soil spectroscopy and its role in enabling digital soil mapping at paddock scale.
         </aside>
@@ -663,15 +615,7 @@
 
       <section>
         <h2>Two Philosophies of Weed Detection</h2>
-        <ul>
-          <li><strong>Green-on-brown:</strong> Detecting green plant against bare soil, dead vegetation, or stubble</li>
-          <li>Scenario: chemical fallow or pre-emergent paddock with no living crop</li>
-          <li>Any green signal = weed by definition</li>
-          <li><strong>Green-on-green:</strong> Detecting weed among live, green crop plants of similar colour</li>
-          <li>Scenario: established, growing crop</li>
-          <li>Colour alone cannot distinguish weed from crop</li>
-          <li>Require entirely different sensing approaches</li>
-        </ul>
+        <img src="../images/Chapter_04_09.jpg" alt="Green-on-Brown vs Green-on-Green Weed Detection" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Introduce the two fundamentally different weed-detection problems. Establish that they require entirely different solutions.
         </aside>
@@ -712,14 +656,7 @@
 
       <section>
         <h2>Targeted Spot-Spraying: Economics and Resistance Management</h2>
-        <ul>
-          <li>Sensor signal must trigger individual nozzle/section with fast response latency</li>
-          <li><strong>Economic case (WA):</strong> Chemical fallow paddocks with &lt;50% weed cover</li>
-          <li>50–90% herbicide volume reductions compared to blanket spraying</li>
-          <li>Payback within 1–3 seasons on broadacre WA operation</li>
-          <li><strong>Herbicide resistance management:</strong> Targeted full-rate application vs blanket sub-lethal exposure</li>
-          <li>Reduces selection pressure driving resistance evolution</li>
-        </ul>
+        <img src="../images/Chapter_04_10.jpg" alt="Broadcast vs Spot-Spraying Comparison" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Connect weed detection to actuation and management outcomes. Quantify economic case and resistance management benefits.
         </aside>
@@ -867,15 +804,7 @@
 
       <section>
         <h2>Downforce Sensors: Measuring Seeder Force</h2>
-        <ul>
-          <li>Sensing modality outside optical and ranging families</li>
-          <li>Measures mechanical force (load cell or hydraulic pressure transducer)</li>
-          <li><strong>Mounted on seeder opener linkage:</strong> Measures actual force applied to soil in real time</li>
-          <li>Addresses key problem: Force needed for consistent seed depth changes with soil conditions</li>
-          <li>Gravel rise → sandy slope → clay valley within single pass</li>
-          <li><strong>Sensor-fed control:</strong> Automatically adjusts downforce row-by-row in real time</li>
-          <li>Fixed mechanical settings cannot achieve this</li>
-        </ul>
+        <img src="../images/Chapter_04_11.jpg" alt="Seeding Sensor and Downforce Control System" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Introduce downforce sensors as mechanical sensing modality. Explain problem they solve for seeding.
         </aside>
@@ -898,15 +827,7 @@
 
       <section>
         <h2>Other Mechanical and Force Sensors</h2>
-        <ul>
-          <li><strong>Draft force sensors:</strong> Measure pulling force through implement</li>
-          <li>Tillage resistance mapping (direct detection of compacted zones, hard-pans)</li>
-          <li>Tractor performance and fuel-efficiency monitoring</li>
-          <li><strong>Soil penetrometers/cone penetrometers:</strong> Measure soil mechanical resistance with depth</li>
-          <li>Identify compaction layers and hard-pans</li>
-          <li>Pairs naturally with Controlled Traffic Farming verification</li>
-          <li>Standard ground-truthing method for CTF compaction-reduction benefits</li>
-        </ul>
+        <img src="../images/Chapter_04_12.jpg" alt="Soil Sensing Methods: Penetrometer, Draft Force, and EC Mapping" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Survey broader family of mechanical and force sensors. Emphasize application to CTF and soil compaction assessment.
         </aside>
@@ -920,15 +841,7 @@
 
       <section>
         <h2>Weather Stations: The Underpinning Sensor Network</h2>
-        <ul>
-          <li><strong>Essential sensor category:</strong> Underlies nearly every other decision in this unit</li>
-          <li><strong>Standard station components:</strong> Temperature, humidity, wind speed/direction, solar radiation, rainfall</li>
-          <li><strong>Derived product 1 - Reference evapotranspiration:</strong> Estimates atmospheric water demand</li>
-          <li>Basis for irrigation scheduling in WA irrigated horticulture and pasture</li>
-          <li><strong>Derived product 2 - Growth-degree-days:</strong> Thermal-time framework for Zadoks growth staging</li>
-          <li>Depends on continuous, reliable temperature data</li>
-          <li>Frame as the sensor network enabling every thermal-time and water-balance calculation elsewhere</li>
-        </ul>
+        <img src="../images/Chapter_04_13.jpg" alt="Weather Station Multi-Sensor System and Applications" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Introduce weather station as essential sensor category. Explain derived products and role in enabling other decisions.
         </aside>
@@ -951,13 +864,7 @@
 
       <section>
         <h2>Common Sensor Selection Mistakes</h2>
-        <ul>
-          <li><strong>Pitfall 1:</strong> Choose sensor based on headline resolution without checking temporal resolution matches how fast condition develops</li>
-          <li><strong>Pitfall 2:</strong> Deploy passive optical sensor in conditions (cloud, low sun, dust) where accuracy was never validated</li>
-          <li><strong>Pitfall 3:</strong> Apply spectroscopic/computer-vision calibration from one soil/crop/weed flora to another without retraining</li>
-          <li><strong>Pitfall 4:</strong> Treat single sensor reading as fact, forgetting indirect-measurement principle</li>
-          <li>Miss the ground-truthing step that every chapter emphasizes</li>
-        </ul>
+        <img src="../images/Chapter_04_14.jpg" alt="Common Mistakes in Sensor Selection and Deployment" style="max-width: 90%; height: auto; margin: 0.5em auto; display: block;">
         <aside class="notes">
           Provide practical pitfalls list drawn from principles developed across lecture. Emphasize common mistakes.
         </aside>
