@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Satellite Data for Precision Agriculture</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.css">
+  
+  <style>
+    /* UWA Branding */
+    :root {
+      --uwa-blue: #27348B;
+      --uwa-gold: #E2B600;
+      --uwa-navy: #002147;
+      --uwa-light-grey: #F5F5F5;
+      --uwa-dark-grey: #333333;
+    }
+
+    .reveal {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--uwa-navy);
+      color: var(--uwa-light-grey);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      color: var(--uwa-blue);
+      text-transform: none;
+      font-weight: 600;
+    }
+
+    .reveal .slides section {
+      text-align: left;
+      font-size: 0.78em;
+    }
+
+    .reveal .title-slide h1 {
+      color: var(--uwa-gold);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      margin-bottom: 0.5em;
+    }
+
+    .reveal .title-slide h2 {
+      color: var(--uwa-light-grey);
+      font-size: 0.7em;
+      font-weight: 400;
+      margin-bottom: 1.5em;
+    }
+
+    .reveal .title-slide p {
+      color: var(--uwa-light-grey);
+      font-size: 0.6em;
+    }
+
+    .reveal section[data-background-color="#27348B"] h2,
+    .reveal section[data-background-color="#002147"] h2 {
+      color: var(--uwa-gold);
+      text-align: center;
+      font-size: 1.8em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .reveal ul {
+      margin-left: 0;
+      list-style-position: outside;
+    }
+
+    .reveal li {
+      margin-bottom: 0.6em;
+      line-height: 1.4;
+    }
+
+    .reveal strong {
+      color: var(--uwa-gold);
+      font-weight: 600;
+    }
+
+    .reveal em {
+      color: var(--uwa-blue);
+      font-style: italic;
+    }
+
+    .reveal a {
+      color: var(--uwa-blue);
+      text-decoration: underline;
+    }
+
+    .reveal a:hover {
+      color: var(--uwa-gold);
+    }
+
+    .reveal .smaller {
+      font-size: 0.75em;
+      color: #cccccc;
+    }
+
+    .reveal code {
+      background-color: rgba(255,255,255,0.1);
+      padding: 0.1em 0.3em;
+      border-radius: 3px;
+      color: var(--uwa-gold);
+    }
+
+    /* Two-column layout */
+    .reveal .two-col {
+      display: flex;
+      justify-content: space-between;
+      gap: 2em;
+    }
+
+    .reveal .two-col > div {
+      flex: 1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .reveal .slides section {
+        font-size: 0.65em;
+      }
+      .reveal .two-col {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- TITLE SLIDE -->
+      <section class="title-slide" data-background-color="#27348B">
+        <h1>Satellite Data for Precision Agriculture</h1>
+        <h2>Platforms, Indices, SAR, and Google Earth Engine</h2>
+        <p><strong>AGRI4401</strong> Precision Agriculture</p>
+        <p>School of Agriculture and Environment<br>The University of Western Australia</p>
+      </section>
+
+      <!-- PART 1: SETTING THE SCENE -->
+      <section data-background-color="#002147">
+        <h2>Part 1: Setting the Scene</h2>
+      </section>
+
+      <section>
+        <h2>From Landsat to Planet: Precision Agriculture's Satellite Revolution</h2>
+        <ul>
+          <li><strong>1990s:</strong> Landsat 30 m, 15-day revisit, cloud-limited—first PA prescription maps</li>
+          <li><strong>2026:</strong> Rich palette of options
+            <ul>
+              <li>Sentinel-2: Free 10 m multispectral, 5-day</li>
+              <li>Sentinel-1: Cloud-penetrating SAR</li>
+              <li>Planet: Daily 3 m coverage</li>
+              <li>Google Earth Engine: 50+ year archive, cloud computation</li>
+            </ul>
+          </li>
+          <li><strong>Satellite skills now core competency,</strong> not specialist research domain</li>
+        </ul>
+        <aside class="notes">
+          Open by tracing the arc from precision agriculture's origins to today, anchored in the satellite data reality a WA farmer now faces. In the 1990s, early PA practitioners worked with Landsat at 30 m spatial resolution and 15-day revisit, images routinely degraded by cloud cover, and the only freely available spatial layer for most of the WA wheatbelt. Even so, these images enabled the first generation of prescription maps driving variable-rate fertiliser, pesticide, and tillage regimes tailored to management zones. Traditional agronomic assessment — soil cores, lab analyses, DPIRD and GRDC trial-site surveys — provided static snapshots between seasons. Today's palette is unrecognisably richer: Sentinel-2 delivers free 10 m multispectral imagery with a five-day revisit; Sentinel-1 provides cloud-penetrating SAR; Planet SuperDove delivers daily 3 m coverage; and Google Earth Engine places the complete global archive, from 1972 to yesterday's overpass, on a cloud computing platform accessible from a browser. Establishing where this revolution came from frames why understanding satellite data at the level of physics, processing, and application — the subject of this lecture — is now a core competency for a WA precision agronomist, not a specialist research skill.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Landsat: Farming Data From Space</h2>
+        <div style="text-align: center;">
+          <iframe width="840" height="473" src="https://www.youtube.com/embed/VGXRSReliUM" title="Landsat: Farming Data From Space" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <aside class="notes">
+          This NASA video provides an overview of how Landsat satellite data is used in precision agriculture, demonstrating real-world farming applications and the value of the 50-year archive for agricultural monitoring.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Satellite Data Value Chain: From Photon to Farm Decision</h2>
+        <ul>
+          <li><strong>Stage 1—Acquisition:</strong> Sensor records top-of-atmosphere radiance (~10:30 am overpass)</li>
+          <li><strong>Stage 2—Pre-processing:</strong> Correct for atmosphere, sensor, geometry → surface reflectance</li>
+          <li><strong>Stage 3—Feature extraction:</strong> Multi-band image → vegetation index or backscatter metric</li>
+          <li><strong>Stage 4—Time-series analysis:</strong> Track feature across season and years</li>
+          <li><strong>Stage 5—Decision:</strong> Compare to threshold/zone/model → trigger farm action</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Each lecture section unpacks one stage. Understanding failure modes as important as execution.</em></p>
+        <aside class="notes">
+          Map the complete workflow that converts a satellite overpass into an actionable farm management insight, establishing the five stages that the rest of the lecture unpacks step by step. Stage 1 — Acquisition: the sensor records radiance at the top of the atmosphere across its spectral bands during a ~10:30 am local solar time overpass over a WA paddock. Stage 2 — Pre-processing: raw data is corrected for sensor noise, atmospheric effects, and geometric distortion, converting top-of-atmosphere radiance to surface reflectance — the physically meaningful, comparable quantity that all indices require. Stage 3 — Feature extraction: vegetation indices, SAR backscatter ratios, or machine-learning features compress the multi-band image into an agronomically interpretable layer. Stage 4 — Time-series analysis: the feature is tracked across multiple overpasses through the season and across multiple years, revealing patterns invisible in any single date. Stage 5 — Decision: the map or trend is compared against a management threshold, a zone boundary, or an APSIM model trajectory to trigger a specific intervention — topdressing, targeted scouting, or zone-based prescription update. Every section of this lecture corresponds to one stage in this chain, and understanding where each stage can fail is as important as knowing how to execute it.
+        </aside>
+      </section>
+
+      <!-- PART 2: PHYSICAL FOUNDATIONS -->
+      <section data-background-color="#002147">
+        <h2>Part 2: Physical Foundations</h2>
+      </section>
+
+      <section>
+        <h2>Blackbody Radiation: Why Satellites Can See What They See</h2>
+        <ul>
+          <li><strong>Planck's Law:</strong> All objects emit EM radiation based on temperature</li>
+          <li><strong>Two primary sources:</strong>
+            <ul>
+              <li>Sun (~5778 K): Peaks at 500 nm (visible) → passive optical sensing</li>
+              <li>Earth (~300 K): Peaks at 10 µm (thermal IR) → thermal sensing</li>
+            </ul>
+          </li>
+          <li><strong>Three sensing modalities:</strong>
+            <ul>
+              <li>Passive optical: Reflected sunlight (day only)</li>
+              <li>Passive thermal: Emitted Earth radiation (day/night)</li>
+              <li>Active SAR: Self-emitted microwaves (all-weather, all-time)</li>
+            </ul>
+          </li>
+          <li><strong>Physics determines what each satellite can observe when</strong></li>
+        </ul>
+        <aside class="notes">
+          Establish the physical law that explains the entire electromagnetic sensing framework: Planck's Law of blackbody radiation. Every object at a temperature above absolute zero emits electromagnetic radiation whose spectral distribution depends on temperature, described by the Planck function: B(λ,T) = (2hc²/λ⁵) / [exp(hc/λkT) − 1], where h is Planck's constant, c the speed of light, k Boltzmann's constant, T temperature, and λ wavelength. Wien's Displacement Law shows that peak emission wavelength shifts toward shorter wavelengths as temperature increases: the Sun (~5778 K) peaks near 500 nm in the visible range, which is why solar radiation drives passive optical sensing; Earth's surface (~300 K) peaks near 10 µm in the thermal infrared, which is what thermal sensors measure directly. This dual source explains the split in remote sensing modalities: visible and near-infrared sensors detect reflected solar radiation (passive, daytime only); thermal sensors detect emitted Earth radiation (passive, day and night); SAR sensors emit and detect their own microwave radiation (active, all-weather). Understanding this distinction is not academic — it directly determines which satellite can observe what property under which conditions, the central design question of any WA satellite monitoring programme.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The Electromagnetic Spectrum in Precision Agriculture</h2>
+        <ul>
+          <li><strong>Visible (400–700 nm):</strong> Chlorophyll absorption → NDVI</li>
+          <li><strong>Near-infrared (700–1100 nm):</strong> Leaf scattering → LAI, canopy structure</li>
+          <li><strong>Red-edge (680–750 nm):</strong> Most chlorophyll-sensitive region → nitrogen status</li>
+          <li><strong>SWIR (1100–2500 nm):</strong> Water absorption → soil moisture, grain protein</li>
+          <li><strong>Thermal IR (8–14 µm):</strong> Emitted radiation → canopy temperature, water stress</li>
+          <li><strong>Microwave (1 mm–1 m):</strong> SAR cloud-penetrating → soil moisture, canopy volume</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>No single region captures all information—comprehensive monitoring requires multi-spectral approach</em></p>
+        <aside class="notes">
+          Survey the spectral regions exploited in PA remote sensing, connecting each to the physical sensing mechanism established in the previous slide. Visible (400–700 nm): reflected solar radiation detected by RGB and multispectral cameras; chlorophyll absorbs strongly in the blue and red, producing the characteristic green canopy reflectance that drives NDVI and related indices. Near-infrared (700–1100 nm): the high-reflectance plateau from internal leaf cell-wall scattering, sensitive to LAI and canopy structure; the red-edge transition (680–750 nm) is the most chlorophyll-sensitive region in the entire spectrum. Shortwave infrared (SWIR, 1100–2500 nm): leaf and soil water content produces distinct absorption features at 1.4 µm and 1.9 µm, exploited for soil moisture inference and grain protein estimation. Thermal infrared (8–14 µm): emitted Earth radiation mapped to canopy temperature, sensitive to evapotranspiration and water stress via the stomatal-closure mechanism detailed in the companion Sensors chapter. Microwave/radar (1 mm–1 m): SAR is largely unaffected by atmosphere and cloud; C-band (~5.6 cm, Sentinel-1) penetrates light crop canopy and responds to soil surface moisture and canopy volume scattering. The full suite — visible through microwave — is needed for comprehensive PA monitoring because no single spectral region captures all the physiological and structural information a crop management decision requires.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Landsat 8: Band by Band</h2>
+        <div style="text-align: center;">
+          <iframe width="840" height="473" src="https://www.youtube.com/embed/A6WzAc1FTeA" title="Landsat 8: Band by Band" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <aside class="notes">
+          This video provides a detailed exploration of each spectral band on Landsat 8, demonstrating how different wavelengths reveal different aspects of Earth's surface and why multi-spectral imaging is essential for comprehensive agricultural monitoring.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Sun-Synchronous Orbits and the Geometry of Consistent Illumination</h2>
+        <ul>
+          <li><strong>Orbit design:</strong> Plane precesses at same rate Earth orbits Sun</li>
+          <li><strong>Result:</strong> Every overpass at same local solar time (~10:30 am for Sentinel-2, Landsat)</li>
+          <li><strong>Fixed illumination angle</strong> → minimises BRDF variation across dates</li>
+          <li><strong>Enables valid temporal comparison:</strong> April NDVI – September NDVI = crop change, not illumination change</li>
+          <li><strong>Caution:</strong> Planet CubeSats lack strict sun-synchronicity → need BRDF normalisation (often skipped)</li>
+        </ul>
+        <aside class="notes">
+          Explain the orbital design decision that makes optical satellite time series directly comparable across dates — a prerequisite for any phenological analysis. A sun-synchronous orbit is a near-polar orbit (~700 km altitude) whose plane precesses at exactly the same rate as Earth orbits the Sun (~0.9856° per day), ensuring the satellite always crosses any given latitude at the same local solar time on every overpass — approximately 10:30 am descending node for both Sentinel-2 and Landsat 8/9. This fixed solar angle means every image of a WA paddock is illuminated at the same sun-zenith and sun-azimuth, minimising the bidirectional reflectance (BRDF) variation that would otherwise make the same canopy appear brighter or darker on different dates simply due to changing illumination. Explain the practical consequence: a sun-synchronous design is what makes it valid to subtract an April NDVI from a September NDVI and interpret the difference as crop change rather than illumination change. By contrast, Planet's diverse fleet of CubeSats lacks strict sun-synchronicity, so Planet time series require explicit BRDF normalisation before multi-temporal comparison — a pre-processing step often skipped in casual analyses, introducing systematic biases into seasonal curves that users should be aware of.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Passive Optical vs Active Microwave: Two Fundamentally Different Ways to See a Crop</h2>
+        <ul>
+          <li><strong>Passive optical:</strong> Reflected sunlight → requires daylight and clear skies</li>
+          <li><strong>WA conflict:</strong> May–August (critical cropping period) = highest cloud frequency</li>
+          <li><strong>Active SAR:</strong> Self-emitted microwaves → cloud/smoke/rain penetration, all-weather capability</li>
+          <li><strong>Practical portfolio:</strong>
+            <ul>
+              <li>Optical when cloud-free → spectral detail</li>
+              <li>SAR during cloud periods → structure and moisture</li>
+              <li>Fuse both → continuous WA growing season coverage</li>
+            </ul>
+          </li>
+        </ul>
+        <aside class="notes">
+          Establish the active/passive distinction as the most important architectural choice in satellite sensing, directly determining which conditions each sensor can operate in. Passive optical sensors (Landsat, Sentinel-2, Planet) measure reflected sunlight in the visible, near-infrared, and SWIR bands — requiring daylight and clear skies. In WA's Mediterranean-climate growing season, May to August — exactly when seeding decisions, early-season nitrogen management, and canopy establishment monitoring matter most — cloud frequency is highest and monitoring windows most critical, creating a genuine conflict between agricultural need and passive-sensor capability. Active SAR sensors (Sentinel-1) emit their own microwave signal and measure the returned backscatter; microwaves pass through cloud, smoke, and light rain with negligible attenuation, making SAR completely independent of illumination and weather. This is not a theoretical advantage — during WA's winter cropping months, SAR may be the only satellite source that reliably delivers cloud-free observations week after week. The practical portfolio approach: use optical data (Sentinel-2, Landsat) when cloud-free for spectral detail; use SAR (Sentinel-1) during cloud-affected periods for structural and moisture information; fuse both for a continuous, cloud-resilient monitoring stream across the full WA growing season.
+        </aside>
+      </section>
+
+      <!-- PART 3: THE SATELLITE PLATFORMS -->
+      <section data-background-color="#002147">
+        <h2>Part 3: The Satellite Platforms</h2>
+      </section>
+
+      <section>
+        <h2>Landsat: Five Decades of Continuity and the Long Memory of the Land</h2>
+        <ul>
+          <li><strong>Programme:</strong> NASA/USGS, 1972–present, 8 satellite generations</li>
+          <li><strong>Current:</strong> Landsat 8 + 9 tandem = 8-day combined revisit</li>
+          <li><strong>Resolution:</strong> 30 m multispectral, 15 m pan, 100 m thermal</li>
+          <li><strong>Spectral coverage:</strong> Coastal aerosol through thermal IR (full optical range)</li>
+          <li><strong>Data access:</strong> Free via USGS EarthExplorer, GEE; atmospherically corrected 1982–present</li>
+          <li><strong>Irreplaceable asset:</strong> 50-year archive for multi-decade zone delineation, salinity tracking, long-term trends</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Default choice for: "How has this paddock changed over the past decade?"</em></p>
+        <aside class="notes">
+          Profile Landsat as the foundation of quantitative Earth observation, emphasising its unique value for multi-year historical analyses central to precision agriculture zone delineation. Launched in 1972, the Landsat programme — NASA/USGS — has maintained continuous imagery for over 50 years through eight satellite generations; Landsat 8 (2013–) and Landsat 9 (2021–) operate in tandem for an effective 8-day combined revisit. Spatial resolution: 30 m multispectral, 15 m panchromatic, 100 m thermal. Spectral bands: coastal aerosol (443 nm), blue, green, red, NIR, SWIR-1 (1610 nm), SWIR-2 (2200 nm), and thermal infrared — covering the full optical range. Data access: entirely free through USGS EarthExplorer and the Landsat Collection 2 Level-2 surface reflectance archive, atmospherically corrected and analysis-ready from 1982 to present, also fully accessible within Google Earth Engine. The 50-year archive is irreplaceable: for management zone delineation using 10-year yield-stability analysis, for detecting multi-decade salinity expansion at the toposequence positions from Chapter 05, or for tracking long-term productivity trajectories after CTF adoption — no other satellite programme offers comparable temporal depth at no cost. Landsat is the platform students should reach for first whenever the question involves "how has this paddock changed over the past decade?"
+        </aside>
+      </section>
+
+      <section>
+        <h2>Landsat 9: More Than Just A Picture</h2>
+        <div style="text-align: center;">
+          <iframe width="840" height="473" src="https://www.youtube.com/embed/0rVQHFPZfJk" title="Landsat 9 - More Than Just A Picture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <aside class="notes">
+          This video showcases the capabilities of Landsat 9 and demonstrates how the 50-year Landsat archive enables long-term monitoring of agricultural landscapes, essential for understanding multi-decadal trends in WA precision agriculture.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Sentinel-2: Europe's 10-Metre Free Multispectral Workhorse</h2>
+        <ul>
+          <li><strong>Programme:</strong> ESA Copernicus, Sentinel-2A (2015), 2B (2017), 2C (2024), 2D (2025)—four satellites delivering 5-day revisit at WA latitudes</li>
+          <li><strong>Spatial resolution:</strong> 10 m for four key bands (blue, green, red, NIR); 20 m for six red-edge and SWIR bands; 60 m for atmospheric utility bands</li>
+          <li><strong>Differentiating spectral asset:</strong> Three red-edge bands (Band 5: 705 nm, Band 6: 740 nm, Band 7: 783 nm) straddle most chlorophyll-sensitive region—enable nitrogen-status indices unavailable from Landsat's broader bands</li>
+          <li><strong>Data access:</strong> Free through Copernicus Browser (browser.dataspace.copernicus.eu); Level-2A surface reflectance products generated operationally by Sen2Cor processor; also directly accessible within GEE as COPERNICUS/S2_SR_HARMONIZED</li>
+          <li><strong>Practical WA use:</strong> 10 m pixels resolve individual management zones within paddocks and detect inter-row variability in row-spaced crops; free access and 5-day revisit make routine growing-season monitoring economically feasible across large broadacre farms</li>
+          <li><strong>Default first-choice:</strong> For majority of in-season agronomic monitoring tasks</li>
+        </ul>
+        <aside class="notes">
+          Profile Sentinel-2 as the primary satellite for in-season crop monitoring in WA precision agriculture, arguing its combination of spatial resolution, spectral design, and free access makes it the default first-choice platform for the majority of agronomic monitoring tasks. Programme: ESA Copernicus, Sentinel-2A (2015), 2B (2017), 2C (2024), 2D (2025) — four satellites delivering a 5-day revisit at WA latitudes. Spatial resolution: 10 m for the four key bands (blue, green, red, NIR), 20 m for the six red-edge and SWIR bands, 60 m for atmospheric utility bands. The three red-edge bands (Band 5: 705 nm, Band 6: 740 nm, Band 7: 783 nm) are Sentinel-2's differentiating spectral asset — they straddle the most chlorophyll-sensitive region of the vegetation reflectance spectrum, enabling nitrogen-status indices unavailable from Landsat's broader bands. Data access: free through the Copernicus Browser (browser.dataspace.copernicus.eu); Level-2A surface reflectance products generated operationally by the Sen2Cor processor; also directly accessible within GEE as the collection COPERNICUS/S2_SR_HARMONIZED. Practical WA use: Sentinel-2's 10 m pixels resolve individual management zones within paddocks and detect inter-row variability in row-spaced crops, while its free access and 5-day revisit make routine growing-season monitoring economically feasible across large broadacre farms.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Planet: Commercial Daily Revisit at Metre Scale</h2>
+        <ul>
+          <li><strong>Fleet:</strong> ~200 CubeSat PlanetScope (SuperDove) satellites</li>
+          <li><strong>Capability:</strong> Daily global coverage, 3 m resolution, 8 bands (inc. red-edge 705 nm)</li>
+          <li><strong>Access:</strong> Commercial subscription (academic programmes available)</li>
+          <li><strong>Unique strength:</strong> Daily overpass → higher cloud-free probability within 7-day window</li>
+          <li><strong>Limitations:</strong> Less mature atmospheric correction, BRDF inconsistencies, cost barrier for broadacre</li>
+          <li><strong>Strategic use:</strong> Time-critical windows when Sentinel-2 cloud gaps unacceptable; sub-5 m applications</li>
+        </ul>
+        <aside class="notes">
+          Profile Planet Labs as the commercial constellation that broke the trade-off between spatial resolution and revisit frequency. Planet operates approximately 200 CubeSat-class PlanetScope (SuperDove) satellites delivering daily global coverage at 3 m resolution with eight spectral bands including a red-edge band at 705 nm — spectral design directly comparable to Sentinel-2 Band 5. Data access: commercial subscription; Planet offers academic and research access programmes and has provided data to GRDC and DPIRD WA research projects. Planet's unique operational strength is temporal: daily overpass dramatically increases the probability of a cloud-free image within any 7-day window compared to Landsat or Sentinel-2 — critical during WA's June break-of-season monitoring window when cloud frequency is highest and the agronomic information value of a crop establishment image is at its peak. Planet's limitations relative to Sentinel-2: less mature atmospheric correction pipeline, less consistent BRDF behaviour across the diverse fleet, and the cost barrier that makes whole-season broadacre monitoring economically feasible primarily for high-value horticulture rather than for broadacre grain at commodity prices. The strategic position: use Planet for time-critical windows where Sentinel-2's cloud gaps are unacceptable; use Sentinel-2 for systematic, cost-effective season-long monitoring.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Comparing Platforms: A Decision Matrix for WA Applications</h2>
+        <div class="two-col">
+          <div>
+            <ul>
+              <li><strong>Multi-year zone delineation:</strong> Landsat (free 1982–present archive)</li>
+              <li><strong>In-season N management:</strong> Sentinel-2 (10 m, red-edge, 5-day, free)</li>
+              <li><strong>Cloud-period monitoring:</strong> Sentinel-1 SAR (free, all-weather)</li>
+            </ul>
+          </div>
+          <div>
+            <ul>
+              <li><strong>Row-scale variability:</strong> Planet (3 m, commercial)</li>
+              <li><strong>Regional yield forecasting:</strong> Sentinel-2 + Sentinel-1 fusion (GEE, free)</li>
+            </ul>
+          </div>
+        </div>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Free Sentinel + Landsat via GEE satisfies vast majority of WA broadacre PA tasks</em></p>
+        <aside class="notes">
+          Synthesise the three platform profiles into a practical decision matrix for the five most common WA precision agriculture satellite tasks. Multi-year zone delineation (10+ year history): Landsat is the only option with free archive depth from 1982; 30 m resolution is adequate for paddock-scale zone boundaries. In-season nitrogen management (10 m, red-edge, within 5 days): Sentinel-2 is the clear choice — free, 10 m, red-edge bands, 5-day revisit; Planet adds daily revisit for cloud-gap insurance at commercial cost. Cloud-period establishment monitoring (May–July): Sentinel-1 SAR is the only reliable free option; Planet can supplement optically if budget allows. Row-scale variability mapping (< 5 m resolution): Planet SuperDove at 3 m is the only cost-effective option at this resolution for large areas. Regional yield forecasting (full-wheatbelt scale): Sentinel-2 plus Sentinel-1 fusion in GEE, covering the full WA grain region free of charge. The consistent finding: free data from Sentinel-1, Sentinel-2, and Landsat accessed through GEE satisfies the requirements of the vast majority of WA broadacre PA monitoring tasks; Planet's cost is justified primarily for narrow critical windows or sub-5 m applications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Accessing Satellite Data: Portals, APIs, and GEE Collections</h2>
+        <ul>
+          <li><strong>USGS EarthExplorer:</strong> Landsat archive, Collection 2 Level-2 surface reflectance downloads</li>
+          <li><strong>Copernicus Browser:</strong> Sentinel-1/2 search, visualisation, Level-2A downloads</li>
+          <li><strong>Planet Explorer:</strong> Commercial account required</li>
+          <li><strong>Google Earth Engine:</strong> Cloud-native access, no downloads, free for academics
+            <ul class="smaller">
+              <li>LANDSAT/LC09/C02/T1_L2 (Landsat 9 SR)</li>
+              <li>COPERNICUS/S2_SR_HARMONIZED (Sentinel-2 SR)</li>
+              <li>COPERNICUS/S1_GRD (Sentinel-1 SAR)</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><strong>Critical:</strong> Always use surface reflectance (SR/Level-2A), not top-of-atmosphere (ToA)—common student error</p>
+        <aside class="notes">
+          Provide a practical guide to where and how to obtain satellite data for a WA paddock. USGS EarthExplorer (earthexplorer.usgs.gov): the authoritative archive for all Landsat missions; browse by spatial extent and date, filter by cloud cover, download Collection 2 Level-2 surface reflectance GeoTIFFs. Copernicus Browser (browser.dataspace.copernicus.eu): ESA's consolidated portal for Sentinel-1 and Sentinel-2; provides search, visualisation, and direct download of Level-2A atmospherically corrected Sentinel-2 products. Planet Explorer (planet.com/explorer): commercial browser interface requiring account and subscription. Google Earth Engine (code.earthengine.google.com): cloud-native access to complete Landsat and Sentinel archives without any download; computation runs in Google's infrastructure against their pre-indexed archive; the most efficient access pathway for time-series analysis and is free for academic users. Key GEE collection IDs for WA agriculture: LANDSAT/LC09/C02/T1_L2 (Landsat 9 surface reflectance), COPERNICUS/S2_SR_HARMONIZED (Sentinel-2 SR), COPERNICUS/S1_GRD (Sentinel-1 SAR). Critical practical note: always confirm you are accessing the surface reflectance (SR) or Level-2A collection, not the top-of-atmosphere (ToA) collection — using uncorrected ToA data for time-series comparison is one of the most common student errors in satellite data analysis.
+        </aside>
+      </section>
+
+      <!-- PART 4: PRE-PROCESSING -->
+      <section data-background-color="#002147">
+        <h2>Part 4: Pre-Processing</h2>
+      </section>
+
+      <section>
+        <h2>Radiometric Calibration: From Digital Numbers to Physical Units</h2>
+        <ul>
+          <li><strong>Raw output:</strong> Digital Number (DN) per pixel—sensor response + bias</li>
+          <li><strong>UAV calibration:</strong> Empirical line using white reference panel</li>
+          <li><strong>Satellite L1:</strong> Manufacturer coefficients convert DN → ToA radiance</li>
+          <li><strong>Level-2 products:</strong> Automated calibration + atmospheric correction → surface reflectance</li>
+          <li><strong>Critical:</strong> Always use Level-2/Level-2A (SR) for time-series analysis</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Consistent calibration prerequisite for meaningful seasonal NDVI curves</em></p>
+        <aside class="notes">
+          Explain the first pre-processing step that converts the raw sensor output into a physically meaningful quantity. Every satellite and camera sensor records a Digital Number (DN) per pixel per band — an integer that reflects the sensor's electronic response to incoming radiation, including both the scene signal and sensor-specific biases (dark current, fixed-pattern noise, gain settings). For proximal or UAV multispectral sensors, empirical line calibration converts DNs to reflectance using simultaneous measurements of a calibrated white reference panel: Reflectance(λ) = [DN(λ) − DN_dark(λ)] / [DN_white(λ) − DN_dark(λ)], where DN_dark is the dark-frame reading (sensor bias) and DN_white is the white panel reading (normalisation). For satellite Level-1 data, the sensor manufacturer provides absolute radiometric calibration coefficients (gain and offset) converting DN to top-of-atmosphere radiance: L = gain × DN + offset. Level-2A or Collection 2 Level-2 products perform this conversion and the subsequent atmospheric correction automatically, which is why analysis-ready Level-2 products are always the starting point for agricultural analysis rather than raw Level-1 data. Consistent radiometric calibration across all images in a time series is the prerequisite that makes a seasonal NDVI curve a meaningful biological signal rather than an artefact of varying sensor states.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Atmospheric Correction: The 6S Model and the Path to Surface Reflectance</h2>
+        <ul>
+          <li><strong>Purpose:</strong> ToA radiance → BoA surface reflectance (comparable across dates/sensors)</li>
+          <li><strong>Atmospheric effects:</strong> Rayleigh + Mie scattering, H₂O/O₃/CO₂ absorption</li>
+          <li><strong>6S algorithm:</strong> Standard correction model (requires AOD, water vapour, ozone, elevation)</li>
+          <li><strong>WA context:</strong> Summer bushfire smoke → high AOD in March–May images</li>
+          <li><strong>ARD products:</strong> Sentinel-2 L2A (Sen2Cor), Landsat C2 L2 (LaSRC) automate correction</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><strong>Always use Level-2A/C2L2 products—atmospheric correction already applied</strong></p>
+        <aside class="notes">
+          Explain the atmospheric correction step that converts top-of-atmosphere (ToA) radiance to bottom-of-atmosphere (BoA) surface reflectance — the key step that makes images from different dates, different sensors, and different atmospheric conditions directly comparable. The atmosphere both scatters (primarily Rayleigh scattering by air molecules, and Mie scattering by aerosols) and absorbs (by water vapour, ozone, and CO2) incoming solar radiation and reflected surface radiation, modifying the spectral signal before it reaches the sensor. The Second Simulation of the Satellite Signal in the Solar Spectrum (6S) radiative transfer model is the standard algorithm for high-accuracy atmospheric correction: it requires aerosol optical depth (from AERONET ground stations or satellite-derived aerosol products), water vapour and ozone profiles (from reanalysis meteorology), and surface elevation, and produces per-band correction coefficients applied to ToA reflectance to yield BoA surface reflectance. In WA context: summer bushfire smoke produces high aerosol optical depth that can significantly affect autumn images from March–May at the start of the cropping season; MODTRAN-based or 6S-based correction is essential for these images. Analysis-ready data products (Sentinel-2 Level-2A via Sen2Cor, Landsat Collection 2 Level-2 via LaSRC) automate this step, but validation against in-situ spectroradiometer measurements targeting < 5% RMSE remains best practice for research applications.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Cloud Masking: WA's Growing-Season Data Challenge</h2>
+        <ul>
+          <li><strong>Impact:</strong> Cloud outliers corrupt seasonal curves, phenology metrics, multi-year averages</li>
+          <li><strong>QA masking:</strong> Sentinel-2 SCL layer, Landsat QA_PIXEL band → per-pixel cloud/shadow flags</li>
+          <li><strong>Mandatory first step:</strong> Mask clouds before any VI calculation</li>
+          <li><strong>WA cloud frequency:</strong> May–August: 40–70% of overpasses cloud-contaminated</li>
+          <li><strong>Algorithms:</strong> Fmask (Landsat), s2cloudless (Sentinel-2) provide cloud probability</li>
+          <li><strong>Strategies:</strong>
+            <ul class="smaller">
+              <li>Multi-date composites</li>
+              <li>SAR during cloud periods</li>
+              <li>Planet for critical windows</li>
+            </ul>
+          </li>
+        </ul>
+        <aside class="notes">
+          Address cloud contamination as the dominant data-quality challenge for optical satellite monitoring of WA cropping systems, not a minor footnote. Cloud pixels produce radiance values far brighter than any vegetated or soil surface; including them in a vegetation index calculation introduces outliers that corrupt seasonal curves, phenology metrics, and multi-year averages. Quality Assessment (QA) band masking: Sentinel-2 Level-2A products include a Scene Classification Layer (SCL) with per-pixel labels for cloud, cloud shadow, water, and vegetation; Landsat Collection 2 provides a QA_PIXEL band with equivalent flags. The first mandatory analysis step is always to apply this mask, retaining only clear-sky pixels. Cloud frequency in WA: analysis of the Sentinel-2 archive over the WA wheatbelt shows that during May–August, 40–70% of overpasses are at least partially cloud-contaminated at any given location — meaning a naive strategy of downloading the nearest available image may frequently return unusable data. Algorithms: the Fmask algorithm (used in Landsat Collection 2) and the s2cloudless machine-learning cloud detector (for Sentinel-2) provide per-pixel cloud probability, enabling threshold-based masking more nuanced than simple spectral thresholding. Strategies: composite multiple overpasses into a cloud-free mosaic; use SAR data during cloud-heavy periods; use Planet's higher overpass frequency for cloud-gap insurance during critical windows.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Geometric Correction and Analysis-Ready Data</h2>
+        <ul>
+          <li><strong>Geometric correction:</strong> GCPs + DEM orthorectification → terrain-corrected imagery</li>
+          <li><strong>WA context:</strong> Minor for flat wheatbelt; significant for SW hills</li>
+          <li><strong>Accuracy drivers:</strong> DEM quality, GCP distribution (GDOP applies)</li>
+          <li><strong>ARD products:</strong> Landsat C2 L2, Sentinel-2 L2A → atmospherically corrected, cloud-masked, terrain-corrected SR as COGs</li>
+          <li><strong>NASA HLS:</strong> Harmonised Landsat + Sentinel-2 at 30 m, 2–3 day revisit (in GEE)</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><strong>Always start from ARD—eliminates weeks of pre-processing</strong></p>
+        <aside class="notes">
+          Complete the pre-processing chain with geometric correction and introduce the concept of Analysis-Ready Data (ARD) as the operational standard that removes most pre-processing burden from the end user. Geometric correction aligns raw imagery to a geographic coordinate system using ground control points (GCPs) and a digital elevation model for orthorectification — removing terrain-induced pixel displacement that would cause systematic spatial errors in multi-date comparisons or when overlaying satellite imagery with farm paddock boundaries. For flat WA wheatbelt topography, terrain displacement is minor, but for hilly country in the South-West it can reach several pixels at steep viewing angles. Orthorectification accuracy depends on DEM quality and GCP distribution; GDOP considerations from the GNSS chapters apply here too: poorly distributed control points produce systematic geometric errors. ARD products: Landsat Collection 2 Level-2 and Sentinel-2 Level-2A provide atmospherically corrected, cloud-masked, terrain-corrected surface reflectance in a consistent tile scheme as cloud-optimised GeoTIFFs (COGs), accessible via STAC APIs. The NASA Harmonised Landsat and Sentinel-2 (HLS) product cross-calibrates both sensors to 30 m and combines them for an effective 2–3 day revisit — directly accessible in GEE. Starting from ARD rather than raw data eliminates weeks of pre-processing work and is the recommended workflow for all WA agricultural satellite analysis.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Data in Harmony: NASA's Harmonized Landsat and Sentinel-2 Project</h2>
+        <div style="text-align: center;">
+          <iframe width="840" height="473" src="https://www.youtube.com/embed/63ljR84c85M" title="Data in Harmony: NASA's Harmonized Landsat and Sentinel-2 Project" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <aside class="notes">
+          This video explains NASA's Harmonized Landsat Sentinel-2 (HLS) project, which cross-calibrates both satellite platforms to provide seamless 2–3 day revisit coverage—a game-changer for high-frequency agricultural monitoring accessible through Google Earth Engine.
+        </aside>
+      </section>
+
+      <!-- PART 5: VEGETATION INDICES -->
+      <section data-background-color="#002147">
+        <h2>Part 5: Vegetation Indices</h2>
+      </section>
+
+      <section>
+        <h2>NDVI: The Standard Measure, Its Strengths, and Its Saturation</h2>
+        <ul>
+          <li><strong>Formula:</strong> NDVI = (NIR − Red) / (NIR + Red)</li>
+          <li><strong>WA wheat:</strong> 0.10–0.20 bare soil → 0.60–0.85 peak anthesis → 0.15–0.25 stubble</li>
+          <li><strong>Strengths:</strong> Simple, robust, validated for biomass/LAI/yield</li>
+          <li><strong>Limitations:</strong>
+            <ul class="smaller">
+              <li>Saturation above LAI ≈ 3–4</li>
+              <li>Soil background sensitivity (early season)</li>
+              <li>Atmospheric effects (red band)</li>
+            </ul>
+          </li>
+          <li><strong>Recommendation:</strong> Always compute first—known tool better than sophisticated one with unpredictable failures</li>
+        </ul>
+        <aside class="notes">
+          Present NDVI (Normalised Difference Vegetation Index) as the foundational vegetation index — the most widely computed spectral index in the history of remote sensing — while being fully honest about its limitations. Formula: NDVI = (NIR − Red) / (NIR + Red); exploits the strong contrast between high NIR reflectance (from internal leaf scattering) and low red reflectance (chlorophyll absorption) that characterises healthy vegetation. For WA wheat, NDVI ranges from approximately 0.10–0.20 on bare soil after seeding, rises to 0.60–0.85 at peak canopy around anthesis in September, and falls back toward 0.15–0.25 during post-harvest stubble. NDVI's strengths: simple to compute from any satellite with red and NIR bands, robust to many sources of noise, and validated against biomass, LAI, and crop yield in hundreds of published studies covering WA wheat and canola. NDVI's limitations, which motivate the next three slides: saturation above LAI ≈ 3–4, where yield differences continue to grow but NDVI plateaus and loses discriminative power; sensitivity to soil background at low canopy cover (early season), where soil brightness contaminates the signal; and sensitivity to atmospheric effects in the red band, meaning an uncorrected ToA image will give a different NDVI from a surface-reflectance image of the same canopy. Despite these limitations, NDVI remains the recommended first index to compute when exploring a new dataset, because its behaviour and failure modes are well understood — a known tool is more useful than a sophisticated one whose failures are less predictable.
+        </aside>
+      </section>
+
+      <section>
+        <h2>EVI and SAVI: Correcting for Atmosphere and Soil Background</h2>
+        <ul>
+          <li><strong>SAVI:</strong> [(NIR − Red) / (NIR + Red + L)] × (1 + L), L = 0.5
+            <ul class="smaller">
+              <li>Reduces soil background effect at low canopy cover</li>
+              <li>Better for WA early-season (May–June, LAI < 1)</li>
+            </ul>
+          </li>
+          <li><strong>EVI:</strong> G × (NIR − Red) / (NIR + C1×Red − C2×Blue + L)
+            <ul class="smaller">
+              <li>Blue-band corrects aerosol/smoke (WA summer/autumn)</li>
+              <li>Less saturation at high biomass</li>
+            </ul>
+          </li>
+          <li><strong>Use case:</strong> EVI recommended for full-season WA wheat (sparse → anthesis)</li>
+        </ul>
+        <aside class="notes">
+          Introduce two indices specifically designed to address the limitations of NDVI identified in the previous slide. SAVI (Soil-Adjusted Vegetation Index): SAVI = [(NIR − Red) / (NIR + Red + L)] × (1 + L), where L is a soil brightness correction factor, typically L = 0.5 for intermediate vegetation cover. By including L in the denominator, SAVI reduces the soil background effect that inflates NDVI at low canopy cover — making it more sensitive and less biased during WA's early-season establishment phase (May–June, LAI < 1) when NDVI readings are heavily confounded by sandy-soil reflectance. EVI (Enhanced Vegetation Index): EVI = G × (NIR − Red) / (NIR + C1 × Red − C2 × Blue + L), where G = 2.5, C1 = 6, C2 = 7.5, L = 1 (standard MODIS-optimised coefficients). The blue-band correction term (C2 × Blue) adjusts for aerosol scattering, specifically the residual haze and smoke common in WA summer and early autumn that atmospheric correction does not fully remove. EVI exhibits substantially less saturation than NDVI at high biomass and is the index of choice when comparing Sentinel-2 or Landsat data across paddocks ranging from early-season sparse canopy to full anthesis canopy cover — the full seasonal arc typical of WA wheat.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Red-Edge Indices: NDRE and the Nitrogen-Status Advantage</h2>
+        <ul>
+          <li><strong>Red-edge (680–750 nm):</strong> Steepest reflectance gradient, dominated by chlorophyll; sampled by 3 Sentinel-2 bands (absent from Landsat)</li>
+          <li><strong>NDRE:</strong> (B8A − B5) / (B8A + B5), where B8A = 865 nm NIR, B5 = 705 nm red-edge
+            <ul class="smaller">
+              <li>Continues increasing at LAI 3–5 where NDVI saturates</li>
+              <li>Index of choice for mid-season N status</li>
+            </ul>
+          </li>
+          <li><strong>WA wheat calibration:</strong> NDRE < 0.22 at tillering → N deficiency; > 0.35 → adequate</li>
+          <li><strong>CIre:</strong> (B7 / B5) − 1 → direct chlorophyll proxy (R² > 0.80 vs SPAD)</li>
+        </ul>
+        <aside class="notes">
+          Present the red-edge family of indices as the spectral feature that most clearly differentiates Sentinel-2 from Landsat for in-season crop monitoring. The red-edge region (680–750 nm) is the steepest part of the vegetation reflectance spectrum, dominated by chlorophyll absorption; it is sampled by three dedicated Sentinel-2 bands entirely absent from Landsat. NDRE (Normalised Difference Red Edge): NDRE = (B8A − B5) / (B8A + B5), where B8A is the narrow NIR band (865 nm) and B5 is the first red-edge band (705 nm). For WA wheat at the September anthesis window (LAI 3–5), NDRE continues to increase linearly with chlorophyll concentration where NDVI has saturated, making it the index of choice for mid-season nitrogen status assessment to inform topdressing decisions. Published calibration for WA wheat: NDRE values below ~0.22 at tillering (Zadoks Z25–Z30) indicate nitrogen deficiency warranting in-season correction; values above ~0.35 indicate adequate to excess status. CIre (Chlorophyll Index Red Edge): CIre = (B7 / B5) − 1, using the third red-edge band at 783 nm; a more direct proxy for leaf chlorophyll concentration, calibrated against SPAD measurements in published WA studies with strong correlations (R² > 0.80) against measured leaf chlorophyll.
+        </aside>
+      </section>
+
+      <section>
+        <h2>NDWI and SWIR Indices: Water Stress and Soil Moisture from Space</h2>
+        <ul>
+          <li><strong>SWIR advantage:</strong> Available from Landsat/Sentinel-2; absent from most UAV sensors</li>
+          <li><strong>NDWI (Gao, canopy water):</strong> (NIR − SWIR1) / (NIR + SWIR1)
+            <ul class="smaller">
+              <li>SWIR1 (~1610 nm) in water absorption region</li>
+              <li>Detects stress before visible greenness change</li>
+            </ul>
+          </li>
+          <li><strong>NDWI (McFeeters, open water):</strong> (Green − NIR) / (Green + NIR) → maps waterlogging</li>
+          <li><strong>Grain protein proxy:</strong> SWIR2/SWIR1 ratio at harvest → protein mapping (GRDC research)</li>
+        </ul>
+        <aside class="notes">
+          Survey the water-sensitive spectral indices that exploit SWIR bands available from Landsat and Sentinel-2 but completely absent from most UAV multispectral sensors — making satellite data uniquely valuable for water-status monitoring at scale. NDWI (Gao 1996, canopy water): NDWI = (NIR − SWIR1) / (NIR + SWIR1); sensitive to liquid water content in plant canopies because SWIR1 (~1610 nm for Sentinel-2 Band 11) falls within the water absorption region where leaf water strongly attenuates reflectance; detects canopy water stress before visible changes in greenness, offering a physiologically earlier stress signal than NDVI. NDWI (McFeeters 1996, soil/open water): a different formula using green and NIR bands, used to detect open water bodies and inundated zones — directly relevant to mapping the waterlogging events on WA duplex soils after heavy winter rainfall identified in Chapter 05. Grain protein proxy (harvest-stage): at late-season images when the crop is yellow and senescing, the ratio of SWIR2 (2200 nm) to SWIR1 (1610 nm) bands carries information about grain protein concentration, exploited in published GRDC-funded Australian research to map grain quality spatially at harvest — connecting satellite data directly to the grain-quality sensing content of the companion Crop Spatial Variability chapter.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Choosing and Validating a Vegetation Index: The Ground-Truth Requirement</h2>
+        <ul>
+          <li><strong>Selection logic:</strong>
+            <ul class="smaller">
+              <li>LAI/biomass → NDVI or EVI</li>
+              <li>Chlorophyll/N status → NDRE or CIre (Sentinel-2)</li>
+              <li>Canopy water → NDWI</li>
+              <li>Early-season sparse cover → SAVI</li>
+            </ul>
+          </li>
+          <li><strong>Check failure mode:</strong> Saturation? Soil background? Atmospheric sensitivity?</li>
+          <li><strong>Validation requirement:</strong> Index map = hypothesis; ground-truth = measurement</li>
+          <li><strong>Minimum workflow:</strong> ≥20 georeferenced field measurements on image day; compute correlation; report RMSE in agronomic units</li>
+          <li><strong>Equifinality caution:</strong> Low NDRE = N deficiency OR water stress OR disease OR senescence</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Satellite generates hypothesis; ground scouting confirms it</em></p>
+        <aside class="notes">
+          Synthesise the vegetation index section into a decision framework, reinforcing the indirect-measurement and ground-truthing principles central to this unit. Selecting an index: start from the biophysical property of interest (LAI/biomass → NDVI or EVI; chlorophyll/N status → NDRE or CIre from Sentinel-2; canopy water → NDWI; early-season under sparse cover → SAVI). Then check whether the index's known failure mode (saturation, soil background, atmospheric sensitivity) critically compromises performance at the expected canopy conditions for the target crop and growth stage. Validation: an index map without field validation is a hypothesis, not a measurement. The minimum valid workflow: collect at least 20 georeferenced ground-truth measurements of the target property (e.g., SPAD readings for nitrogen, destructive biomass cuts) on the same day as the satellite overpass; compute the correlation between the index value at each location and the field measurement; report RMSE in interpretable agronomic units rather than R² alone. The equifinality caution from Chapters 04 and 07 applies directly: a low NDRE zone in a paddock is consistent with nitrogen deficiency, water stress, disease, or early senescence, and only a targeted field visit at that location on the day of the image can distinguish between them. The satellite map generates the hypothesis; ground scouting confirms it.
+        </aside>
+      </section>
+
+      <!-- PART 6: SYNTHETIC APERTURE RADAR -->
+      <section data-background-color="#002147">
+        <h2>Part 6: Synthetic Aperture Radar</h2>
+      </section>
+
+      <section>
+        <h2>Why SAR? Active Microwave Sensing Through Cloud, Smoke, and Dark</h2>
+        <ul>
+          <li><strong>Not a fallback:</strong> SAR = genuinely complementary information source</li>
+          <li><strong>Active sensing:</strong> Emits cm-wavelength microwaves, records backscatter; passes through cloud/smoke/rain → all-weather, day & night</li>
+          <li><strong>WA critical months:</strong> June–August cloud-heavy period when crop establishment monitoring matters most</li>
+          <li><strong>Unique sensitivity:</strong> Surface roughness, canopy structure, stem density, soil moisture (dielectric constant)</li>
+          <li><strong>Fusion value:</strong> Optical (biochemistry) + SAR (structure/moisture) = complete monitoring</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Free Sentinel-2 + Sentinel-1 in GEE = cloud-resilient year-round monitoring, WA wheatbelt</em></p>
+        <aside class="notes">
+          Establish SAR as a fundamentally different information source from optical data rather than a fallback for cloudy days. SAR emits its own microwave signal in the centimetre-wavelength range and records the returned backscatter; microwaves pass through cloud, smoke, and light rain with negligible attenuation, making SAR all-weather, all-time, day and night. In WA's Mediterranean growing season, June to August — when cloud cover makes optical satellite monitoring unreliable precisely when crop establishment and early tillering monitoring matters most — SAR is often the only satellite source reliably delivering cloud-free observations week after week. Beyond cloud penetration: SAR backscatter is sensitive to the physical structure and geometry of targets — surface roughness, canopy volume, stem density, and soil dielectric constant (which is a strong function of soil moisture) — properties that optical reflectance is largely insensitive to. SAR and optical data are genuinely complementary information sources: fusing them extracts both spectral composition (optical, sensitive to biochemistry) and structural and moisture information (SAR, sensitive to geometry and water content) in a single monitoring framework. For the WA wheatbelt in 2026, the combination of free Sentinel-2 optical data plus free Sentinel-1 SAR, fused in Google Earth Engine, delivers a cloud-resilient, year-round monitoring capability that was commercially cost-prohibitive even a decade ago.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Sentinel-1: Free, Global, C-Band SAR Every Six Days</h2>
+        <ul>
+          <li><strong>Programme:</strong> ESA Copernicus, 1A (2014), 1C (2024) → 6-day cycle</li>
+          <li><strong>C-band:</strong> 5.405 GHz, ~5.6 cm wavelength; penetrates light canopy, senses soil surface</li>
+          <li><strong>Mode:</strong> IW swath (250 km, 5×20 m) → full WA wheatbelt sub-region per pass</li>
+          <li><strong>Polarisation:</strong> VV (soil/surface) + VH (vegetation volume scattering)</li>
+          <li><strong>Access:</strong> Free via Copernicus Browser, GEE (COPERNICUS/S1_GRD)</li>
+          <li><strong>Backscatter (dB):</strong> −8 to −12 (moist bare soil); −7 to −10 (wheat canopy); −20 to −30 (water)</li>
+          <li><strong>VH/VV ratio:</strong> Biomass proxy rising with canopy development—structural sentinel independent of cloud</li>
+        </ul>
+        <aside class="notes">
+          Profile Sentinel-1 as the primary SAR platform for WA agricultural monitoring. Programme: ESA Copernicus; Sentinel-1A launched 2014, Sentinel-1C launched late 2024, providing a 6-day repeat cycle globally. Frequency: C-band (5.405 GHz, wavelength ~5.6 cm); C-band penetrates light vegetation canopies and responds to surface moisture and soil surface roughness below the canopy. Acquisition mode: Interferometric Wide Swath (IW, 250 km swath, 5 × 20 m spatial resolution) is the standard product for agricultural monitoring — covering entire WA wheatbelt sub-regions in a single pass. Polarisation: dual-polarisation VV (vertical transmit/vertical receive) + VH (vertical transmit/horizontal receive); VV is more sensitive to soil and surface structure; VH is more sensitive to vegetation volume scattering. Data access: free via Copernicus Browser and GEE (collection: COPERNICUS/S1_GRD). Pre-processing steps for agricultural use: apply thermal noise removal, radiometric calibration, and Range-Doppler terrain correction (all available in the ESA SNAP toolbox or as pre-processed layers in GEE). Backscatter is expressed in decibels (dB): typical VV values of −8 to −12 dB over moist bare soil; −7 to −10 dB over a mature wheat canopy; −20 to −30 dB over open water. The VH/VV ratio (or VH − VV in dB) is a biomass proxy index that rises as crop canopy develops — a structural sentinel that operates completely independently of cloud cover.
+        </aside>
+      </section>
+
+      <section>
+        <h2>SAR Backscatter and Polarisation: Reading the Crop's Structure</h2>
+        <ul>
+          <li><strong>Backscatter (dB):</strong> Rough/wet = bright (high scatter); smooth/dry = dark (specular scatter away)</li>
+          <li><strong>VH:</strong> Volume scatter from canopy → increases with biomass/complexity</li>
+          <li><strong>VV:</strong> Surface scatter (soil) + double-bounce (stem-ground) → moisture & structure</li>
+          <li><strong>VH/VV ratio:</strong> Crop biomass proxy</li>
+          <li><strong>WA wheat trajectory:</strong> VH ~−18 dB at sowing → −12 dB anthesis → −16 to −18 dB senescence</li>
+          <li><strong>Soil moisture:</strong> Bare-soil VV sensitive to topsoil moisture → pre-sowing moisture maps (April–May break-of-season)</li>
+        </ul>
+        <aside class="notes">
+          Explain the physical meaning of the SAR signal and how to interpret its agricultural content. Backscatter intensity (in dB) reflects how much of the emitted microwave signal is scattered back to the sensor: rough or wet surfaces scatter strongly (bright in the SAR image); smooth or dry surfaces scatter specularly away from the sensor (dark in the image, especially at oblique look angles). VH backscatter is generated primarily by volume scattering from canopy elements (leaves, stems) that depolarise the transmitted vertical signal; it increases monotonically as crop biomass and canopy complexity increase through the growing season. VV backscatter receives contributions from both surface scattering (soil) and double-bounce (signal bouncing between stems and the ground), making it sensitive to both surface moisture and crop structure. The VH/VV ratio increases with crop development and is widely used as a crop biomass proxy. Seasonal trajectory for WA wheat: Sentinel-1 VH backscatter rises from approximately −18 dB at sowing on bare soil to −12 dB at anthesis as biomass peaks, then falls to −16 to −18 dB as the crop senesces and stems dry — a distinctive arc trackable through cloud cover in months when Sentinel-2 cannot observe. Soil moisture: at pre-seeding or fallow stages when soil is bare, C-band VV is sensitive to topsoil moisture content through its effect on the soil dielectric constant, enabling maps of pre-sowing moisture distribution relevant to the break-of-season timing decisions made across the WA wheatbelt each April–May.
+        </aside>
+      </section>
+
+      <section>
+        <h2>SAR Applications in WA Precision Agriculture</h2>
+        <ul>
+          <li><strong>Soil moisture:</strong> Bare-soil VV maps pre-seeding topsoil moisture → break-of-season sowing decisions</li>
+          <li><strong>Crop classification:</strong> Different crops = distinct VH/VV trajectories; WA studies > 85% accuracy (SAR-only)</li>
+          <li><strong>Flood/waterlogging mapping:</strong> Specular scatter over water → maps flooded valley-floor zones within 6 days, regardless of cloud</li>
+          <li><strong>Optical-SAR fusion:</strong> Sentinel-2 + Sentinel-1 in GEE → near-continuous VI time series across WA growing season</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Free cloud-resilient crop monitoring from two complementary sources</em></p>
+        <aside class="notes">
+          Survey the four SAR applications most relevant to WA cropping systems. Soil moisture mapping: at bare-soil or low-cover stages (before seeding and in fallow paddocks), C-band VV backscatter maps pre-seeding topsoil moisture across a landscape — relevant to break-of-season sowing decisions across the wheatbelt. Crop-type classification and early-season monitoring: different crops (wheat, barley, canola, lupins) have different canopy geometries and development rates, producing distinct VH/VV seasonal trajectories allowing classification of crop type from multi-temporal SAR stacks even before emergence is visible optically. Published WA studies using Sentinel-1 have demonstrated > 85% accuracy in classifying major WA grain crops from SAR time series alone. Flood and waterlogging mapping: inundated areas exhibit characteristic specular scattering in SAR (very low backscatter); after major winter rainfall events, Sentinel-1 reliably maps flooded zones on the valley-floor positions identified as waterlogging-prone in Chapter 05, providing spatially explicit flood extent within 6 days regardless of cloud cover. Optical-SAR fusion: by fusing Sentinel-1 SAR with Sentinel-2 optical during cloud-gap months, a near-continuous vegetation index time series can be reconstructed across the full WA growing season — cloud-resilient crop monitoring from two free sources, integrated in Google Earth Engine.
+        </aside>
+      </section>
+
+      <!-- PART 7: KEY AGRICULTURAL APPLICATIONS -->
+      <section data-background-color="#002147">
+        <h2>Part 7: Key Agricultural Applications</h2>
+      </section>
+
+      <section>
+        <h2>In-Season Crop Health Monitoring: Stress, Nutrient Deficiency, and Biomass</h2>
+        <ul>
+          <li><strong>N deficiency:</strong> NDRE (Sentinel-2) 20 m maps → zones < critical threshold at Z30 flag topdressing candidates (2–4 week window Z30–Z37)</li>
+          <li><strong>Biomass tracking:</strong> Cumulative/peak NDVI/EVI correlates with dry matter → compare vs APSIM potential to ID underperforming zones</li>
+          <li><strong>Early stress detection:</strong> PRI or SWIR/NIR ratios detect water stress before visible chlorophyll loss</li>
+          <li><strong>Multi-temporal power:</strong> Trajectory distinguishes persistent constraint (always low) from acute event (sudden drop = disease/waterlogging)</li>
+        </ul>
+        <aside class="notes">
+          Develop the in-season crop health monitoring workflow as the primary operational application of satellite data in WA precision agriculture. Nutrient deficiency detection: NDRE from Sentinel-2 provides spatial maps of chlorophyll-linked nitrogen status at 20 m resolution; zones below the WA critical NDRE threshold at Zadoks Z30 (tillering) flag candidate areas for in-season urea topdressing — a decision worth pursuing given the 2–4 week window between the flag and the closure of the effective topdressing window (Zadoks Z30–Z37 for WA wheat). Biomass tracking: cumulative or peak-season NDVI/EVI correlates with above-ground dry matter accumulation, enabling comparison of paddock biomass trajectories against modelled potential (APSIM) to identify underperforming zones for investigation. Detecting crop stress early: the PRI (Photochemical Reflectance Index) from hyperspectral sensors or the ratio of SWIR/NIR bands from Sentinel-2 can detect water stress and photosynthetic efficiency changes earlier than NDVI, since photosynthetic rates decline before visible chlorophyll loss occurs. Multi-temporal analysis strengthens all these applications: tracking a paddock's index trajectory rather than reading a single-date image distinguishes a zone that was always below average (a persistent soil constraint) from one that suddenly dropped in a specific week (an acute stress event — disease, waterlogging — requiring immediate investigation).
+        </aside>
+      </section>
+
+      <section>
+        <h2>Disease, Pest, and Weed Detection from Satellite</h2>
+        <ul>
+          <li><strong>Disease detection:</strong> Stripe rust, septoria, blackleg → chlorophyll degradation (red-edge), phenolic compounds (UV), canopy structure changes</li>
+          <li><strong>Early detection:</strong> Multi-temporal NDRE flags rust focus 1–2 weeks before visual outbreak (localised chlorophyll drop)</li>
+          <li><strong>Green-on-brown weeds:</strong> Fallow/early-season vegetation in bare paddock → Sentinel-2 NDVI 10 m maps weed burden, prioritises herbicide application (operational WA use)</li>
+          <li><strong>Green-on-green weeds:</strong> Requires sub-metre resolution → UAV or ground CV, not satellite</li>
+          <li><strong>Caveat:</strong> Equifinality—satellite flags <em>where</em> and <em>when</em>, ground scouting confirms <em>what</em></li>
+        </ul>
+        <aside class="notes">
+          Examine the emerging applications of satellite data for biotic stress detection — an area of active WA research with significant yield-protection potential. Disease detection: airborne foliar pathogens (stripe rust, septoria in WA's higher-rainfall south, blackleg in canola) produce characteristic spectral changes including chlorophyll degradation (detectable in red-edge indices), increased UV absorption from phenolic compounds, and altered canopy structure. Multi-temporal Sentinel-2 NDRE time series can detect the onset of a stripe-rust infection focus 1–2 weeks before it is visible as a mapped outbreak, because the localised drop in canopy chlorophyll deviates from the surrounding paddock trajectory even when symptoms are not yet visible to scouting. Weed detection: green-on-brown (vegetation in a fallow or early-season paddock with bare soil) is detectable from Sentinel-2 NDVI at 10 m resolution, enabling regional mapping of weed burden in chemical-fallow programs — a genuinely operational WA application where satellite data can prioritise paddocks for targeted herbicide application. Green-on-green (weeds in an established crop) requires sub-metre resolution and is more effectively addressed by UAV imagery or ground-based computer vision as developed in the companion Sensors chapter, rather than satellite. Practical caveat: satellite-detected stress anomalies require ground validation because the equifinality problem (the same spectral signature arising from multiple causes) means a satellite can reliably flag *where* and *when* but not *what* without a confirmatory scouting visit.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Soil Moisture Inference from Satellite Data</h2>
+        <ul>
+          <li><strong>Optical (surface only):</strong> Moist soil darkens reflectance, especially SWIR; SWIRMI/SSM products from Landsat/Sentinel-2 for bare/sparse paddocks</li>
+          <li><strong>Hyperspectral:</strong> Narrow 1.4 µm and 1.9 µm features → PLSR/ML calibration; 10–20% RMSE improvement vs multispectral</li>
+          <li><strong>SAR:</strong> Sentinel-1 C-band VV → soil dielectric constant (volumetric water); global products (ESA CCI, NASA SMAP) daily 1 km</li>
+          <li><strong>Critical limitation:</strong> Satellites measure top 5 cm; WA wheat terminal drought depends on <em>subsoil</em> moisture → requires APSIM inference, not direct retrieval</li>
+        </ul>
+        <aside class="notes">
+          Present the satellite data approaches for inferring soil moisture — a high-value PA application with specific WA relevance given the importance of pre-sowing subsoil moisture and post-seeding establishment moisture for WA dryland cropping decisions. Optical approach (surface only): soil moisture darkens bare-soil reflectance in the visible and NIR, particularly in the SWIR bands where water absorption is strongest; the shortwave infrared moisture index (SWIRMI) and surface soil moisture (SSM) products can be derived from Landsat and Sentinel-2 for bare or sparsely-vegetated paddocks. Hyperspectral approach: narrow water absorption features at 1.4 µm and 1.9 µm allow quantitative soil moisture estimation using PLSR or machine-learning calibration; RMSE improvements of 10–20% over multispectral indices have been demonstrated in published WA-applicable studies. SAR approach: Sentinel-1 C-band VV backscatter responds to the soil dielectric constant, which is directly linked to volumetric water content; global satellite soil moisture products derived from Sentinel-1 (e.g., ESA's CCI Soil Moisture, NASA SMAP) provide daily 1 km estimates useful for regional water balance analysis. Limitations: surface soil moisture (top 5 cm) is what satellites primarily measure; subsoil moisture — which governs WA wheat's terminal drought risk — cannot be directly retrieved from any current satellite sensor and requires inference via soil-water balance modelling (APSIM) calibrated against surface observations.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Typical Satellite Analyses in Precision Agriculture</h2>
+        <ul>
+          <li><strong>Yield estimation:</strong> Integrated seasonal NDVI/EVI → in-season forecast (WA R² 0.60–0.75 within-farm)</li>
+          <li><strong>Crop classification:</strong> Multi-temporal SAR + optical → paddock-level crop type; supports DPIRD regional stats</li>
+          <li><strong>Paddock boundaries:</strong> High-res Planet → automated delineation (updated as fields amalgamate/subdivide)</li>
+          <li><strong>Sowing-date detection:</strong> First NDVI > 0.30–0.35 → break-of-season spatial map</li>
+          <li><strong>Peak vegetation (anthesis):</strong> Max NDVI date/value → connects to frost-risk/heat-stress</li>
+          <li><strong>Crop failure detection:</strong> Peak NDVI < 0.35 → flags severe stress, triggers investigation/insurance</li>
+        </ul>
+        <aside class="notes">
+          Survey the full range of agronomic outputs that precision agriculture practitioners routinely derive from satellite data in WA operational contexts, spanning single-date products through multi-year analyses. Yield estimation: integrated seasonal NDVI or EVI correlates with final grain yield sufficiently to support in-season forecasting weeks before harvest; published WA accuracy around R² = 0.60–0.75 within a single farm. Crop classification and paddock mapping: multi-temporal SAR + optical stacks reliably distinguish major WA grain crops, fallow, and pasture at paddock level; supports DPIRD regional crop area estimates. Paddock boundary delineation: high-resolution Planet data enables automated field boundary detection, keeping farm boundary layers current as paddocks are amalgamated or subdivided across seasons. Sowing-date and green-up detection: the first date of the season when NDVI crosses a threshold (typically 0.30–0.35 for WA wheat) detects the break-of-season crop establishment event, enabling spatial mapping of sowing date across a farm or region — directly informing yield potential forecasts. Peak vegetation identification: the date and value of maximum NDVI in a season estimates the anthesis timing per zone, connecting to the frost-risk and heat-stress exposure content of the companion Crop Spatial Variability chapter. Crop failure detection: a seasonal NDVI peak below a critical threshold (e.g., < 0.35) flags potential crop failure or severe stress, triggering early investigation and insurance assessment.
+        </aside>
+      </section>
+
+      <!-- PART 8: TIME-SERIES ANALYSIS -->
+      <section data-background-color="#002147">
+        <h2>Part 8: Time-Series Analysis</h2>
+      </section>
+
+      <section>
+        <h2>Time-Series Analysis: Seasonal Curves and Phenological Metrics</h2>
+        <ul>
+          <li><strong>Single-date limitation:</strong> Confounds variety (maturity), management (sowing date), stress (N vs waterlogging looks similar)</li>
+          <li><strong>Time series resolves:</strong> Green-up rate = establishment; peak timing = phenology; senescence rate = grain-fill; anomalies = stress events</li>
+          <li><strong>Smoothing methods:</strong>
+            <ul class="smaller">
+              <li>Savitzky-Golay: Moving polynomial, preserves peaks</li>
+              <li>Harmonic regression: Sine/cosine fit; coefficients (amplitude, phase) map crop classes (powerful in GEE)</li>
+            </ul>
+          </li>
+          <li><strong>Phenological metrics:</strong> SoS (~May–June), ToP (~Aug–Sep), EoS (~Oct–Nov), iNDVI (cumulative intercepted radiation → Monteith)</li>
+        </ul>
+        <aside class="notes">
+          Argue that a single-date satellite image, however spatially detailed, is a fundamentally limited agricultural intelligence tool compared to a dense, well-processed time series. A single NDVI image confounds variety differences (a later-maturing variety is greener in October), management differences (a later-sown paddock is at an earlier growth stage on any given date), and stress differences (nitrogen deficiency looks similar to waterlogging on one date). A time series from sowing to harvest resolves all three: the rate of green-up encodes establishment; the timing of peak NDVI encodes phenology; the rate of senescence encodes grain-fill period length; and anomalous deviations from the expected trajectory at a specific date encode stress events. Two standard smoothing methods for noisy, cloud-gapped time series: Savitzky-Golay filtering applies a moving polynomial to the temporal data, preserving peak shape while suppressing noise; harmonic regression (Fourier decomposition) fits sine and cosine functions to the full seasonal arc, particularly powerful in GEE because the fitted coefficients themselves (amplitude, phase) can be spatially mapped for crop classification. Standard phenological metrics extracted from smoothed curves: Start of Season (SoS, ~May–June for WA wheat), Time of Peak (ToP, ~August–September), End of Season (EoS, ~October–November), and integrated NDVI (iNDVI) as a proxy for cumulative intercepted radiation directly linking to Monteith's equation from Chapter 14.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Multi-Year Stability Analysis: From Annual Maps to Management Zones</h2>
+        <ul>
+          <li><strong>Method:</strong> Compute annual metric (peak NDVI, iNDVI, senescence date) per pixel × 10+ years; classify by behaviour: consistent high (high mean, low CV), consistent low (low mean, low CV), unstable (high CV)</li>
+          <li><strong>Three-class map:</strong> Data-driven zones from satellite evidence; more robust than single-year yield map; available for any Landsat-covered paddock from 2000—even if never yield-monitored</li>
+          <li><strong>Management responses:</strong>
+            <ul class="smaller">
+              <li>Consistently low → fixed constraints (gravel, salinity) → reduced-input zones</li>
+              <li>Unstable → seasonal interactions (waterlogging, drought) → adaptive in-season management</li>
+            </ul>
+          </li>
+          <li><strong>In GEE:</strong> 20 years Landsat, peak NDVI, mean/CV, 3-class zones → < 5 minutes computation</li>
+        </ul>
+        <aside class="notes">
+          Present multi-year satellite time-series stability analysis as the most powerful and practically actionable application of satellite archives for WA precision agriculture zone delineation. Method: compute an annual summary metric (peak NDVI, iNDVI, or time of senescence) for each pixel across 10+ years of Landsat or Sentinel-2 archive; classify each pixel by its multi-year behaviour — consistently high (high mean, low coefficient of variation), consistently low (low mean, low CV), or unstable (high CV regardless of mean). The three-class stability map is a data-driven zone delineation from satellite evidence, more robust than any single year's yield map and available for any paddock with Landsat coverage from 2000 onward — even if no yield monitor has ever operated there. The classes map directly to management responses: consistently low zones typically correspond to fixed soil constraints (gravel rises, saline discharge zones) warranting permanent reduced-input zones; unstable zones correspond to season-dependent interactions (waterlogging, terminal drought) requiring adaptive in-season management rather than a static prescription map — a direct, practical link to the diagnostic categories in Chapter 07's crop spatial variability framework. In Google Earth Engine, this entire analysis — 20 years of Landsat, peak annual NDVI, mean and CV maps, three-class stability zones — can be computed for a WA wheatbelt paddock in under five minutes of cloud computation.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Fusing Optical and SAR: Cloud-Resilient Crop Monitoring</h2>
+        <ul>
+          <li><strong>Fusion logic:</strong> Use Sentinel-2 (NDRE/NDVI) when cloud-free; use Sentinel-1 (VH/VV, VH) during cloud gaps; cross-calibrate SAR onto optical scale using clear-sky overlap</li>
+          <li><strong>In GEE:</strong> Straightforward workflow fills cloud-masked Sentinel-2 with SAR-predicted estimates → near-continuous 6-day stream across WA growing season</li>
+          <li><strong>Fused product provides:</strong>
+            <ul class="smaller">
+              <li>Sentinel-2 spectral sensitivity (N, chlorophyll, senescence) when clear</li>
+              <li>Sentinel-1 structural/moisture (biomass, soil moisture, flood) during cloud gaps</li>
+              <li>Continuous temporal record neither alone could provide</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Practical operational answer to WA's May–August cloud problem</em></p>
+        <aside class="notes">
+          Bring the optical and SAR threads together into the practical combined monitoring strategy that addresses WA's cloud-cover challenge without commercial Planet data. The fusion logic: use Sentinel-2 optical observations (NDRE, NDVI) when cloud-free, accepted as the primary information source; use Sentinel-1 SAR metrics (VH/VV ratio, VH backscatter) during cloud-gap periods as a structurally complementary observation; use the statistical relationship between the two sensor streams, established during clear-sky periods when both are available, to cross-calibrate the SAR observations onto an optical-equivalent scale for gap-filling. In GEE, a straightforward fusion workflow fills cloud-masked Sentinel-2 pixels with SAR-predicted estimates, producing a near-continuous 6-day monitoring stream across the full WA growing season — a capability that required substantial research computing infrastructure before GEE made planetary-scale computation freely accessible. This fused product provides: the spectral sensitivity of Sentinel-2 (nitrogen status, chlorophyll, senescence timing) during clear-sky periods; the structural and moisture sensitivity of Sentinel-1 (biomass development, soil moisture, flood events) during cloud-gap months; and a continuous temporal record that neither source could provide alone — the practical operational answer to WA's May–August cloud problem.
+        </aside>
+      </section>
+
+      <!-- PART 9: GOOGLE EARTH ENGINE -->
+      <section data-background-color="#002147">
+        <h2>Part 9: Google Earth Engine</h2>
+      </section>
+
+      <section>
+        <h2>Google Earth Engine: Cloud-Native Geospatial at Planetary Scale</h2>
+        <ul>
+          <li><strong>Platform:</strong> > 70 PB archive (Landsat, Sentinel-1/2, MODIS, daily updates) + co-located computation</li>
+          <li><strong>Eliminates:</strong> Download-store-process cycle (previously prohibitive without research cluster)</li>
+          <li><strong>Scale:</strong> 40 years Landsat across all of WA → minutes on GEE distributed infrastructure</li>
+          <li><strong>Access:</strong> Free for academics via code.earthengine.google.com; Python geemap library in Jupyter</li>
+          <li><strong>WA adoption:</strong> Standard for DPIRD/CSIRO/UWA paddock-to-regional monitoring; displaced desktop GIS for multi-temporal analysis</li>
+        </ul>
+        <aside class="notes">
+          Introduce GEE as a transformative platform that has fundamentally changed the accessibility of large-scale satellite data analysis. GEE co-locates a planetary-scale archive (> 70 petabytes of Earth observation data, including complete Landsat, Sentinel-1, Sentinel-2, and MODIS collections updated daily) with the computing infrastructure to process it in-place — eliminating the download-store-process cycle that previously made multi-year, multi-scene satellite analysis practically prohibitive without a research computing cluster. A computation processing 40 years of Landsat scenes across all of WA can complete in minutes on GEE's distributed infrastructure. Access: free for researchers and educators via a Google Cloud project at code.earthengine.google.com; also accessible through the Python geemap library (pip install geemap) within Jupyter notebooks — enabling integration with the same Python data analysis workflows used in AGRI4401 practicals. In WA agricultural research, GEE has become the standard environment for paddock-to-regional crop monitoring, displacing desktop GIS workflows for multi-temporal analysis. DPIRD, CSIRO, and UWA collaborative studies have all used GEE for seasonal crop monitoring dashboards, salinity extent analysis from the Landsat archive, and crop-type classification from Sentinel-1 SAR time series — representative of the operational research landscape students entering the profession will encounter.
+        </aside>
+      </section>
+
+      <section>
+        <h2>The GEE Programming Model: Collections, Maps, and Reducers</h2>
+        <ul>
+          <li><strong>ImageCollection:</strong> Stack of images filtered by location/date/cloud; starting point of every analysis</li>
+          <li><strong>Filter methods:</strong> .filterBounds(geometry), .filterDate(start, end), .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))</li>
+          <li><strong>.map(function):</strong> Applies operation to every image in parallel (e.g., compute NDVI)</li>
+          <li><strong>Reducer:</strong> Aggregates images/pixels statistically (mean, median, max, percentile) across time or space</li>
+          <li><strong>Standard workflow:</strong> Define geometry → filter collection → cloud mask → map index → reduce by paddock → extract time series → export CSV</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><em>Single conceptual model scales to any satellite task—only collection ID & band names change</em></p>
+        <aside class="notes">
+          Explain the core concepts that make GEE different from desktop GIS, enabling students to write effective analysis scripts. ImageCollection: the fundamental data type — a stack of images filtered by location, date, and cloud cover; the starting point of virtually every analysis. .filterBounds(geometry): spatially filters the collection to images intersecting a target paddock. .filterDate(start, end): temporally filters to a date range. .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)): pre-filters by scene cloud fraction. .map(function): applies an operation to every image in the collection (e.g., computing NDVI for each Sentinel-2 image) as a server-side parallel operation. Reducer: aggregates images or pixel values statistically — mean, median, max, percentile — across time (seasonal composite) or space (paddock mean time series). The standard GEE workflow for a WA paddock NDVI time series: define geometry → filter ImageCollection → apply cloud mask → map index function → reduce by paddock polygon → extract time series → chart or export to Google Drive as CSV. This pattern applies identically to Landsat, Sentinel-2, and Sentinel-1 with only the collection ID and band names changing — a single conceptual model scales to any satellite data analysis task.
+        </aside>
+      </section>
+
+      <section>
+        <h2>A Worked Example: Multi-Year Stability Map in GEE</h2>
+        <ul>
+          <li><strong>Step 1:</strong> Load paddock boundary as GEE asset (shapefile upload)</li>
+          <li><strong>Step 2:</strong> Filter Landsat C2 L2 → paddock extent, August, 2013–2023, cloud < 20%</li>
+          <li><strong>Step 3:</strong> Apply QA_PIXEL mask; per year, compute max NDVI via .qualityMosaic('NDVI')</li>
+          <li><strong>Step 4:</strong> Stack 10 annual peak-NDVI images; compute pixel-wise mean, SD, CV</li>
+          <li><strong>Step 5:</strong> Classify stability zones (consistent high/low, unstable) via ee.Image.expression()</li>
+          <li><strong>Step 6:</strong> Export GeoTIFF (MGA Zone 50) + CSV statistics to Google Drive</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><strong>Time:</strong> < 5 minutes | <strong>Output:</strong> Satellite-evidenced zone map from 10 years free data, no yield monitor required</p>
+        <aside class="notes">
+          Walk through a complete GEE analysis from start to finish — computing a 10-year NDVI stability map for a WA wheatbelt paddock — connecting theory to an operational product. Step 1: load the farm paddock boundary as a GEE asset uploaded from a shapefile (the same shapefile workflow as the practical tutorial). Step 2: filter the Landsat Collection 2 Level-2 archive to the paddock extent, peak-season months (August), and 2013–2023, with cloud cover < 20%. Step 3: apply QA_PIXEL cloud mask; for each year compute the maximum NDVI image using .qualityMosaic('NDVI') to select the clearest, greenest observation for each year. Step 4: stack the 10 annual peak-NDVI images; compute pixel-wise mean, standard deviation, and coefficient of variation using ee.Reducer.mean() and equivalents. Step 5: classify into stability zones — consistently high, consistently low, unstable — using ee.Image.expression(). Step 6: export the classified map to Google Drive as a GeoTIFF in MGA Zone 50 (EPSG:28350) for import into QGIS, alongside a CSV of per-year peak-NDVI statistics per paddock for in-depth analysis. The total computation takes under 5 minutes; the output is a satellite-evidenced management zone map grounded in 10 years of free archive data, requiring no yield monitor and no commercial data subscription.
+        </aside>
+      </section>
+
+      <section>
+        <h2>From Satellite to APSIM: Data Assimilation and Yield Forecasting</h2>
+        <ul>
+          <li><strong>Statistical forecasting:</strong> Correlate seasonal iNDVI or peak NDRE with yield; calibrated from yield map + satellite archive; in-season forecast weeks before harvest (WA R² 0.60–0.75 within-farm; 0.40–0.60 across farms)</li>
+          <li><strong>APSIM data assimilation:</strong> Satellite LAI (NDVI/NDRE → PROSAIL inversion) updates APSIM LAI state via ensemble Kalman filter; corrects model drift; projects yield from corrected state</li>
+          <li><strong>Fusion advantage:</strong> Mechanistic understanding (APSIM) + observational evidence (satellite) → leading approach for in-season VR topdressing (UWA/CSIRO/DPIRD research frontier)</li>
+        </ul>
+        <aside class="notes">
+          Present the integration of satellite-derived vegetation metrics with crop growth modelling — the methodological bridge between this chapter and Chapter 14's APSIM content. Two integration approaches. Statistical yield forecasting: directly correlating seasonal iNDVI or peak NDRE with harvest yield, calibrated from a historical archive of yield maps and coincident satellite data; once calibrated, in-season satellite observations at the peak-season date provide a yield forecast weeks before harvest with published R² of 0.60–0.75 for WA wheat within a single farm, degrading to 0.40–0.60 across multiple farms due to calibration transfer limitations. Data assimilation into APSIM: the mechanistically richer approach — satellite-observed LAI (inverted from NDVI or NDRE using PROSAIL inversion, connecting directly to the companion Sensors chapter) updates APSIM's simulated LAI state at each observation date using an ensemble Kalman filter; the satellite observation corrects model drift caused by soil parameter uncertainty; the model then projects forward from the corrected state to produce a yield forecast conditioned on both mechanistic understanding and observational evidence. This fusion of satellite data with process-based modelling is the leading approach for in-season variable-rate topdressing decision support in WA broadacre wheat — a live research frontier at UWA, CSIRO, and DPIRD.
+        </aside>
+      </section>
+
+      <!-- PART 10: SYNTHESIS -->
+      <section data-background-color="#002147">
+        <h2>Part 10: Synthesis</h2>
+      </section>
+
+      <section>
+        <h2>Data Management, Big Data, and Future Directions</h2>
+        <ul>
+          <li><strong>Data volume:</strong> Single Sentinel-2 tile ~1 GB; full season ~10–15 GB; multi-year wheatbelt archives → terabytes; GEE cloud-native architecture eliminates local storage/processing barrier</li>
+          <li><strong>Data governance:</strong> Public archives (Landsat/Sentinel) unrestricted; commercial data has licensing; farm satellite products raise same ownership issues as any PA layer (ADAPT/ISOXML apply)</li>
+          <li><strong>Future:</strong>
+            <ul class="smaller">
+              <li>Hyperspectral satellites (PRISMA, EnMAP, EMIT, DESIS) → leaf biochemistry (protein, cellulose) from orbit</li>
+              <li>AI/LSTM on Sentinel stacks → > 90% WA crop-type classification</li>
+              <li>Satellites as real-time "eyes" of autonomous farm systems (update APSIM, flag zones for robots, generate prescriptions)</li>
+            </ul>
+          </li>
+        </ul>
+        <aside class="notes">
+          Address the practical data management reality and technology horizon. Data volume: a single full-resolution Sentinel-2 tile is approximately 1 GB; a full growing-season time series of 10 cloud-free tiles reaches 10–15 GB; multi-year archives across the WA wheatbelt quickly reach terabytes — the point where local storage and desktop processing become impractical. GEE's cloud-native architecture eliminates this barrier by keeping data in the cloud and bringing computation to the data. Data governance: the free public satellite archives (Landsat, Sentinel) are unrestricted; commercial satellite data carries subscription and licensing obligations. Farm-specific satellite-analysis products raise the same data ownership questions as any farm data layer — ADAPT API and ISOXML standards from the Telematics chapter apply to satellite-derived zone maps and prescription files. Future directions: hyperspectral satellite missions (PRISMA, EnMAP, EMIT, DESIS) are now delivering hundreds of contiguous narrow bands from orbit, enabling the leaf-level biochemical retrievals (protein, cellulose, leaf water) previously possible only with airborne sensors. AI and time-series LSTM networks trained on Sentinel-1/Sentinel-2 stacks achieve > 90% crop-type classification for WA grain crops. Ultimately, satellite data is becoming the continuous real-time "eyes" of an autonomous farm management system — updating APSIM simulations in the cloud, flagging zones for robotic inspection, and generating in-season prescription updates — a trajectory that makes the satellite data skills in this lecture central to WA precision agriculture practice for decades.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Beyond the Visible: Landsat Next's New Spectral Bands</h2>
+        <div style="text-align: center;">
+          <iframe width="840" height="473" src="https://www.youtube.com/embed/uHFLo7GlGPc" title="Beyond the Visible: Landsat Next's New Spectral Bands" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <aside class="notes">
+          This video previews Landsat Next's enhanced spectral capabilities, including hyperspectral bands that will enable direct measurement of crop biochemistry from orbit—representing the future direction of satellite-based precision agriculture.
+        </aside>
+      </section>
+
+      <section>
+        <h2>Bringing It Together: Satellites as the Spatial Scalability Layer</h2>
+        <ul>
+          <li><strong>Technology stack connections:</strong>
+            <ul class="smaller">
+              <li>Sensors (Ch 04): EM physics | Crop Variability (Ch 07): diagnostic framework</li>
+              <li>Soil/Water (Ch 05), Nutrients (Ch 06): what varies & why</li>
+              <li>GNSS (Ch 02–03): positional precision | Telematics (Ch 11): data connectivity</li>
+              <li>Crop Models (Ch 14): mechanistic simulation | Kriging (Ch 13): spatial interpolation</li>
+            </ul>
+          </li>
+          <li><strong>Satellite role:</strong> Scales all to landscape extent; spatially continuous + temporally dense observational record</li>
+          <li><strong>Central limitation:</strong> Every satellite measurement = indirect inference through imperfect model; reliability depends on calibration quality</li>
+          <li><strong>Ground-truth:</strong> Final indispensable step in every workflow</li>
+        </ul>
+        <p class="smaller" style="margin-top: 1.5em;"><strong><em>Satellites generate hypotheses at scale; agronomists confirm them in the paddock</em></strong></p>
+        <aside class="notes">
+          Close with the unifying synthesis positioning satellite remote sensing in the full PA technology stack, connecting to every other chapter in the unit. Sensors (Chapter 04) established the electromagnetic physics; Crop Spatial Variability (Chapter 07) established the diagnostic framework; Soil and Water (Chapter 05) and Nutrients (Chapter 06) established what varies and why; GNSS and DGPS (Chapters 02–03) established positional precision; Telematics (Chapter 11) established the data connectivity layer; Crop Models (Chapter 14) established mechanistic simulation; Kriging (Chapter 13) established spatial interpolation from point samples. Satellite data is the chapter that scales all of these to landscape extent — it provides the spatially continuous, temporally dense observational record that neither point sensors, yield monitors, nor crop models alone can supply across an entire WA farm or region. The central limitation threaded throughout: every satellite measurement is an indirect inference through an imperfect physical and mathematical model, and its reliability depends on the quality and relevance of the calibration linking the satellite signal to the farm property of interest. Ground-truth scouting remains the final, indispensable step in every satellite monitoring workflow — regardless of the platform, the index, or the sophistication of the time-series method. Satellites generate hypotheses at scale; agronomists confirm them in the paddock.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/math/math.min.js"></script>
+  
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      controls: true,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      plugins: [ RevealNotes, RevealMath.KaTeX ]
+    });
+  </script>
+</body>
+</html>
