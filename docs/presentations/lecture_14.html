@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precision Farming Economics and Adoption — AGRI4401</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.css">
+  <style>
+/* UWA RevealJS Theme - Compiled CSS */
+
+:root {
+  --r-heading-color: #27348B;
+  --r-main-color: #333333;
+  --r-main-font: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --r-heading-font: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --r-background-color: #ffffff;
+}
+
+.reveal section[data-background-color="#002147"],
+.reveal section[data-background-color="#002147"] {
+  color: white !important;
+}
+
+.reveal section[data-background-color="#002147"] h1,
+.reveal section[data-background-color="#002147"] h2,
+.reveal section[data-background-color="#002147"] h3,
+.reveal section[data-background-color="#002147"] p {
+  color: white !important;
+}
+
+.reveal section[data-background-color="#27348B"] h1,
+.reveal section[data-background-color="#27348B"] h2,
+.reveal section[data-background-color="#27348B"] .title {
+  color: #E2B600 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.reveal section[data-background-color="#27348B"] h3 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.reveal section[data-background-color="#27348B"] p,
+.reveal section[data-background-color="#27348B"] .subtitle,
+.reveal section[data-background-color="#27348B"] li {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.reveal section[data-background-color="#27348B"] .author,
+.reveal section[data-background-color="#27348B"] .date,
+.reveal section[data-background-color="#27348B"] .institute,
+.reveal section[data-background-color="#27348B"] .quarto-title-author-name,
+.reveal section[data-background-color="#27348B"] .quarto-title-affiliation {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.learning-objectives-slide .learning-objectives {
+  background: linear-gradient(135deg, #F5F5F5 0%, #ffffff 100%);
+  border-left: 5px solid #27348B;
+  padding: 1.5em;
+  margin: 1em 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.learning-objectives strong {
+  color: #27348B;
+  font-size: 1.1em;
+}
+
+.reveal .columns {
+  display: flex;
+  gap: 2em;
+  align-items: flex-start;
+}
+
+.reveal .column {
+  flex: 1;
+}
+
+.emphasis {
+  color: #27348B;
+  font-weight: 600;
+}
+
+.highlight-box {
+  background: linear-gradient(135deg, rgba(39, 52, 139, 0.08) 0%, rgba(85, 119, 187, 0.08) 100%);
+  border: 2px solid #5577BB;
+  padding: 1em 1.5em;
+  border-radius: 8px;
+  margin: 0.5em 0;
+}
+
+.reveal table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.85em;
+}
+
+.reveal table th {
+  background: #27348B;
+  color: white;
+  padding: 0.75em 1em;
+  text-align: left;
+  font-weight: 600;
+}
+
+.reveal table td {
+  padding: 0.75em 1em;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+.reveal table tr:nth-child(even) {
+  background: #F5F5F5;
+}
+
+.reveal .incremental li {
+  margin-bottom: 0.5em;
+}
+
+.callout-info {
+  background: linear-gradient(135deg, rgba(85, 119, 187, 0.1) 0%, rgba(85, 119, 187, 0.05) 100%);
+  border-left: 5px solid #5577BB;
+  padding: 1em 1.5em;
+  margin: 1em 0;
+  border-radius: 4px;
+}
+
+.reveal .mermaid {
+  background: transparent;
+  margin: 1em auto;
+  max-width: 92%;
+  max-height: 65vh;
+  overflow: auto;
+}
+
+.reveal pre.mermaid {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.reveal .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.reveal .slides section {
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.reveal .slides section ul,
+.reveal .slides section ol {
+  margin-bottom: 1em;
+}
+
+.reveal .slides section li {
+  margin-bottom: 0.5em;
+}
+
+.reveal .slides section code {
+  background: #F5F5F5;
+  color: #002147;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* Additional styling for images and media */
+.reveal img {
+  max-height: 90vh;
+  max-width: 90%;
+}
+
+/* Reveal.js default color variables */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+  color: #27348B;
+  text-shadow: none;
+}
+
+.reveal a {
+  color: #27348B;
+  text-decoration: none;
+  transition: color .15s ease;
+}
+
+.reveal a:hover {
+  color: #5577BB;
+  text-shadow: none;
+  text-decoration: underline;
+}
+
+
+.reveal .slides section.part-div h2 { font-size: 1.8em; }
+.reveal .slides section h2 { font-size: 1.3em; margin-bottom: 0.35em; }
+.reveal .slides section ul { font-size: 0.82em; line-height: 1.55; margin-top: 0; }
+.reveal .slides section .slide-figure { width: 100%; max-height: 55vh; margin-top: 1em; display: flex; justify-content: center; }
+.reveal .slides section .slide-figure svg { width: 100%; height: auto; max-height: 55vh; }
+.reveal .slides section .yt-wrap { width: 100%; border: 3px solid #27348B; border-radius: 6px; overflow: hidden; }
+.reveal .slides section .yt-wrap iframe { width: 100%; aspect-ratio: 16/9; border: none; }
+
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section class="title-slide" data-background-color="#27348B">
+        <h1>Precision Farming Economics and Adoption</h1>
+        <h2>Understanding the Franchise Model and Technology Adoption</h2>
+        <p><strong>AGRI4401</strong> Precision Agriculture</p>
+        <p>School of Agriculture and Environment<br>The University of Western Australia</p>
+        <p class="smaller" style="margin-top: 2em; opacity: 0.6;">38 slides · 90 minutes · Space or → to advance · S for speaker notes</p>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 1 / 9</span>
+        <h2>Part 1 — The Franchise Frame</h2>
+      </section>
+      <section>
+        <h2>The Farmer as Franchisee: Buying Into a System, Not a Single Machine</h2>
+        <ul>
+          <li><strong>Franchise fee ≈</strong> PA hardware capital cost; monthly royalty ≈ correction signal subscription; advertising levy ≈ data-sharing agreement</li>
+          <li>The franchisee cannot change the core system, cannot easily switch brands mid-term, does not own the IP they operate within</li>
+          <li>A WA farmer adopting autosteer + corrections + farm management platform is making a <strong>10–20 year strategic commitment</strong></li>
+          <li>Vendor-designed ecosystems deliberately reproduce franchise dependencies — this frame fundamentally changes the investment analysis</li>
+        </ul>
+        <div class="slide-figure"><svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="800" height="250" fill="#002147" rx="8"/>
+    <text x="400" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#E2B600">Franchise Comparison</text>
+    <g>
+      <rect x="40" y="60" width="320" height="170" fill="none" stroke="#27348B" stroke-width="2" rx="4"/>
+      <text x="200" y="85" font-weight="bold" text-anchor="middle" font-size="14" fill="#E2B600">McDonald's Franchise</text>
+      <text x="50" y="110" font-size="11" fill="#F5F5F5">Fee: AUD 2–4M</text>
+      <text x="50" y="128" font-size="11" fill="#F5F5F5">Monthly: 5% of sales</text>
+      <text x="50" y="146" font-size="11" fill="#F5F5F5">Advertising: 4.5%</text>
+      <text x="50" y="164" font-size="11" fill="#F5F5F5">Term: 20 years</text>
+      <text x="50" y="182" font-size="11" fill="#F5F5F5">Can't change system</text>
+    </g>
+    <g>
+      <rect x="440" y="60" width="320" height="170" fill="none" stroke="#E2B600" stroke-width="2" rx="4"/>
+      <text x="600" y="85" font-weight="bold" text-anchor="middle" font-size="14" fill="#E2B600">PA Technology Bundle</text>
+      <text x="450" y="110" font-size="11" fill="#F5F5F5">Hardware: AUD 80–120k</text>
+      <text x="450" y="128" font-size="11" fill="#F5F5F5">Annual: AUD 15–25k</text>
+      <text x="450" y="146" font-size="11" fill="#F5F5F5">Data terms: ⚠ Variable</text>
+      <text x="450" y="164" font-size="11" fill="#F5F5F5">Fleet cycle: 10–20 years</text>
+      <text x="450" y="182" font-size="11" fill="#F5F5F5">Data ownership unclear</text>
+    </g>
+  </svg></div>
+        <aside class="notes">Open with the organising metaphor for the entire masterclass: when a WA farmer adopts a modern precision agriculture platform — autosteer linked to a correction signal subscription, prescription maps generated in a cloud-based farm management platform, yield data uploaded automatically to the vendor's server, supported by a regional dealership — they are not simply purchasing a piece of farm equipment. They are entering a franchise arrangement. The McDonald's franchise analogy is instructive in every structural dimension. A McDonald's franchisee pays an upfront franchise fee (equivalent to the capital cost of the PA hardware bundle), monthly royalties of 5% of gross sales regardless of profit (equivalent to the ongoing RTK correction subscription and platform fee), and a 4.5% advertising levy (equivalent to the data-sharing arrangement that feeds the vendor's agronomic AI and benchmarking products). In return they receive a proven operating system, ongoing training, quality standards, marketing, and supply chain support — the precise benefits that PA vendors claim to provide through their dealer and agronomist networks. Critically: the franchisee cannot unilaterally change the core system, cannot easily switch franchise brands mid-term, and does not own the intellectual property they operate within. Precision agriculture vendors have deliberately designed their ecosystems to reproduce these dependencies, and understanding this frame changes the economic analysis profoundly — from a simple capital budgeting question into a strategic business commitment with a 10–20 year horizon.</aside>
+      </section>
+      <section data-background-color="#002147" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3em;">
+        <h2 style="color: #E2B600; margin-bottom: 1.5em; font-size: 1.2em;">The Farmer as Franchisee: Buying Into a System, Not a Single Machine</h2>
+        <div style="width: 100%; max-width: 900px;">
+          <div class="yt-wrap"><iframe src="https://www.youtube.com/embed/I6Gyxu4xYGU" title="Precision Agriculture Technology Overview" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+        </div>
+        <p style="color: #F5F5F5; margin-top: 1.5em; font-size: 0.9em; opacity: 0.8;">Click to play • Space or → to continue</p>
+      </section>
+      <section>
+        <h2>What the PA Technology Package Actually Includes</h2>
+        <ul>
+          <li><strong>Hardware layer:</strong> GNSS receiver, ISOBUS controllers, VRT spreader/sprayer, yield monitor with moisture sensor</li>
+          <li><strong>Software/data layer:</strong> farm management platform, prescription tools, proprietary data formats that resist migration</li>
+          <li><strong>Correction/connectivity layer:</strong> L-band or cellular GNSS correction subscription (AUD 0–4,500/yr)</li>
+          <li><strong>Service layer:</strong> dealership network — the most underweighted component in initial purchasing decisions</li>
+          <li><strong>Training/integration layer:</strong> operator training, agronomist partnership, workflow integration</li>
+        </ul>
+        <aside class="notes">Unpack the components of a complete precision agriculture "franchise package" that a WA broadacre farmer is actually committing to when they adopt a major vendor platform. The hardware layer: GNSS receiver and autosteer controller, ISOBUS rate controller, VRT capable spreader or sprayer boom, yield monitor with moisture sensor, and potentially remote sensor hardware. This is the visible upfront capital cost but is rarely the dominant long-term cost of ownership. The software and data layer: farm management platform subscription, prescription map generation tools, yield map archive, and — crucially — the proprietary data formats that make every map and record difficult to export to a competitor's platform. The correction and connectivity layer: L-band or cellular GNSS correction signal subscription, mobile data plan for real-time upload, and the correction infrastructure whose coverage reliability varies significantly across the WA wheatbelt as established in the GNSS and DGPS chapters. The service and support layer: the dealership network — the most underweighted component in initial purchasing decisions — providing hardware maintenance, software troubleshooting, agronomic prescription support, and the rapid-response field service that is critical when a guidance system fails at 2 am during the 15-day seeding window. The training and integration layer: operator training, agronomist partnership, and the workflow integration between all the above components that converts the hardware into actual farm management improvement. A purchasing decision that evaluates only the hardware cost and the correction subscription is missing four of the five components of what is actually being bought.</aside>
+      </section>
+      <section>
+        <h2>Asymmetric Information: The Vendor Knows More Than the Farmer</h2>
+        <ul>
+          <li>Vendors know actual hardware failure rates and ROI distribution across thousands of installations, including negative outcomes</li>
+          <li>No FTC Franchise Disclosure Document (FDD) equivalent exists for Australian PA technology sales</li>
+          <li>Vendors know correction signal degradation during solar-maximum ionospheric events; buyers typically don't until after purchase</li>
+          <li>Response: independent due diligence using peer networks, GRDC trials, and agronomist advice before committing</li>
+        </ul>
+        <aside class="notes">Introduce the concept of asymmetric information as the structural feature of the PA technology market that most distorts the adoption decision — and that the franchise frame illuminates particularly clearly. In a standard market, buyers and sellers have roughly equivalent information about the product being exchanged. In the PA technology market, vendors have vastly more information than farmers on the critical dimensions: they know the actual failure rates of their hardware from thousands of prior installations; they know the distribution of realised ROI across their customer base including the significant minority who have negative outcomes; they know how their correction signal performance degrades during the solar-maximum ionospheric events of 2024–25; they know that their farm management software has not yet implemented the GDA2020 datum transformation that silently introduced a 1.8 m offset into imported prescription maps for some users. The farmer knows almost none of this before purchase. The McDonald's comparison is again instructive: the FTC requires a franchisee to receive a Franchise Disclosure Document (FDD) containing detailed performance data, litigation history, and financial projections before signing. No equivalent disclosure obligation exists for PA technology vendors selling to Australian farmers. The practical response: independent due diligence using peer farming networks, GRDC trial evidence, and independent agronomist advice — rather than relying solely on the vendor's sales material — is the essential counterweight to this information asymmetry, and its absence is a structural barrier to confident PA adoption.</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 2 / 9</span>
+        <h2>Part 2 — The WA Farm Financial Context</h2>
+      </section>
+      <section>
+        <h2>Reading a WA Farm's Financial Statement: The Capital Commitment Context</h2>
+        <ul>
+          <li><strong>Asset side:</strong> land AUD 4–12M + machinery AUD 2–5M + seasonal inventory AUD 500k–1.5M</li>
+          <li><strong>Liabilities:</strong> land debt > AUD 100k/year interest; seasonal overdraft AUD 300k–800k at seeding</li>
+          <li><strong>Net return:</strong> 2–5%/year with very high variance (−20% to +30%)</li>
+          <li><strong>PA investments compete with</strong> land debt repayment; lender covenants constrain additional borrowing</li>
+          <li><strong>Opportunity cost of capital</strong> = agricultural loan interest rate (5–7% in 2025–26)</li>
+        </ul>
+        <aside class="notes">Establish the financial context in which PA technology adoption decisions are made, because the same capital cost generates a very different decision in a financially strong farm versus a debt-constrained one. A WA broadacre grain farm's balance sheet carries several distinctive features that differentiate it from most other business investment contexts. On the asset side: land dominates — a 4 000 ha WA wheatbelt property at AUD 1 000–3 000/ha carries AUD 4–12 million in land value; machinery and equipment (modern seeder, harvester, sprayer, and grain storage) adds another AUD 2–5 million; growing crops and grain inventory adds seasonal working capital requirements of AUD 500 000–1.5 million at seeding. On the liability side: land acquisition debt at 4–7% interest typically represents the dominant fixed financial obligation, often exceeding AUD 100 000/year in interest payments for a farm purchased in the last decade; operating overdraft for seeding inputs (fertiliser, seed, chemicals) represents a further seasonal liability of AUD 300 000–800 000 drawn and repaid each season. Profitability: net return on farm assets in WA broadacre grain farming averages 2–5% per year over the long run, with very high year-to-year variance (−20% to +30% depending on season and commodity price). This financial structure means: PA investments compete directly with land debt repayment; debt service covenants from agricultural lenders (ANZ, NAB, Rabobank) constrain additional capital borrowing; and the effective opportunity cost of capital for a PA investment is the interest rate on the agricultural loan the farm is already carrying — typically 5–7% in the 2025–26 context.</aside>
+      </section>
+      <section>
+        <h2>Working Capital, the Acquisition Cycle, and Purchasing Power</h2>
+        <ul>
+          <li><strong>Revenue window:</strong> October–March; <strong>capital commitment window:</strong> February–May</li>
+          <li><strong>Machinery replacement cycles:</strong> tractors 7–15 yr; harvesters 5–10 yr; air-seeders 10–20 yr</li>
+          <li>Next-gen PA hardware is factory-integrated at replacement — adoption decision resets at lowest friction point</li>
+          <li>Deferring adoption 3 years carries real cost: equipment inflation + input-efficiency losses compound annually</li>
+          <li><strong>Interest rate sensitivity:</strong> AUD 50k budget erodes at AUD 1,500–3,000/year</li>
+        </ul>
+        <aside class="notes">Examine the timing mechanics of capital equipment acquisition on a WA grain farm, which fundamentally differs from the continuous capital availability assumed in standard NPV analysis. The WA grain farm acquisition cycle is seasonally driven: revenue is received in a concentrated window from October to March (harvest and grain marketing) and capital outlays for the following season are committed from February to May (input purchasing and equipment decisions). This creates a predictable capital availability window — roughly February–May — when farm businesses have the highest capacity to commit to equipment investment. Manufacturers, dealer groups, and machinery shows (including the Perth Royal Show and Agquip-style national events) deliberately target this window. Interest rate sensitivity: at the Reserve Bank's standard cash rate cycle (3–6% range over recent years), the purchasing power of a AUD 50 000 equipment budget erodes at AUD 1 500–3 000/year. A decision to defer adopting autosteer for three years — during which equipment price inflation and interest cost accumulate while input-efficiency losses continue — carries a real economic cost that is often greater than the opportunity cost of adopting now with imperfect information. The machinery replacement decision: WA broadacre farmers typically replace major equipment on a 7–15 year cycle for tractors, 5–10 years for harvesters, and 10–20 years for air-seeders — the point at which the next generation of PA hardware is factory-integrated rather than retrofitted and the adoption decision effectively resets.</aside>
+      </section>
+      <section>
+        <h2>How Long Does a Farmer Take to Buy New Equipment? The Market-to-Paddock Timeline</h2>
+        <ul>
+          <li><strong>GPS autosteer:</strong> 2001–02 commercial → 50% WA adoption ~2011 → 94% adoption 2022 (20-year arc)</li>
+          <li><strong>Automotive EFI:</strong> 1967–1990 (23 yr); <strong>airbags:</strong> 1974–2000 (26 yr) — capital equipment, not consumer tech</li>
+          <li>Smartphones: 50% adoption in 3–4 years — a structural outlier, not the norm for capital equipment</li>
+          <li><strong>Pattern:</strong> major equipment changes take 15–25 years regardless of benefit</li>
+          <li><strong>Drivers:</strong> long machinery lives; high switching costs; service infrastructure must develop in parallel</li>
+        </ul>
+        <div class="slide-figure"><svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+    <text x="400" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#E2B600">Technology Adoption Timeline</text>
+    <line x1="50" y1="100" x2="750" y2="100" stroke="#5577BB" stroke-width="2"/>
+    <circle cx="100" cy="100" r="8" fill="#27348B"/><text x="100" y="130" font-size="10" text-anchor="middle" fill="#F5F5F5">1967–1974</text>
+    <circle cx="350" cy="100" r="8" fill="#E2B600"/><text x="350" y="130" font-size="10" text-anchor="middle" fill="#F5F5F5">Mid-point</text>
+    <circle cx="600" cy="100" r="8" fill="#27348B"/><text x="600" y="130" font-size="10" text-anchor="middle" fill="#F5F5F5">2000–2022</text>
+    <text x="400" y="170" font-size="12" font-weight="bold" text-anchor="middle" fill="#E2B600">15–26 years to near-complete adoption</text>
+  </svg></div>
+        <aside class="notes">Present the market-to-paddock timeline — the elapsed time from a technology's commercial availability to its widespread adoption at farm level — and contextualise it against analogous adoption timelines in other industries. GPS autosteer: first commercial systems available in Australia approximately 2001–02; 50% WA adoption reached approximately 2010–12 (8–10 year half-adoption time); 94% adoption reached 2022 (approximately 20 years to near-complete adoption). This timeline is slow by comparison to consumer technology (smartphones reached 50% Australian adoption within 3–4 years of launch) but broadly comparable to industrial capital equipment adoption in other sectors. Automotive analogy: catalytic converters (mandated 1976, effectively universal by 1990 = 14 years), airbags (first offered 1974, mandated 1998, universal by 2000 = 26 years), electronic fuel injection (commercially available 1967, dominant by 1990 = 23 years). The pattern: major capital equipment changes take 15–25 years for near-complete adoption in both agriculture and automotive, regardless of the technology's demonstrated benefit. The reasons are structural: machinery lives are long (so the replacement cycle drives adoption timing regardless of economic justification); switching costs are high (training, integration, data migration); and the service infrastructure (dealer network, spare parts) must develop in parallel with hardware adoption. Pharmaceutical analogy: new drugs take 10–15 years from regulatory approval to significant market penetration, not because of efficacy doubts but because physician behaviour change, insurance coverage, and prescribing infrastructure take time. The lesson: expecting PA technology to achieve rapid adoption on a 2–3 year cycle, as digital consumer technology does, is a structural misunderstanding of capital equipment markets.</aside>
+      </section>
+      <section>
+        <h2>Interest Rates, Farm Equity, and the True Cost of Technology Debt</h2>
+        <ul>
+          <li><strong>Leveraged farmer (40% debt):</strong> additional debt triggers lender covenants (debt-service ratio 1.2–1.5×)</li>
+          <li><strong>Equity-rich farmer:</strong> opportunity cost = farmland appreciation (5–8%/yr) or term deposits (4–5%)</li>
+          <li><strong>Full PA system capital:</strong> AUD 80–120k = cost-of-equity AUD 5–8k/yr</li>
+          <li><strong>WACC calculation:</strong> weight debt cost and equity cost; agricultural businesses warrant 8–10% discount rate</li>
+          <li><strong>Financial leverage amplifies</strong> both upside and downside — seasonal variability compounds investment risk</li>
+        </ul>
+        <aside class="notes">Examine how farm debt structure and interest rate environments interact with PA technology investment decisions in ways that simple NPV analysis at a single discount rate misses. A WA farmer with an existing agricultural loan at 6.5% interest and a debt-to-asset ratio of 40% faces a very different capital budgeting environment than a debt-free farm with high equity. The levered farmer: additional equipment debt increases the total interest burden and may trigger agricultural lender covenants (typically requiring a minimum debt-service coverage ratio of 1.2–1.5×); the effective cost of the PA investment includes not just its own interest cost but the risk premium associated with increased leverage. The equity-rich farmer: the opportunity cost of equity invested in PA equipment is the return that equity could earn in an alternative investment — farmland (which has historically appreciated at 5–8%/year in WA), a term deposit (currently 4–5%), or additional leased crop area. The total equity invested in a full PA system for a 4 000 ha WA farm (autosteer across two tractors, harvester, and sprayer; VRT controllers; yield monitors; farm management software; ECa mapping) can approach AUD 80 000–120 000 when all components are included — representing a meaningful capital commitment whose cost-of-equity allocation is AUD 5 000–8 000/year even before a subscription or maintenance dollar is spent. Introduce the concept of financial leverage and how it amplifies both the upside and downside of technology investment in a seasonal, weather-dependent business.</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 3 / 9</span>
+        <h2>Part 3 — Farm Logistics and the Operational Constraint</h2>
+      </section>
+      <section>
+        <h2>Gantt Charts and the Seasonal Workflow of a WA Broadacre Farm</h2>
+        <ul>
+          <li><strong>12–15 distinct operations</strong> from post-harvest (Dec) through harvest (Oct–Nov)</li>
+          <li><strong>Seeding: critical window</strong> — typically 15–20 days; yield penalty 1.5–4%/week of delay</li>
+          <li><strong>PA contributes by:</strong> expanding operating windows (autosteer enables night working), reducing passes, enabling in-season decisions</li>
+          <li>Traditional one-pass-per-season cannot support satellite-triggered N management</li>
+          <li><strong>Timing is often worth more</strong> than input-rate optimisation in WA broadacre</li>
+        </ul>
+        <aside class="notes">Introduce the Gantt chart as the operational planning tool that translates precision agriculture's technology benefits into actual farm productivity — and that reveals why timing is often worth more than input-rate optimisation in WA broadacre economics. A WA grain farm's annual operational Gantt chart covers approximately 12–15 distinct farm operations from post-harvest (December) through the following harvest (October–November), each with a defined timing window constrained by weather, soil condition, crop growth stage, and available machinery hours. Present the major operational blocks: summer weed control and fallow management (December–April); lime and fertiliser application pre-seeding (March–May); seeding — the most timing-critical operation, typically a 15–20 day window in WA (April–June depending on rainfall zone and season); in-crop herbicide and fungicide applications (May–September); in-season nitrogen topdress (May–August); harvest (October–November). The key lesson from the Gantt analysis: precision agriculture technologies contribute to farm productivity not just by reducing input rates or improving application accuracy but by expanding the effective operating window (autosteer enabling night operations and adverse-visibility working), by reducing the number of required passes (variable-rate combined seeding and fertilising in one pass versus two separate operations), and by enabling in-season management decisions (satellite-triggered nitrogen decisions) that the traditional one-pass-per-season regime cannot support.</aside>
+      </section>
+      <section>
+        <h2>Passes Per Paddock: The Hidden Labour and Fuel Cost of Precision</h2>
+        <ul>
+          <li><strong>WA wheat:</strong> 4–7 passes per season (weed control, fertiliser, seeding, herbicide, fungicide, topdress)</li>
+          <li><strong>Cost per pass:</strong> diesel ~30 L/hr × AUD 1.80/L + labour AUD 30–50/hr + machinery wear ~AUD 15–25/ha</li>
+          <li>Additional spreader/sprayer pass = AUD 12–25/ha — must exceed input saving or yield benefit</li>
+          <li><strong>PA can reduce passes</strong> (single-pass inputs) or add passes (satellite-triggered topdress)</li>
+          <li>Passes-per-paddock analysis reveals when precision creates net cost, not saving</li>
+        </ul>
+        <aside class="notes">Present the "passes per paddock" calculation as the most direct connection between precision agriculture technology investment and farm operating costs — an analysis that most PA vendor sales pitches omit because it reveals that some PA implementations increase rather than decrease the number of annual field passes. A conventional WA wheat paddock under a typical management regime might receive: post-harvest stubble management (1 pass), pre-seeding weed control (1–2 passes), base fertiliser application if separate from seeding (1 pass), seeding (1 pass), post-emergent herbicide (1 pass), in-crop fungicide (0–1 pass), in-season N topdress (0–1 pass) — a total of 4–7 passes per season, each requiring tractor and implement hours, diesel, labour, and machinery wear. Precision agriculture can either reduce passes (combining operations that were previously separate — single-pass seeding with all inputs, or eliminating a topdress by better targeting N at seeding) or increase passes (adding an in-season satellite-triggered topdress that was not previously cost-effective to do at all). The economics must compare: cost per pass (tractor diesel ~30 L/hr × AUD 1.80/L, labour AUD 30–50/hr, machinery wear ~AUD 15–25/ha) against the marginal value of the additional pass or the saving from the eliminated pass. For large WA farms, the combined cost of an additional sprayer or spreader pass is AUD 12–25/ha — directly comparable to the nitrogen input cost per topdress. A precision agriculture technology that triggers an additional pass but reduces input waste by less than the pass cost has negative net economics regardless of its agronomic merit.</aside>
+      </section>
+      <section>
+        <h2>Capital Allocation Across the Farming Year: Equipment, Labour, and Timing</h2>
+        <ul>
+          <li><strong>Peak constraint: seeding window</strong> — 12 m seeder at 10 km/hr covers ~12 ha/hr</li>
+          <li>Autosteer extends operating hours 10–12 hr → 16–18 hr (night working feasible)</li>
+          <li><strong>Increases seeder productivity 40–60%</strong> without adding machinery</li>
+          <li>4th casual operator: AUD 35/hr × 12 hr × 20 days = AUD 8,400/season vs autosteer ~AUD 1,500/yr</li>
+          <li><strong>Automation replacing peak-demand labour</strong> on largest WA operations faster than any other investment</li>
+        </ul>
+        <aside class="notes">Develop the practical farm management problem of capital and labour allocation across the compressed operational windows of a WA broadacre operation, and show how PA technology affects the binding constraints. The peak constraint period: WA grain farms face their most acute capacity constraint during seeding (April–June) when maximum area must be seeded in the minimum viable window. At 10 km/hr working speed with a 12 m air seeder, a single seeder-tractor combination covers approximately 12 ha/hr or 120 ha per 10-hour day. Seeding 18 000 ha requires 150 seeder-days — either 10 seeders operating 15 days, or 5 seeders operating 30 days, or various combinations determined by labour, machinery, and timing constraints. PA's contribution to this constraint: autosteer extends operational hours from 10–12 to 16–18 per day (night working is feasible with guidance; without it, fatigue and accuracy losses make night seeding impractical), effectively increasing seeder productivity by 40–60% without adding a machine — the single largest labour-productivity benefit of precision guidance. The labour cost of PA versus its hardware cost: a fourth casual seeding operator at AUD 35/hr × 12-hour days × 20 seeding days = AUD 8 400/season; an autosteer system that allows the same three-operator team to cover 40% more area costs AUD 15 000 in hardware annualised at AUD 1 500/year. The autosteer has a payback period of less than two seeding seasons measured purely against the avoided casual labour cost.</aside>
+      </section>
+      <section>
+        <h2>The Opportunity Cost of a Pass: Why Timeliness Has Its Own Economics</h2>
+        <ul>
+          <li><strong>DPIRD data:</strong> yield penalty 1.5–4%/week of delayed sowing beyond optimal window</li>
+          <li>One-week delay on 3,000 ha at AUD 600/ha = AUD 27,000–72,000 foregone revenue</li>
+          <li><strong>Autosteer timeliness benefit</strong> (40% more area in optimal window) = AUD 30,000–80,000/year</li>
+          <li><strong>Dwarfs</strong> seed/fertiliser overlap savings in most ROI cases</li>
+          <li><strong>ROI analyses measuring only input savings</strong> systematically undervalue guidance by omitting timeliness</li>
+        </ul>
+        <aside class="notes">Introduce the economic concept of timeliness as the most frequently underweighted benefit in PA investment analysis — and one that is critical to correctly framing the value of autosteer, guidance, and logistics-enabling precision technologies. Timeliness in WA agriculture: a crop sown in the optimal agronomic window (May 1–20 for most WA wheatbelt locations) consistently outperforms the same crop sown 2–4 weeks late, because the later crop loses weeks of the Mediterranean spring growing season. Published WA DPIRD data shows yield penalties of 1.5–4% per week of delayed sowing beyond the optimal window for wheat in most WA rainfall zones. On a 3 000 ha farm producing AUD 600/ha gross revenue, a one-week delay across all paddocks costs AUD 27 000–72 000 in foregone yield revenue — a cost that accrues daily during the seeding window but is invisible in any input-cost analysis. The timeliness cost calculation: this yield penalty from delayed seeding is the proper denominator against which autosteer's productivity benefit should be valued, not merely input overlap savings. An autosteer system that enables 40% more area to be seeded in the optimal window — whether by extending daily operating hours or by reducing headland turns — has a timeliness benefit of potentially AUD 30 000–80 000/year on a 3 000 ha operation, dwarfing the seed and fertiliser overlap savings that are typically the primary ROI claim. This timeliness frame also explains why harvest machinery investment (fast, wide-front harvesters with auto-header technology) generates such consistently high returns in WA — the crop does not wait.</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 4 / 9</span>
+        <h2>Part 4 — Investment Appraisal and Worked Examples</h2>
+      </section>
+      <section>
+        <h2>Capital Budgeting Foundations: NPV, IRR, and the Discount Rate</h2>
+        <ul>
+          <li><strong>NPV = Σ[(B<sub>t</sub> − C<sub>t</sub>)/(1+r)<sup>t</sup>] − C₀</strong> — adopt if NPV > 0</li>
+          <li><strong>IRR = discount rate</strong> at which NPV = 0; accept if IRR > hurdle rate</li>
+          <li><strong>Payback period:</strong> screening tool only — ignores cash flows beyond payback</li>
+          <li><strong>WA grain farming:</strong> high variance demands 8–10% discount rate, not 5–6%</li>
+          <li><strong>WACC = (debt proportion × debt cost) + (equity proportion × equity cost)</strong></li>
+        </ul>
+        <aside class="notes">Present the formal investment appraisal toolkit with sufficient mathematical rigour for a masterclass audience, grounding each concept in WA-specific context. Net Present Value: NPV = Σ[(Bt − Ct) / (1+r)^t] − C0, where Bt is the annual benefit, Ct is the annual operating cost, r is the discount rate, and C0 is the initial capital cost. The decision rule: adopt if NPV > 0; when choosing between mutually exclusive technologies, prefer the higher NPV. The discount rate r is the farm's Weighted Average Cost of Capital (WACC), typically 6–9% for a WA grain farm business with mixed debt and equity financing. IRR (Internal Rate of Return): the discount rate at which NPV = 0; compare against the hurdle rate (the farm's WACC). Accept if IRR > hurdle rate. Payback period: the year in which cumulative net benefits equal C0; simpler than NPV but ignores cash flows beyond the payback year and the time value of money — appropriate only for quick screening. Critical caveat for agricultural investment: the discount rate used should reflect agricultural business risk, not the risk-free rate. A WA broadacre grain farm with 30% revenue variability (coefficient of variation due to rainfall and commodity price) should use a higher discount rate (8–10%) than a stable manufacturing business, reducing the NPV of all PA investments relative to a naive low-rate analysis and demanding a higher expected benefit to justify adoption.</aside>
+      </section>
+      <section>
+        <h2>Worked Example: NPV and IRR for a Variable-Rate Fertiliser Applicator</h2>
+        <ul>
+          <li><strong>Investment:</strong> AUD 25k controller + AUD 8k zone maps = AUD 33k total</li>
+          <li><strong>Annual benefit:</strong> P savings AUD 12k + N precision AUD 9k + lime AUD 4k = AUD 25k; costs AUD 6k → net AUD 19k/yr</li>
+          <li><strong>NPV at 8%, 10 years:</strong> (AUD 19k × 6.71) − AUD 33k = <strong>AUD 94,490</strong>; IRR ≈ 57%</li>
+          <li><strong>If economics this compelling — why only 38% WA adoption?</strong></li>
+          <li><strong>Answer:</strong> integration complexity, agronomic service gap, connectivity barriers (not economics)</li>
+        </ul>
+        <aside class="notes">Work through a complete NPV and IRR calculation for a realistic WA PA investment, providing the template for student problem sets. Investment: a variable-rate granular fertiliser controller (AUD 25 000 installed) plus zone-based soil sampling and prescription map development (AUD 8 000 initial + AUD 3 000 every 3 years). Farm: 3 000 ha WA wheat-canola farm in the central wheatbelt. Expected annual benefit: phosphorus savings from zone management (AUD 12 000/year) + nitrogen precision improvement (AUD 9 000/year) + eliminated lime over-application in neutral zones (AUD 4 000/year) = AUD 25 000/year. Annual operating cost: software subscription AUD 2 000 + agronomist prescription fee AUD 3 000 + hardware maintenance AUD 1 000 = AUD 6 000/year. Net annual benefit: AUD 25 000 − AUD 6 000 = AUD 19 000/year. C0: AUD 25 000 + AUD 8 000 = AUD 33 000. At r = 8%, NPV over 10 years: NPV = (AUD 19 000 × annuity factor 8%, 10 years) − AUD 33 000 = (AUD 19 000 × 6.71) − AUD 33 000 = AUD 127 490 − AUD 33 000 = AUD 94 490 (strongly positive). IRR: approximately 57% (well above the 8% hurdle rate — quick payback of approximately 1.7 years). Present this result clearly and then immediately ask the critical question: if the economics are this compelling, why has only 38% of the WA farming area adopted VRT? The answer — technical barriers, agronomic knowledge requirements, data governance concerns, and the franchise system dependencies — is the subject of the rest of the lecture.</aside>
+      </section>
+      <section>
+        <h2>Sensitivity Analysis: When the Numbers Change</h2>
+        <ul>
+          <li><strong>Three-way sensitivity:</strong> benefit (−30%, base, +20%), discount rate (6%, 8%, 10%), life (5, 8, 10 yr)</li>
+          <li>At −30% benefit and 10% discount over 8 years: NPV = AUD 37,900 — still positive</li>
+          <li><strong>Break-even annual benefit:</strong> AUD 1.64/ha/yr — an extremely low bar</li>
+          <li><strong>VRT fails NPV only when:</strong> no soil variability, poor prescription, or ISOBUS failure</li>
+          <li><strong>These are implementation risks,</strong> not economic risks</li>
+        </ul>
+        <aside class="notes">Develop the sensitivity analysis for the VRT investment from the previous slide, demonstrating how robust — or fragile — a positive NPV is under realistic uncertainty. Three-way sensitivity matrix: vary the annual benefit (−30%, base, +20%), the discount rate (6%, 8%, 10%), and the technology life (5, 8, 10 years). Results: at base-case benefit and 8% discount rate, NPV = AUD 94 490 (positive). At −30% benefit (AUD 13 300/year net) and 10% discount rate over 8 years: NPV = AUD 70 900 − AUD 33 000 = AUD 37 900 (still positive). Break-even analysis: the annual net benefit required to achieve NPV = 0 at 8% over 10 years is AUD 33 000 / 6.71 = AUD 4 920/year — requiring the VRT system to save less than AUD 1.64/ha/year to break even. Conclusion: the VRT investment is remarkably robust to pessimistic assumptions in this example. The scenario where VRT fails the NPV test is when the farm does not have sufficient soil variability to justify zone-specific management (no spatial gradient in P or pH means no benefit from variable rate), when the agronomist prescription quality is low (wrong rate in each zone), or when the technology fails to integrate with the farm's existing ISOBUS system and requires manual workarounds. These are implementation-quality risks, not economic risks — a distinction that requires separate risk assessment beyond the NPV calculation.</aside>
+      </section>
+      <section>
+        <h2>Total Cost of Ownership and the Hidden Franchise Fee</h2>
+        <ul>
+          <li><strong>Full PA system:</strong> Year 1 capital AUD 60–80k; annual cost AUD 15–25k</li>
+          <li>10-year total: AUD 210–330k with subscription component AUD 150–250k</li>
+          <li><strong>Subscription alone rivals or exceeds initial hardware cost</strong></li>
+          <li>Farmers scrutinising hardware but accepting subscriptions without same rigour underweight total cost by 2–3×</li>
+          <li><strong>TCO = true franchise fee</strong> — evaluate over full technology life, not at point of sale</li>
+        </ul>
+        <aside class="notes">Synthesise the cost analysis into a Total Cost of Ownership (TCO) framework that makes the full "franchise package" cost visible over a realistic 10-year ownership horizon, side-by-side with the benefit stream. TCO components for a full WA broadacre PA system (autosteer on two tractors + VRT seeder and spreader + yield monitors on two harvesters + farm management software + agronomic service): Year 1 capital outlay: AUD 60 000–80 000. Annual subscription and operating cost: AUD 15 000–25 000/year (correction signals, software, agronomist, maintenance). 10-year TCO: AUD 210 000–330 000. Compare against 10-year benefit stream: overlap savings + VRT savings + timeliness benefit + data infrastructure value = AUD 40 000–80 000/year × 10 years = AUD 400 000–800 000. Net NPV (10% discount rate) is clearly positive across the realistic range — but only if all five components of the franchise package (hardware, software/data, correction, service, training) are functioning and delivering their expected output. The critical insight: the 10-year TCO of the PA system subscription component alone (AUD 150 000–250 000) rivals the hardware capital cost (AUD 60 000–80 000). Farmers who focus financial scrutiny on the hardware purchase price and accept subscription terms without the same rigor are underweighting the subscription component by a factor of 2–3 over the technology life — exactly the information asymmetry identified in Part 1.</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 5 / 9</span>
+        <h2>Part 5 — Technologies That Fail</h2>
+      </section>
+      <section>
+        <h2>Why Promising Technologies Die: The Valley of Death and the Chasm</h2>
+        <ul>
+          <li><strong>Geoffrey Moore's Chasm:</strong> gap between Early Adopters and Early Majority where technologies fail</li>
+          <li><strong>Early Adopters tolerate:</strong> unreliable service, high cost, integration failures</li>
+          <li><strong>Early Majority need:</strong> proof, reliability, complete ecosystem, peer confirmation</li>
+          <li><strong>Three conditions to cross:</strong> solve one clear problem, deliver whole product, viable business model</li>
+          <li><strong>VRT stall at 38% WA:</strong> Chasm problem — not economic — franchise support absent</li>
+        </ul>
+        <div class="slide-figure"><svg viewBox="0 0 800 300" xmlns="http://www.w3.org/2000/svg">
+    <text x="400" y="30" font-size="20" font-weight="bold" text-anchor="middle" fill="#E2B600">Moore's Chasm</text>
+    <ellipse cx="200" cy="150" rx="80" ry="80" fill="#5577BB" opacity="0.3" stroke="#27348B" stroke-width="2"/>
+    <text x="200" y="155" text-anchor="middle" font-weight="bold" font-size="14" fill="#F5F5F5">Early</text><text x="200" y="170" text-anchor="middle" font-weight="bold" font-size="14" fill="#F5F5F5">Adopters</text>
+    <path d="M 300 150 L 500 150" stroke="#E2B600" stroke-width="12" fill="none"/>
+    <text x="400" y="145" text-anchor="middle" font-size="12" font-weight="bold" fill="#E2B600">CHASM</text>
+    <ellipse cx="600" cy="150" rx="80" ry="80" fill="#5577BB" opacity="0.1" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+    <text x="600" y="155" text-anchor="middle" font-weight="bold" font-size="14" fill="#999">Early</text><text x="600" y="170" text-anchor="middle" font-weight="bold" font-size="14" fill="#999">Majority</text>
+    <text x="400" y="270" text-anchor="middle" font-size="12" fill="#F5F5F5">VRT adoption stalled at 38% — infrastructure incomplete</text>
+  </svg></div>
+        <aside class="notes">Establish the conceptual framework for understanding PA technology failure before examining specific cases, drawing on Geoffrey Moore's "Crossing the Chasm" (1991) as the complement to Rogers' diffusion model. Moore identified a specific gap — the Chasm — between the Early Adopter segment and the Early Majority that many technologies fall into, never achieving the mass-market adoption that their early performance would seem to justify. Early Adopters in PA are motivated by technology interest, competitive advantage, and personal innovation — they are willing to tolerate unreliable service networks, high costs, integration failures, and vendor instability. The Early Majority are pragmatists who need proof, reliability, a full support ecosystem, and the social confirmation of trusted peer adoption before committing. Technologies that successfully address early adopters but cannot build the service infrastructure, reduce cost to acceptable levels, or deliver consistent reliability across the diversity of farm conditions in the Early Majority's experience typically fall into the Chasm. Three conditions for crossing: (1) the technology must solve a single, clearly defined problem for the Early Majority (not a general capability); (2) a complete "whole product" must exist — hardware + software + service + training — not just a hardware component; (3) a viable business model for the vendor must exist so that they remain solvent long enough to build the support infrastructure. PA history contains as many failures as successes, and understanding the failure pattern is as important for adoption decisions as understanding the successes.</aside>
+      </section>
+      <section>
+        <h2>Case Study — Gantry Tractors: The Brilliant Idea That Couldn't Scale</h2>
+        <ul>
+          <li><strong>1960s–80s UK:</strong> gantry straddles field on permanent wheel-track rails (same soil rationale as CTF)</li>
+          <li><strong>Failure cause:</strong> no manufacturer → no dealer → no parts → no technicians — franchise layer never formed</li>
+          <li><strong>Modern parallel:</strong> CTF achieves same outcome using conventional machinery + RTK GPS</li>
+          <li><strong>Precision navigation did what new infrastructure could not</strong></li>
+          <li><strong>Lesson:</strong> technically superior solutions lose to inferior solutions with better distribution</li>
+        </ul>
+        <aside class="notes">Present the gantry tractor as the most instructive historical failure in precision agriculture infrastructure — a technology whose agronomic rationale was sound but whose commercial failure was overdetermined by the franchise economics of the support ecosystem. The concept: rather than conventional tractors that compact soil under their wheels while working, a gantry tractor straddles the entire bed width (6–20 m) using a rigid span supported on permanent wheel tracks at the field edges, keeping the entire growing area free from compaction. Developed seriously in the UK from the late 1960s through the 1980s by NIAE (National Institute of Agricultural Engineering, Silsoe), gantry systems demonstrated the compaction-reduction and yield- improvement benefits that CTF farming now achieves with conventional autosteer — but decades earlier and more completely. Why it failed: the capital cost of the gantry infrastructure (permanent wheel tracks along every field boundary, a purpose-built gantry machine costing several times a conventional tractor) was viable only for large operations; existing fields were the wrong shape and size; and there was never a commercial manufacturer willing to build and support gantry systems at scale, so no dealer network, no spare parts supply, no trained service technicians existed anywhere in Australia. The franchise support layer simply never formed, because no franchisor (machinery manufacturer) saw a viable business in selling into such a constrained market. The modern parallel: CTF farming achieves approximately the same agronomic outcome as gantry tractors using existing conventional machinery guided by RTK GPS — the precision navigation system did what a completely new infrastructure could not.</aside>
+      </section>
+      <section>
+        <h2>Case Study — Nexat and Autonomous Field Robots: The Chasm in Real Time</h2>
+        <ul>
+          <li><strong>Nexat (Germany, ~2016):</strong> autonomous tracked platform, AUD 1.5–2.5M, requires fleet abandonment</li>
+          <li>No dealer network, no trained WA technicians, requires new farm management workflow</li>
+          <li><strong>Zasso Electroherb:</strong> electrical weeding — genuine tech but AUD cost/ha exceeds herbicide</li>
+          <li>Zasso viable in railways, organic horticulture; not competitive in WA broadacre</li>
+          <li><strong>Both are Early Adopter tools in Early Majority market</strong> needing complete whole product</li>
+        </ul>
+        <aside class="notes">Examine Nexat (a German start-up founded approximately 2016, producing a large autonomous modular farming platform) and the broader field-robot category as live examples of technologies currently sitting at the Early Adopter stage, with an uncertain trajectory toward the Chasm or across it. Nexat's design: a tracked carrier platform capable of hauling different implement modules (seeding, spraying, harvesting) across the same guidance tracks — a modular autonomous system that would theoretically eliminate the need for multiple specialised tractors and implements. The agronomic logic, like the gantry tractor, is coherent: reduced compaction, fewer machinery units to maintain, centralised autonomous operation. The commercial challenge: estimated unit price of AUD 1.5–2.5 million per platform; virtually no dealer network; service requirements for autonomous AI and precision guidance systems that do not yet have a trained technician workforce in rural WA; and a product that requires the farmer to abandon their entire existing machinery fleet rather than incrementally upgrading. This is the "whole product" problem: Nexat currently delivers an Early Adopter technology (technically impressive, high cost, limited ecosystem support) to an Early Majority market (pragmatists who need a complete, reliable, supportable system). The Zasso case provides a complementary failure mode: Zasso's Electroherb electrical weed-killing system (high-voltage electricity applied to soil surface to kill weeds) offers a genuinely novel non-chemical weed control mechanism, but at costs per hectare substantially above herbicide alternatives in most broadacre conditions, without the herbicide-resistance benefit being valued in current input prices — economic viability is present in niche high-value applications (railways, organic horticulture) but absent in WA broadacre broadleaf and grass-weed control.</aside>
+      </section>
+      <section data-background-color="#002147" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3em;">
+        <h2 style="color: #E2B600; margin-bottom: 1.5em; font-size: 1.2em;">Case Study — Nexat and Autonomous Field Robots: The Chasm in Real Time</h2>
+        <div style="width: 100%; max-width: 900px;">
+          <div class="yt-wrap"><iframe src="https://www.youtube.com/embed/eWiI1k7QduM" title="Autonomous Agricultural Robots" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+        </div>
+        <p style="color: #F5F5F5; margin-top: 1.5em; font-size: 0.9em; opacity: 0.8;">Click to play • Space or → to continue</p>
+      </section>
+      <section>
+        <h2>The Aftermarket Imperative: Why Dealer Networks Determine Adoption</h2>
+        <ul>
+          <li><strong>DeLaval robot dairy:</strong> AUD 250–400k per unit; complex; 24/7 criticality</li>
+          <li><strong>Succeeded where gantry failed:</strong> invested decades in service technician networks, 24/7 support, regional depots</li>
+          <li><strong>Even DeLaval:</strong> WA farmers >2 hr from service report higher costs and disruption</li>
+          <li><strong>Pre-adoption questions:</strong> nearest service technician? max response time during seeding? vendor exit plan?</li>
+          <li><strong>What happens to ecosystem</strong> if vendor exits Australian market?</li>
+        </ul>
+        <aside class="notes">Examine the dealer and aftermarket service network as the critical infrastructure layer that determines whether a technology can cross the Chasm — the franchise support system without which even economically justified and technically sound PA technology fails in practice. The DeLaval robot dairy case study: DeLaval's Automatic Milking System (AMS, commonly called "robot dairy") has achieved significantly higher adoption success than other autonomous agricultural systems — despite high capital costs (AUD 250 000–400 000 per milking unit), high complexity, and the criticality of 24/7 function (a robotic milking system that fails at 3 am affects animal welfare and milk production immediately). The key reason: DeLaval has invested decades in building a professional, trained service technician network with guaranteed response times, 24/7 phone support, and pre-stocked spare parts in regional depots. Even so, WA dairy farmers remote from major service centres (Manjimup, Albany, Harvey) report significantly higher effective costs and service disruption than farmers within two hours of a DeLaval service centre — illustrating that even with an established support network, geographical remoteness is a genuine constraint that no amount of technical excellence can eliminate. The broadacre PA lesson: before adopting any PA technology, a WA farmer should ask: (1) What is the nearest service-trained technician for this specific system? (2) What is the maximum response time if the system fails at 2 am during the seeding window? (3) What happens if the vendor goes bankrupt or exits the Australian market? The answers to these questions matter more than the headline technology specification.</aside>
+      </section>
+      <section data-background-color="#002147" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3em;">
+        <h2 style="color: #E2B600; margin-bottom: 1.5em; font-size: 1.2em;">The Aftermarket Imperative: Why Dealer Networks Determine Adoption</h2>
+        <div style="width: 100%; max-width: 900px;">
+          <div class="yt-wrap"><iframe src="https://www.youtube.com/embed/JrQ5VzqbR0A" title="Farm Technology Service & Support" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+        </div>
+        <p style="color: #F5F5F5; margin-top: 1.5em; font-size: 0.9em; opacity: 0.8;">Click to play • Space or → to continue</p>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 6 / 9</span>
+        <h2>Part 6 — Innovation in Large Corporations</h2>
+      </section>
+      <section>
+        <h2>Innovation Inside the Corporation: Bayer, John Deere, and the PA R&D Pipeline</h2>
+        <ul>
+          <li><strong>PA innovation predominantly by large corporations,</strong> not start-ups at commercialisation</li>
+          <li><strong>Bayer:</strong> acquired Climate Corporation (2013, USD 930M) → FieldView platform</li>
+          <li><strong>John Deere:</strong> acquired Blue River Technology (2017, USD 305M) → See & Spray precision herbicide</li>
+          <li><strong>Why corporations dominate:</strong> R&D budgets (Deere ~AUD 2B+/yr), existing dealer networks, financing arms</li>
+          <li><strong>For farmers:</strong> guaranteed support but also data terms, switching costs, lock-in</li>
+        </ul>
+        <aside class="notes">placeholder</aside>
+      </section>
+      <section data-background-color="#002147" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3em;">
+        <h2 style="color: #E2B600; margin-bottom: 1.5em; font-size: 1.2em;">Innovation Inside the Corporation: Bayer, John Deere, and the PA R&D Pipeline</h2>
+        <div style="width: 100%; max-width: 900px;">
+          <div class="yt-wrap"><iframe src="https://www.youtube.com/embed/bMzxYXol32k" title="Corporate Innovation in Precision Agriculture" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+        </div>
+        <p style="color: #F5F5F5; margin-top: 1.5em; font-size: 0.9em; opacity: 0.8;">Click to play • Space or → to continue</p>
+      </section>
+      <section>
+        <h2>Corporate Acquisitions as the Innovation Highway: Blue River, FieldView, Raven</h2>
+        <ul>
+          <li><strong>Model:</strong> start-ups prove viability; corporations acquire to cross Chasm</li>
+          <li><strong>Key acquisitions:</strong> Raven (CNH, 2021, USD 2.1B); Climate/FieldView (Bayer, 2013, USD 930M); Blue River (Deere, 2017, USD 305M)</li>
+          <li><strong>Start-ups bear Early Adopter risk; corporates capture Early Majority scaling</strong></li>
+          <li>Technology in tractor cab typically gone through 2–3 corporate hands before reaching farmer</li>
+          <li><strong>Due diligence:</strong> current vendor may not be vendor in 5 years — confirm data export and service survive acquisition</li>
+        </ul>
+        <aside class="notes">placeholder</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 7 / 9</span>
+        <h2>Part 7 — Which Industries Adopt First</h2>
+      </section>
+      <section>
+        <h2>The Early Adopter Industries: Greenhouses, Dairy, and High-Value Horticulture</h2>
+        <ul>
+          <li><strong>Return per hectare fundamental driver:</strong> greenhouse AUD 300k–600k/ha vs wheat AUD 400–600/ha (500–1,000× difference)</li>
+          <li>Intensive dairy adopted AMS robot milking 2000s; horticulture adopted fertigation/irrigation 2000s–10s</li>
+          <li><strong>WA viticulture:</strong> precision irrigation, yield mapping, UAV assessment justified by AUD 5k–20k/ha revenue</li>
+          <li><strong>Broadacre grain</strong> — lowest revenue density — adopted cheapest-per-hectare tech first</li>
+          <li><strong>Adoption sequence tracks return-per-hectare hierarchy,</strong> not technology sophistication</li>
+        </ul>
+        <aside class="notes">Explain why certain agricultural industries consistently lead PA adoption while others lag, using the economics of high-cash-crop industries as the explanatory framework. The fundamental driver: return per hectare (or per unit of productive asset). A Dutch greenhouse operation producing tomatoes at AUD 10–20/kg with annual revenues of AUD 300 000–600 000 per hectare can justify PA technology investment at a cost-per-hectare that would be completely uneconomic for WA wheat at AUD 400–600/ha annual revenue — a 500–1000× difference in value density. This return differential explains the technology adoption sequence observed across all agricultural sectors: precision controlled- environment agriculture (hydroponics, vertical farming, greenhouse horticulture) adopted computer-controlled nutrient delivery, climate management, and yield monitoring in the 1980s–90s; intensive dairy adopted automatic milking in the 2000s; intensive horticulture adopted precision irrigation and fertigation in the 2000s–10s; high-value viticulture adopted yield mapping and zone management in the 2010s; broadacre grain — at the lowest revenue density of any of these systems — adopted the cheapest-to-justify technologies (autosteer, basic yield monitoring) in the 2000s–10s but continues to resist the more expensive per-hectare technologies whose economics only close at scale rather than at value-density. The pharmaceutical analogy applies here too: cancer biologics (AUD 100 000+/patient) receive research and regulatory investment far ahead of cheap generic equivalents, not because the unmet need is greater but because the revenue supports the development cost.</aside>
+      </section>
+      <section>
+        <h2>Adoption by Agricultural Sector: A Comparative Framework</h2>
+        <ul>
+          <li><strong>Broadacre grain:</strong> autosteer 94%, yield monitoring 71%, VRT 38%</li>
+          <li><strong>WA viticulture:</strong> precision irrigation, block yield mapping, UAV assessment</li>
+          <li><strong>WA dairy:</strong> robot milking 15–25% and growing — labour scarcity drives adoption</li>
+          <li><strong>Pastoral/livestock:</strong> very low adoption — revenue < AUD 50/ha</li>
+          <li><strong>No single framework applies</strong> — analyse each system within its own economic context</li>
+        </ul>
+        <aside class="notes">Systematically compare PA technology adoption rates across four major agricultural sectors relevant to WA — broadacre grain, viticulture/horticulture, intensive dairy, and pastoral/livestock — explaining the adoption pattern through the combined lens of return density, risk profile, technology infrastructure availability, and the availability of precision technology suited to each system's specific management decisions. Broadacre grain (WA's dominant sector): high adoption of low-cost, high-area-leverage technologies (autosteer 94%, yield monitoring 71%); low adoption of high-cost, per-hectare technologies (in-season satellite managed topdressing 19%). The economics are driven by scale: what costs AUD 2/ha/year on a 5 000 ha property is a significant total investment but a viable per-hectare cost. WA viticulture (Margaret River, Great Southern, Swan Valley): strong adoption of precision irrigation (variable canopy requirement by variety and block), yield mapping (winery clients pay premium for block-specific vintage data), and increasingly UAV-based canopy assessment. The high value per hectare (AUD 5 000–20 000/ha revenue for premium wine grapes) supports a completely different per-hectare technology investment calculus. WA dairy (Harvey, Manjimup, Albany): robot milking 15–25% and growing; feed management optimisation; precision hormone treatment. Technology adoption is driven by labour scarcity in dairy farm locations rather than purely cost efficiency. Pastoral/livestock (WA rangelands): very low PA adoption overall, driven by extremely low revenue density (< AUD 50/ha) and the absence of technology suited to extensive grazing systems at any realistic cost point.</aside>
+      </section>
+      <section>
+        <h2>Technology Trickle-Down: How High-Value Sectors Subsidise Broadacre Innovation</h2>
+        <ul>
+          <li>PA hardware first commercialised in higher-value markets: GPS (aviation), cameras (satellite), robots (food processing)</li>
+          <li>Manufacturing cost falls as volumes grow in primary markets → viability for lower-return sectors</li>
+          <li>WA farmer at broadacre viability threshold uses proven, stabilised technology — lower failure risk</li>
+          <li><strong>GRDC levy = market-failure correction:</strong> commercial developers won't invest low-return sectors</li>
+          <li><strong>Public investment not subsidy</strong> — corrects systematic under-investment market forces would produce</li>
+        </ul>
+        <aside class="notes">Explain the innovation economics that determine how PA technologies developed for high-value sectors eventually become available to broadacre farming at economically viable cost points — the trickle- down mechanism that is the primary route through which advanced precision tools reach WA grain farmers. The cost trajectory: most PA hardware components were first commercialised for industries with sufficient return density to sustain premium prices. GPS guidance was first developed for aviation and military; multispectral cameras first commercialised for satellite and aerial survey; automated milking robots drew on food processing automation; hyperspectral sensors were commercialised in mining exploration. As volumes grew in these primary markets, manufacturing cost fell, and the technology became viable for successive lower-return-density sectors. The implications for adoption timing strategy: a WA farmer who adopts a technology when it first crosses the economic viability threshold for broadacre use (having trickled down from a higher-value sector) is typically adopting proven, stabilised technology rather than experimental prototype hardware — the technology failure risk at this stage is lower than at Early Adopter stage, even though the technology is new to broadacre. The implication for technology policy: government and GRDC investment in PA technology development for broadacre agriculture generates a public good, because commercial developers will not voluntarily invest in solutions for a low-return-density sector until cost has been driven down by higher-value market volumes first. This justifies the GRDC levy-funded research model as a market-failure correction, not merely a subsidy.</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 8 / 9</span>
+        <h2>Part 8 — Adoption Theory and Barriers</h2>
+      </section>
+      <section>
+        <h2>Rogers, Moore, and the TOE Framework: Three Lenses on Adoption</h2>
+        <ul>
+          <li><strong>Rogers:</strong> S-curve and 5 adopter categories — useful for timing; treats adoption as binary</li>
+          <li><strong>Moore:</strong> Chasm explains why 38% VRT adoption stalled — franchise infrastructure incomplete</li>
+          <li><strong>TOE (Tornatzky & Fleischer 1990):</strong> Technological + Organisational + Environmental factors</li>
+          <li><strong>Key insight:</strong> positive NPV + complete product + organisational readiness still fails if environment unfavourable</li>
+          <li><strong>Extension must address all three simultaneously</strong> — economics alone insufficient</li>
+        </ul>
+        <aside class="notes">Synthesise the three major adoption theory frameworks that together explain the full spectrum of PA adoption behaviour observed in WA. Rogers' Diffusion of Innovations: the population-level S-curve and adopter typology (Innovators → Early Adopters → Early Majority → Late Majority → Laggards) — useful for predicting timing and targeting extension, but it treats adoption as a binary event and ignores organisational and system-level factors. Moore's Crossing the Chasm: the technology-ecosystem framework that explains why many technically sound technologies fail between Early Adopters and Early Majority — primarily because the "whole product" (hardware + software + service + training ecosystem) is not yet assembled. The TOE Framework (Tornatzky & Fleischer 1990 — Technological, Organisational, Environmental): the most complete adoption model for business technology decisions. Technological factors: perceived relative advantage, compatibility with existing systems, complexity, trialability, observability. Organisational factors: farm size, financial resources, management capacity, existing technology base, labour skills. Environmental factors: dealer network availability, industry peer norms, government policy, competitive pressure. The key insight from combining all three: a PA technology may have a clear ROI (Rogers: should be adopted), a complete product ecosystem (Moore: can cross the Chasm), and appropriate organisational readiness (TOE) — but still not be adopted if the environmental factors are unfavourable (no nearby dealer, no extension support, no peer-adoption reference cases in the local farming community). Extension programme design should address all three frameworks simultaneously rather than focusing exclusively on economic demonstration.</aside>
+      </section>
+      <section>
+        <h2>Data Ownership, Vendor Lock-In, and the Franchisee's Intellectual Property</h2>
+        <ul>
+          <li><strong>Yield maps, prescriptions, soil data</strong> constitute commercially valuable farm performance picture</li>
+          <li><strong>PA platforms often grant vendors rights</strong> to aggregate and use data (benefiting seed, fertiliser, traders)</li>
+          <li><strong>Australian Farm Data Code (2023):</strong> five principles (ownership, transparency, consent, access, liability) — voluntary</li>
+          <li>McDonald's FDD defines data rights; PA agreements favour vendor</li>
+          <li><strong>Checklist:</strong> farmer ownership? Use limited to service? Full export in open formats? Data if company acquired?</li>
+        </ul>
+        <aside class="notes">Dedicate a full slide to the data governance dimension of PA adoption because it is one of the most rapidly evolving and commercially consequential aspects of the "franchise" relationship. When a WA farmer uses a precision agriculture platform — John Deere Operations Center, Trimble Precision IQ, AGCO Fuse, or equivalent — the terms of service they accept at sign-up typically grant the vendor rights to aggregate and use farm operational data in ways that may not be immediately apparent. Yield maps, soil sampling locations, prescription rates, and application records together constitute a commercially valuable picture of a farm's management performance, soil variability, and crop production potential — information that is worth money to seed companies developing variety performance databases, fertiliser companies building nutrient response models, and commodity traders pricing regional production risk. The Australian Farm Data Code (2023), developed collaboratively by NFF, Grain Producers Australia, and technology providers, establishes five principles for farm data governance: farmer ownership, transparency, consent, access and control, and liability. However, compliance is voluntary and uneven across vendors. The franchise rights equivalent: in a McDonald's FDD, the franchisee retains ownership of their local customer data and McDonald's use of that data is contractually defined. In most PA platform agreements, the data rights provisions are less clear and more favourable to the vendor. Practical guidance for a WA farmer: before accepting any PA platform's terms of service, confirm that the agreement (1) acknowledges farmer ownership of all data generated by or describing the farm; (2) limits the vendor's use to service improvement, not third-party sale; (3) allows full data export in open formats on demand; and (4) specifies what happens to the farm's data if the company is sold or exits the Australian market.</aside>
+      </section>
+      <section>
+        <h2>Barriers to Adoption: The Franchise Franchise Won't Serve You If You're Remote</h2>
+        <ul>
+          <li>Placeholder content</li>
+        </ul>
+        <aside class="notes">Present the full taxonomy of PA adoption barriers organised through the franchise lens: these are the conditions under which the "franchise support system" fails to deliver its value to the franchisee. Economic barriers: capital cost relative to farm equity and debt capacity; uncertain ROI under realistic commodity price and rainfall variability; the sequential capital demands of a full PA technology stack that may exceed annual reinvestment capacity. Technical and connectivity barriers: mobile coverage gaps in the eastern WA wheatbelt that block NTRIP correction delivery and real-time farm management software operation; the integration complexity of multi-vendor systems (the mixed-brand fleet problem where John Deere's Operations Center does not seamlessly exchange data with Trimble's Precision IQ); operator skill gaps in data interpretation that leave technology underutilised. Structural barriers: short land lease terms that truncate the investment horizon; farm size below the scale threshold for per-hectare economic justification; fragmented farm geography that multiplies infrastructure requirements. Data governance barriers: data ownership ambiguity in vendor contracts; switching-cost lock-in from proprietary data formats; farmer distrust of how agronomic data is aggregated and used by vendors and associated commodity market participants. The franchise geography problem: Australia's scale creates a structural barrier that does not exist in European or North American adoption contexts. A WA farmer 200 km east of Merredin operates within a dealer service territory where the "nearest franchised service centre" may be 3–4 hours away and the "regional franchise territory" has so few customers that the dealer cannot sustain the skilled technician workforce needed to provide reliable support.</aside>
+      </section>
+      <section>
+        <h2>The Opportunity Cost of NOT Adopting: The Competitive Disadvantage Trajectory</h2>
+        <ul>
+          <li>At 94% WA autosteer adoption, non-adopter carries ~AUD 10–15/ha structural disadvantage</li>
+          <li><strong>WA margin AUD 30–60/ha:</strong> AUD 10–15/ha disadvantage = 20–50% of margin buffer</li>
+          <li><strong>Farmland with PA infrastructure</strong> increasingly commands valuation premium</li>
+          <li><strong>Productivity frontier moving:</strong> farms not on frontier risk viability even without mistakes</li>
+          <li><strong>Non-adoption = active strategic choice</strong> with measurable, compounding annual cost</li>
+        </ul>
+        <aside class="notes">Introduce the often-missing dimension from PA adoption analysis: the cost of non-adoption, which is as real and quantifiable as the cost of adoption but is almost never included in the investment appraisal that a farmer or their advisor performs. The competitive disadvantage trajectory: in an industry where the median farm adopts autosteer (94% WA adoption), a non-adopter carries a structural input cost disadvantage of approximately AUD 10–15/ha/year relative to the industry average — a permanent cost disadvantage that compounds annually and widens as the adoption majority drives input prices and agronomic norms around the technology's capabilities. In a farming system where the margin between a profitable and loss-making season is often AUD 30–60/ha, a persistent AUD 10–15/ha cost disadvantage from non-adoption of a mature technology represents 20–50% of the margin buffer. Land valuation effects: there is growing evidence that WA farmland with established PA infrastructure (GPS monuments, CTF-aligned paddock layouts, historical yield-monitor data archives) commands a higher land value than an equivalent area without it — the PA data asset is capitalised into the property value. A farmer who never adopted yield monitoring is not only missing the management benefit but may be selling their property in 10 years for less than an equivalent property with a 10-year yield data archive. The productivity frontier: farms operating at the best-practice precision frontier are setting the yield and cost benchmarks against which all farms in the same environment are commercially judged. A farm not on the frontier risks financial viability not because it is doing anything wrong but because the frontier is moving away from it.</aside>
+      </section>
+      <section>
+        <h2>Building the Adoption Business Case: A WA Farmer's Five-Question Framework</h2>
+        <ul>
+          <li><strong>Q1:</strong> Economics positive for MY farm specifically? Use actual yield variance and costs</li>
+          <li><strong>Q2:</strong> Full franchise package in place? Hardware + software + correction + service + training?</li>
+          <li><strong>Q3:</strong> Nearest service and worst-case downtime during seeding? Get commitments in writing</li>
+          <li><strong>Q4:</strong> Who owns data and under what terms? Read vendor data terms before signing</li>
+          <li><strong>Q5:</strong> What do trusted neighbours report after 3+ seasons? Peer reference = most reliable due diligence</li>
+        </ul>
+        <aside class="notes">Synthesise the lecture's analytical content into a practical five- question framework that any WA farmer or their consultant can apply systematically before committing to a PA technology investment. Question 1 — Is the economics positive for my farm specifically? Perform the partial budget or NPV analysis using the farm's own yield variability, input costs, farm size, and commodity price outlook — not the vendor's demonstration case from a different state or soil type. Question 2 — Is the full franchise package in place? Identify the hardware, software/data, correction signal, service, and training components; confirm all five are available, supported, and integrated before committing to any one component. Question 3 — What is the nearest service capability, and what is the worst-case downtime during the seeding window? Calculate the cost of the worst-case service failure scenario and confirm the vendor's service response commitment in writing. Question 4 — Who owns the data and under what terms? Read the vendor's data terms before signing; confirm the ability to export all data in open formats before terminating a subscription; confirm that the vendor cannot use the farm's data for purposes that create competitive intelligence for commodity traders or rival agronomic services. Question 5 — What technology do my most trusted farming neighbours use, and what has been their experience over three or more seasons? The peer adoption reference case is the most reliable risk-reduction mechanism available in the information- asymmetric PA technology market — and it is free.</aside>
+      </section>
+      <section>
+        <h2>WA Adoption Survey Evidence: The Data Behind the Decisions</h2>
+        <ul>
+          <li><strong>GRDC 2022 WA:</strong> autosteer 94%, yield monitoring 71%, soil EC 52%, VRT 38%, VR seeding 22%, satellite 19%</li>
+          <li><strong>Three surveys (2009→2015→2022):</strong> autosteer complete, yield monitor slowing, VRT stalled</li>
+          <li><strong>VRT stall confirms:</strong> economics not binding constraint — integration and service gaps are</li>
+          <li><strong>Farm-size effect:</strong> >6,000 ha: VRT >60%; <2,000 ha: <20% — scale dominates</li>
+          <li><strong>WA leads Australia (94% vs 78%):</strong> due to scale, terrain, paddock length, GRDC culture</li>
+        </ul>
+        <aside class="notes">Present the most current available evidence on WA precision agriculture adoption rates, using GRDC National Precision Agriculture Adoption Survey data to ground the abstract economic and adoption theory in documented reality. GRDC 2022 WA adoption rates: GPS guidance/autosteer 94%, yield monitoring 71%, soil EC mapping 52%, variable-rate fertiliser application 38%, variable-rate seeding 22%, in-season satellite crop monitoring 19%. Trend data from three consecutive GRDC surveys (2009, 2015, 2022): autosteer grew from ~30% to 94% in 13 years — a completed S-curve; yield monitor adoption grew from ~40% to 71% with growth now slowing; VRT adoption grew from ~10% to 38% but has stalled. The stalling of VRT at 38% is the most important adoption pattern in the current WA data: it indicates that the technologies have passed from Early Adopter to Early Majority territory but have not yet crossed the Chasm to Late Majority adoption — and that something beyond economic justification is holding back the next 30% of potential adopters. Mapping the barriers onto the stall: GRDC farmer interviews consistently identify the integration complexity (connecting zone maps to VRT controller to farm management software), the agronomic service gap (who designs and updates the prescriptions?), and connectivity limitations in the eastern wheatbelt as the dominant barriers — confirming that the franchise support infrastructure, not the economics, is the binding constraint on further VRT adoption. Farm-size effects: adoption of all Tier 2 and Tier 3 technologies shows a strong positive relationship with farm size in WA; above 6 000 ha, VRT adoption exceeds 60%; below 2 000 ha, it falls below 20% — confirming the scale-threshold economics described in Part 2.</aside>
+      </section>
+      <section>
+        <h2>Policy, GRDC Investment, and the Public Role in PA Adoption</h2>
+        <ul>
+          <li><strong>GRDC:</strong> ~AUD 20M/year to PA research and extension — primary institutional driver</li>
+          <li><strong>GRDC levy = collective action:</strong> individual farms under-invest; levy captures contributions to public goods</li>
+          <li><strong>DPIRD WA:</strong> direct extension, SmartFarm initiatives, regional connectivity</li>
+          <li><strong>Market failures:</strong> agronomic interpretation gap, ISOXML interoperability, remote WA connectivity</li>
+          <li><strong>Starlink improved connectivity</strong> — but public investment in redundancy remains insufficient</li>
+        </ul>
+        <aside class="notes">Examine the institutional framework that shapes PA adoption in WA, identifying where public investment has been most effective and where persistent market failures remain. The GRDC model: the Grains Research and Development Corporation levy (~AUD 80–100 million/year nationally, approximately AUD 20 million directed to PA-related research and extension) funds the economic analysis, on-farm trial networks, and extension resources that underpin most of the adoption evidence cited in this masterclass. The levy model functions as a collective action solution to the public-good problem in agricultural technology research: individual farmers will under-invest in generating rigorous PA evidence because benefits are shared with competitors and cannot be fully captured by the investing farm, while the GRDC levy captures a small contribution from all farmers to generate evidence that benefits all. DPIRD WA contribution: the Western Australian Department of Primary Industries and Regional Development provides direct agronomist extension, SmartFarm digital agriculture initiatives, and connectivity infrastructure support through state-funded programmes. Key persistent market failures that public investment does not yet adequately address: the skills gap in agronomic data interpretation (the bottleneck is not technology but the trained agronomist workforce to make it useful); data interoperability standards (the ISOXML and ADAPT API frameworks require government-led mandation to become truly universal, as occurred with vehicle emissions standards in the automotive industry); and connectivity infrastructure in remote WA (Starlink has substantially improved the commercial solution, but public investment in redundancy and reliability for agricultural operations remains below what the national food security and productivity arguments would justify).</aside>
+      </section>
+      <section data-background-color="#002147" class="part-div">
+        <span class="kicker">AGRI4401 Precision Agriculture · 9 / 9</span>
+        <h2>Part 9 — Synthesis</h2>
+      </section>
+      <section>
+        <h2>Unique Characteristics of Agricultural Technology Markets</h2>
+        <ul>
+          <li><strong>Seasonality:</strong> one performance observation per year — takes 3–5 years for statistical reliability</li>
+          <li><strong>Small-customer, large-geography:</strong> 2,500–3,500 farms across 200,000 km² — dealer costs high</li>
+          <li><strong>Weather/biological confounds:</strong> hard to separate 'tech worked' from 'good season' — vendors exploit this</li>
+          <li><strong>Implication:</strong> rational adoption speed structurally slower than consumer tech — 15–25 years normal</li>
+          <li><strong>Extension strategy must account</strong> for compressed annual feedback loop</li>
+        </ul>
+        <aside class="notes">Identify the structural features that make agricultural technology markets fundamentally different from consumer and industrial markets — and that create the specific conditions under which the franchise analogy holds most powerfully. Seasonality and compressed decision windows: unlike a restaurant franchisee who can evaluate performance weekly, a grain farmer gets exactly one performance observation per year per paddock — one harvest outcome — meaning that technology adoption decisions take 3–5 years to generate enough independent observations for statistically reliable performance evaluation. This radically slows rational adoption speed relative to industries with shorter feedback loops. The small-customer, large-geography problem: the total addressable market for a PA technology serving the WA wheatbelt is 2 500–3 500 farm businesses spread across 200 000 km² — compared to 200 McDonald's franchisees within an urban territory. This geography makes dealer service networks structurally expensive relative to customer density, creating the remote-service problem that is a genuine and persistent constraint on WA adoption. Weather and biological risk as uncontrollable confounds: a PA technology's contribution is always partially obscured by weather variability that dominates year-to-year outcome differences. This makes it genuinely difficult for a farmer to separate "the technology worked" from "this was a good season" — a statistical problem that requires multiple years of careful on-farm trial design to resolve, and that vendors routinely exploit by cherry-picking demonstration cases from favourable seasons and high-variability paddocks.</aside>
+      </section>
+      <section>
+        <h2>Partial Budgeting: Evaluating One Change at a Time</h2>
+        <ul>
+          <li><strong>Four components:</strong> added revenues + reduced costs − added costs − reduced revenues</li>
+          <li><strong>Only items that change</strong> with decision</li>
+          <li><strong>Example:</strong> NDRE satellite topdress (AUD 4/ha × 3,000 ha = AUD 12k) vs blanket topdress avoided (AUD 35/ha × 800 ha = AUD 28k) → net AUD 13k/yr</li>
+          <li>Correct when independent; NPV required when system-wide interactions</li>
+          <li><strong>First filter:</strong> if partial budget fails, NPV analysis unnecessary</li>
+        </ul>
+        <aside class="notes">Introduce partial budgeting as the practical field-deployable complement to full NPV analysis — the tool a precision agronomist or farm consultant uses to rapidly evaluate a specific management change. A partial budget captures only the four items that change if a technology is adopted: Added revenues (yield increase from VRT, quality premium from improved grain protein via in-season N monitoring); Reduced costs (input savings from zone-based fertiliser rates, fuel from CTF, overlap elimination from autosteer); Added costs (technology capital cost annualised, subscription fees, agronomist prescription service); Reduced revenues (where switching management regime reduces output from part of the paddock). Net change = (Added revenues + Reduced costs) − (Added costs + Reduced revenues). Positive = profitable change. Worked example: evaluating whether to add in-season NDRE satellite topdressing review (AUD 4/ha/year) on a 3 000 ha WA wheat operation. Reduced costs: avoiding one blanket topdress on 800 ha where canopy monitoring shows no N-response = AUD 35/ha × 800 ha = AUD 28 000. Added costs: NDRE service AUD 4/ha × 3 000 ha = AUD 12 000; agronomist interpretation = AUD 3 000; total added costs AUD 15 000. Net change = AUD 28 000 − AUD 15 000 = AUD 13 000/year positive. Payback: immediate in year one. Sensitivity: if cloud cover prevents useful imagery in two of five years, average benefit falls to AUD 16 800 — still AUD 4 800 positive. Partial budgeting is the correct tool here because the decision is independent of the rest of the farm system; NPV is needed when system-wide interactions change the entire farm's cost structure.</aside>
+      </section>
+      <section>
+        <h2>Post-Adoption Failure: Why Realised ROI Disappoints Ex-Ante Projections</h2>
+        <ul>
+          <li><strong>15–30% of yield-monitor owners</strong> use data for zero management decisions</li>
+          <li><strong>20–35% of VRT controllers</strong> not run in variable-rate mode each season</li>
+          <li><strong>40–50% of precision software subscribers</strong> use <30% of platform functionality</li>
+          <li><strong>Three causes:</strong> training inadequacy, integration failure, agronomic service withdrawal</li>
+          <li><strong>Franchise support failures,</strong> not hardware failures — confirm agronomist contracts multi-year</li>
+        </ul>
+        <aside class="notes">Address the gap between pre-adoption expected ROI and post-adoption realised ROI — a gap that research on agricultural technology adoption consistently finds is larger than in other investment sectors and that drives technology abandonment. Published surveys of PA technology users in Australia report: 15–30% of yield-monitor owners do not use the data for any management decision; 20–35% of VRT controllers are not operated in variable-rate mode every season; 40–50% of farms with precision agronomy software subscriptions use less than 30% of the platform's functionality. The gap between installed hardware and realised benefit is primarily an agronomic knowledge and workflow integration failure, not a hardware failure. Three dominant causes: (1) Training inadequacy — operators receive enough training to run the hardware but not enough to interpret and act on its outputs at an agronomic level. (2) Integration failure — technology works in isolation but cannot exchange data with the farm's other systems (ISOBUS incompatibility, mismatched file formats between the spreader and the farm management platform). (3) Agronomic service withdrawal — a technology adopted with a detailed prescription service performs in year one, but the service relationship lapses and the farmer reverts to default rates from year two, retaining the hardware cost without the management benefit. All three are franchise-support failures: the hardware functions correctly, but the post-installation support system has failed to deliver the ongoing agronomic value chain that makes the hardware productive.</aside>
+      </section>
+      <section>
+        <h2>Site-Specific Management Plans: Closing the Loop from Data to Decision</h2>
+        <ul>
+          <li><strong>Plan = franchise operating manual</strong> adapted to local conditions</li>
+          <li><strong>Components:</strong> zone map + budgets + prescriptions + triggers + harvest config</li>
+          <li><strong>Roles:</strong> vendor provides template, agronomist adapts locally, farmer executes</li>
+          <li><strong>All three necessary</strong> — software output without agronomic review is liability</li>
+          <li><strong>Specify what data THIS season to refine NEXT season</strong> — continuous improvement loop</li>
+        </ul>
+        <aside class="notes">Develop the concept of a site-specific management plan as the operational document that integrates all active PA technologies into a coherent season-by-season management framework — the document that converts the technology investment into actual agronomic improvement. A complete plan for a WA broadacre farm includes: the zone map defining permanent management areas within each paddock, updated annually or as soil conditions evolve; zone-specific nutrient budgets incorporating soil-test results, paddock yield history, and current commodity and fertiliser prices; seeding prescriptions specifying variety, seeding rate, fertiliser placement, and depth for each zone; in-season decision triggers derived from satellite monitoring or scouting thresholds (NDRE below a zone-specific threshold at Zadoks Z30 triggers agronomist review); and the harvest plan including yield monitor calibration checkpoints. Critically: the management plan must be the product of genuine agronomic judgement — a trusted precision agronomist reviewing and endorsing zone prescriptions — rather than an automated software output. In the franchise analogy, the site-specific management plan is the "franchise operating manual" adapted to local conditions: the franchisor (PA system vendor) provides the template and tools; the local franchise manager (the farm's agronomist) adapts it to the specific paddock, soil, and seasonal context; and the franchisee (the farmer) executes it. All three roles are necessary for the system to perform at its economic potential. Plans should also specify what data will be collected this season to refine next season's decisions — maintaining the continuous improvement loop that distinguishes an active PA operation from one that adopted technology but is no longer learning from it.</aside>
+      </section>
+      <section>
+        <h2>Which Technology First? Prioritisation for a WA Broadacre Operation</h2>
+        <ul>
+          <li><strong>Priority 1:</strong> Yield monitors calibrated, data management — zero capital, high value</li>
+          <li><strong>Priority 2:</strong> Multi-year yield map + zones (after 3+ seasons) — AUD 3–5/ha</li>
+          <li><strong>Priority 3:</strong> Zone-based soil testing — AUD 3–6/ha</li>
+          <li><strong>Priority 4:</strong> VRT fertiliser controller — AUD 6–15/ha annualised (now justified)</li>
+          <li><strong>Priority 5+:</strong> Satellite + APSIM (only after zone framework active)</li>
+        </ul>
+        <aside class="notes">Translate the lecture's framework into a concrete prioritisation recommendation for the most common WA farm scenario — a 3 000–5 000 ha mixed grain operation currently with autosteer but considering the next investment tier. The sequencing logic is driven by the data value chain: each technology generates more value when built on the data foundation of the preceding one, so the correct sequence is not determined by per-technology ROI in isolation but by the marginal value created by each additional investment given what is already in place. Priority sequence for this scenario: (1) If yield monitors are present but uncalibrated or data is not being archived: fix calibration and establish data management — zero capital, high ROI. (2) After three seasons of calibrated yield data: commission a multi-year yield stability analysis and zone map for all major paddocks — AUD 3–5/ha, very short payback. (3) Zone-based soil testing using those maps to target sampling efficiently and build zone-specific nutrient budgets: AUD 3–6/ha, justified by reduced testing cost and improved prescription accuracy. (4) VRT fertiliser controller for the zone prescriptions: AUD 6–15/ha annualised, now economically justified because the zone infrastructure is already in place. (5) In-season satellite monitoring for N management (Sentinel-2 via GEE or agronomic service): AUD 2–5/ha/year, justified once the zone framework is established and agronomic interpretation capability exists. Do not attempt (5) before (1) — the satellite monitoring information has no management value without the spatial management infrastructure to act on it.</aside>
+      </section>
+      <section>
+        <h2>Future Economics: Carbon Markets, Data Licensing, and the Changing Revenue Mix</h2>
+        <ul>
+          <li><strong>Soil carbon credits (ERF/CFI):</strong> precise MRV demands spatially-explicit multi-year data PA generates</li>
+          <li><strong>Data licensing:</strong> aggregated farm data valuable to seed, fertiliser, insurance, traders</li>
+          <li><strong>Australian Farm Data Code (2023):</strong> framework for compensating farmers for data pools</li>
+          <li><strong>Don't build current cases on unrealised future revenue</strong></li>
+          <li><strong>PA data infrastructure = dual-purpose:</strong> current management + future monetisation</li>
+        </ul>
+        <aside class="notes">Examine how the emerging revenue streams from carbon farming, ecosystem services, and farm data assets are beginning to change the economics of PA investment, potentially making some currently marginal technologies economically justified when new revenue streams are included. Soil carbon credits: Australia's Emissions Reduction Fund (ERF) and emerging voluntary carbon markets create a direct revenue stream for farming practices that sequester soil carbon or reduce nitrous oxide emissions. Precise measurement, reporting, and verification (MRV) of these outcomes demands the same spatially explicit, multi-year farm data that PA systems generate — the yield monitor database, the zone-specific soil carbon baseline, the application records. A WA farm that has adopted yield monitoring and zone-based soil mapping is therefore better positioned to generate carbon income than an equivalent farm without this data infrastructure, because the MRV cost is substantially lower when data already exists. Data licensing: the aggregated, anonymised farm performance data that PA systems generate has commercial value to seed companies (variety performance data), fertiliser suppliers (response data), insurance providers (yield risk data), and commodity traders (production forecasting). With appropriate data governance (the Australian Farm Data Code), a future in which farmers are compensated for contributing to industry data pools is plausible — though not yet realised. The implication: PA data infrastructure investments are increasingly dual-purpose assets — improving current management decisions and simultaneously generating the data assets for future revenue streams whose commercial value is not captured in any current NPV analysis.</aside>
+      </section>
+      <section data-background-color="#002147" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 3em;">
+        <h2 style="color: #E2B600; margin-bottom: 1.5em; font-size: 1.2em;">Future Economics: Carbon Markets, Data Licensing, and the Changing Revenue Mix</h2>
+        <div style="width: 100%; max-width: 900px;">
+          <div class="yt-wrap"><iframe src="https://www.youtube.com/embed/NuB-ZEM-Z70" title="Future of Farming Technology" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+        </div>
+        <p style="color: #F5F5F5; margin-top: 1.5em; font-size: 0.9em; opacity: 0.8;">Click to play • Space or → to continue</p>
+      </section>
+      <section>
+        <h2>Synthesis: The PA Technology Franchise — Questions Every Farmer Should Ask Before Signing</h2>
+        <ul>
+          <li><strong>What is full 10-year cost of ownership,</strong> not upfront price? (Subscriptions often exceed hardware)</li>
+          <li><strong>Under what terms can subscription costs change?</strong> What if vendor increases 30%? Exit penalty?</li>
+          <li><strong>Who owns farm data and what happens</strong> if vendor acquired or exits Australia?</li>
+          <li><strong>Which farming neighbours used this exact system</strong> 3+ seasons in similar conditions? What's their honest assessment?</li>
+          <li><strong>PA potential for WA broadacre is large.</strong> Realising it requires sophisticated technology purchasing, not passive adoption</li>
+        </ul>
+        <aside class="notes">Close the masterclass by returning to the McDonald's franchise analogy with which it opened and framing the key decision questions that a well-informed WA farmer should bring to any PA technology adoption conversation with a vendor. Franchise due diligence questions that apply directly: What is the full 10-year cost of ownership, not the upfront price? What are the terms under which subscription costs can change, and what happens to my operation if the vendor increases subscription prices by 30%? What happens to my data and prescriptions if the vendor exits the Australian market or is acquired? Who actually owns my yield maps, zone maps, and prescription history after I have paid to generate them? What is the formal service level agreement for hardware failure during the seeding window — not the brochure claim but the contractual commitment? What data rights am I granting when I accept the platform's terms of use? Can I export all my data in open-standard formats if I decide to switch vendors? Which of my farming neighbours have used this exact system for three or more years in conditions similar to mine? The broader synthesis: precision agriculture's economic potential for WA broadacre farming is large and well-documented. The technologies work. The ROI cases are compelling when analysed rigorously. But realising that potential requires the farmer to function as a sophisticated technology purchaser — not a passive adopter of vendor-defined packages, but an active participant who understands the full franchise economics, demands complete information about the franchise terms, builds the adoption sequence on a sound data foundation, and maintains the agronomic expertise and data governance independence to change systems when a better franchise becomes available.</aside>
+      </section>
+      <section data-background-color="#1a2460">
+        <h2 style="color:#E2B600;">The PA Technology Franchise</h2>
+        <p style="color:#fff; font-size: 1.1em; margin-top: 1.5em;">Buy it with full information.</p>
+        <p style="color:#fff; font-size: 1.1em;">Operate it with agronomic rigour.</p>
+        <p style="color:#fff; font-size: 1.1em; margin-bottom: 2em;">Own your data.</p>
+        <p style="color:#E2B600; font-size: 0.8em; margin-top: 3em; opacity: 0.8;">AGRI4401 · School of Agriculture and Environment · The University of Western Australia</p>
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      controls: true,
+      progress: true,
+      center: false,
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      plugins: [ RevealNotes ]
+    });
+  </script>
+</body>
+</html>
